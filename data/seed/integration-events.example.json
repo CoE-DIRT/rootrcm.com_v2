@@ -1,0 +1,35 @@
+{
+  "_notice": "Illustrative event envelopes only. No real people, payers, billing or credentials.",
+  "events": [
+    {
+      "id": "evt_demo_0001",
+      "source": "root-v2-preview",
+      "target": "hubspot-disabled",
+      "type": "consultation.requested",
+      "orgId": "org_synthetic_alpha",
+      "correlationId": "demo_correlation_1",
+      "occurredAt": "2026-10-29T00:00:00Z",
+      "status": "simulated",
+      "payload": {
+        "contactEmail": "sample@example.invalid",
+        "contactName": "Sample Contact",
+        "businessName": "Synthetic Practice Alpha",
+        "consent": false
+      }
+    },
+    {
+      "id": "evt_demo_0002",
+      "source": "root-v2-preview",
+      "target": "appwrite-disabled",
+      "type": "onboarding.started",
+      "orgId": "org_synthetic_beta",
+      "correlationId": "demo_correlation_2",
+      "occurredAt": "2026-10-29T00:00:00Z",
+      "status": "simulated",
+      "payload": {
+        "workspace": "client",
+        "requestedPlan": "free"
+      }
+    }
+  ]
+}

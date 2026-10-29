@@ -1,0 +1,39 @@
+{
+  "_notice": "Synthetic roles only. Backend must enforce authoritative membership and permissions per tenant.",
+  "roles": [
+    "guest",
+    "client_owner",
+    "client_admin",
+    "client_viewer",
+    "root_employee",
+    "root_operations",
+    "root_admin"
+  ],
+  "permissions": {
+    "guest": [
+      "public.read"
+    ],
+    "client_owner": [
+      "organization.read",
+      "requests.create",
+      "members.invite"
+    ],
+    "client_admin": [
+      "organization.read",
+      "requests.create"
+    ],
+    "client_viewer": [
+      "organization.read"
+    ],
+    "root_employee": [
+      "assigned_work.read"
+    ],
+    "root_operations": [
+      "assigned_work.read",
+      "assigned_work.update"
+    ],
+    "root_admin": [
+      "root_admin.manage"
+    ]
+  }
+}

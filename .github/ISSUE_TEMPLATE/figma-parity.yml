@@ -1,0 +1,32 @@
+name: Figma parity / implementation
+description: Track one approved ROOT UI slice from design through tested code.
+title: "[Figma] "
+labels: ["design", "figma-parity"]
+body:
+  - type: input
+    id: route
+    attributes:
+      label: Route / component
+      placeholder: "/en/services or Nav/DesktopNav"
+    validations:
+      required: true
+  - type: input
+    id: figma
+    attributes:
+      label: Approved Figma node URL
+      placeholder: "https://www.figma.com/design/...?...node-id=..."
+    validations:
+      required: true
+  - type: textarea
+    id: states
+    attributes:
+      label: Variants / interaction states
+      description: Desktop, 768px, 375px, dark/light, EN/ES, loading, error, hover, focus, reduced motion.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Objective acceptance criteria
+    validations:
+      required: true
