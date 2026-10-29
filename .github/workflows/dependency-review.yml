@@ -1,7 +1,8 @@
-name: Dependency review
+# Intentionally manually triggered until GitHub Settings > Security > Dependency graph is enabled.
+# See issue #3. Restore the pull_request trigger once a successful run confirms support.
+name: Dependency review (pending dependency graph)
 on:
-  pull_request:
-    branches: [main]
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
