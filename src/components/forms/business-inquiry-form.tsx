@@ -1,0 +1,91 @@
+'use client';
+
+import { useState } from 'react';
+import { copy } from '@/content/messages';
+import type { Locale } from '@/i18n/locales';
+import { Button } from '@/components/ui/button';
+import { SelectField, TextArea, TextInput } from '@/components/ui/form-field';
+import { StatusBanner } from '@/components/ui/status';
+import type { FieldErrors } from '@/lib/validation/business-contact';
+
+export function BusinessInquiryForm({ locale }: { locale: Locale }) {
+  const t = copy(locale);
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [errors, setErrors] = useState<FieldErrors>({});
+  const [message, setMessage] = useState('');
+
+  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setStatus('loading');
+    setErrors({});
+    const form = new FormData(event.currentTarget);
+    const payload = {
+      name: form.get('name'),
+      email: form.get('email'),
+      organization: form.get('organization'),
+      concern: form.get('concern'),
+      message: form.get('message'),
+      consent: form.get('consent') === 'on',
+    };
+    const response = await fetch('/api/v1/public/inquiries', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const json = (await response.json()) as {
+      error?: { message?: string; fieldErrors?: FieldErrors };
+      data?: { status: string };
+    };
+    if (!response.ok) {
+      setStatus('error');
+      setErrors(json.error?.fieldErrors ?? {});
+      setMessage(json.error?.message ?? t.status.error);
+      return;
+    }
+    setStatus('success');
+    setMessage(`${t.consultation.received} ${t.status.disabled}`);
+    event.currentTarget.reset();
+  }
+
+  return (
+    <form className="surface mt-8 grid max-w-xl gap-4 p-6" onSubmit={onSubmit} noValidate>
+      <TextInput id="name" name="name" label={t.form.name} required error={errors.name} autoComplete="name" />
+      <TextInput
+        id="email"
+        name="email"
+        type="email"
+        label={t.form.email}
+        required
+        error={errors.email}
+        autoComplete="email"
+      />
+      <TextInput
+        id="organization"
+        name="organization"
+        label={t.form.organization}
+        required
+        error={errors.organization}
+        autoComplete="organization"
+      />
+      <SelectField id="concern" name="concern" label={t.form.concern} error={errors.concern}>
+        <option value="consultation">Consultation</option>
+        <option value="diagnostic">Diagnostic</option>
+        <option value="managed">Managed RCM</option>
+        <option value="custom">Custom MSO</option>
+      </SelectField>
+      <TextArea id="message" name="message" label={t.form.message} error={errors.message} />
+      <label className="flex items-start gap-3 text-sm">
+        <input type="checkbox" name="consent" required className="mt-1" />
+        <span>
+          {t.form.consent} {t.footer.noPhi}
+        </span>
+      </label>
+      {errors.consent ? <p className="field-error">{errors.consent}</p> : null}
+      <Button type="submit" loading={status === 'loading'}>
+        {t.consultation.submit}
+      </Button>
+      {status === 'success' ? <StatusBanner tone="warning">{message}</StatusBanner> : null}
+      {status === 'error' ? <StatusBanner tone="danger">{message}</StatusBanner> : null}
+    </form>
+  );
+}

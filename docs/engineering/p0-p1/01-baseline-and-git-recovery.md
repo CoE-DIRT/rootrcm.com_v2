@@ -47,4 +47,6 @@ Node `v24.19.0`, npm `11.13.0`. `node_modules` already present; no reinstall.
 5. **package-lock.json** — commit the already-generated lockfile; CI switches to `npm ci` + setup-node npm cache.
 6. **Favicon/metadata** — `src/app/icon.svg` and `src/app/apple-icon.tsx` using approved navy/cyan tokens (no third-party logo file exists in-repo). Indexing remains off.
 
-Demo 6 HTML is **not present** under `reference/demo6/` (README only). Figma master `x5HJC3HjJNCCTUOwEdUc52` was inspected via MCP after auth.
+Demo 6 HTML **is present** at `reference/demo6/ROOT_V2_Interactive_Browser_Demo_6.html` (806,463 bytes) but is listed in `.cursorignore`, so agent file search does not index it. It was not copied into `src/`. Figma master `x5HJC3HjJNCCTUOwEdUc52` was inspected via MCP (session `dcfd9802-31ce-4c57-b848-e25893722c6b`).
+
+Config slice landed on `fix/config-stabilization` (`17fb82c`). Public shell continues on `feat/p0-p1-public-shell` fast-forwarded to that commit.
