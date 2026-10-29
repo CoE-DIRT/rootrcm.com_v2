@@ -1,0 +1,25 @@
+name: Integration / data contract
+description: Evaluate an Appwrite, HubSpot, Apollo, Stripe, Figma or other provider boundary.
+title: "[Integration] "
+labels: ["integration"]
+body:
+  - type: dropdown
+    id: provider
+    attributes:
+      label: Provider
+      options: [Appwrite, HubSpot, Apollo, Stripe, Figma, Google Drive, Other]
+    validations:
+      required: true
+  - type: textarea
+    id: boundary
+    attributes:
+      label: Data classes, system of record and permission boundary
+      description: Do not include tokens, PHI or personal prospect records.
+    validations:
+      required: true
+  - type: textarea
+    id: failure
+    attributes:
+      label: Authentication, testing, retries, privacy, failure handling and rollback
+    validations:
+      required: true

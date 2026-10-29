@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability or privacy issue
+    url: https://github.com/CoE-DIRT/rootrcm.com_v2/security/advisories/new
+    about: Report privately if private vulnerability reporting is enabled. Otherwise see SECURITY.md; never post PHI publicly.
+  - name: ROOT business support
+    url: https://rootrcm.com
+    about: Commercial support and service inquiries; do not submit patient data through GitHub.

@@ -1,0 +1,16 @@
+# Intentionally manually triggered until GitHub Settings > Security > Dependency graph is enabled.
+# See issue #3. Restore the pull_request trigger once a successful run confirms support.
+name: Dependency review (pending dependency graph)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  dependency-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: high

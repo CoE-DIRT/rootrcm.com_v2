@@ -1,0 +1,10 @@
+ROOT V2 — Proprietary Source-Available Notice
+Copyright (c) 2026 ROOT Revenue Operations & Outcomes Technology Incorporated. All rights reserved.
+
+This repository is publicly viewable for transparency, evaluation, collaboration planning and contributor review. Public visibility does not grant permission to copy, use, distribute, sublicense, modify, or commercially exploit ROOT-owned original code, designs, content, trademarks, images, or datasets.
+
+All third-party components retain their respective original licenses and notices. Nothing in this notice limits rights already granted by those licenses.
+
+Permissions for original ROOT materials require a separate written agreement from the rights holder. Trademark use requires separate authorization.
+
+This is a temporary licensing posture pending founder/legal approval. It is NOT an open-source license and GitHub may not recognize it as one. See docs/decisions/ADR-0002-licensing.md.

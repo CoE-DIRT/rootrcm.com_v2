@@ -1,0 +1,33 @@
+- name: design
+  color: "7057ff"
+  description: UX, design system and visual parity
+- name: figma-parity
+  color: "a371f7"
+  description: Approved design to implementation mapping
+- name: documentation
+  color: "0075ca"
+  description: Documentation and developer handoff
+- name: integration
+  color: "1d76db"
+  description: External service adapter or API contract
+- name: security
+  color: "b60205"
+  description: Security, privacy, tenant isolation or secret hygiene
+- name: dependencies
+  color: "0366d6"
+  description: Dependency update or ecosystem maintenance
+- name: phase-0
+  color: "c5def5"
+  description: Architecture and governance
+- name: phase-1
+  color: "c2e0c6"
+  description: Figma foundations and UI skeleton
+- name: phase-2
+  color: "fef2c0"
+  description: Prototype parity and synthetic workflows
+- name: blocked
+  color: "d73a4a"
+  description: Needs approval, access, test results or a preceding dependency
+- name: good-first-issue
+  color: "7057ff"
+  description: Documented, low-risk starter task
