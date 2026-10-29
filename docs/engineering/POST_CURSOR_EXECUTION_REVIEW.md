@@ -97,11 +97,21 @@ Verified at start of this pass (read-only):
 | --- | --- | --- |
 | `origin/main` | `16ba2c3` | Unchanged vs historical. |
 | `fix/config-stabilization` | `17fb82c` | PR [#17](https://github.com/CoE-DIRT/rootrcm.com_v2/pull/17) → `main`. CI green. `mergeStateStatus: BLOCKED` (reviews). |
-| `feat/p0-p1-public-shell` | was `b5081ed`; this pass adds a follow-up commit | PR [#18](https://github.com/CoE-DIRT/rootrcm.com_v2/pull/18) stacked on #17. PR [#19](https://github.com/CoE-DIRT/rootrcm.com_v2/pull/19) same head onto `main` (combined). |
+| `feat/p0-p1-public-shell` | `3d1b68b` (this pass) | Pushed. PR [#18](https://github.com/CoE-DIRT/rootrcm.com_v2/pull/18) stacked on #17. PR [#19](https://github.com/CoE-DIRT/rootrcm.com_v2/pull/19) same head onto `main` (combined). |
 | `chore/local-setup-*` | `16ba2c3` | No unique commits. Preserved. |
 | `feat/design-system-and-marketing-ia` | `17fb82c` | Local-only alias of #17 SHA. Preserved. |
 
-**Merge plan executed:** fetch origin; attempt `gh pr merge 17 --merge`; if #17 lands, merge **one** of #18/#19 (prefer #19 onto `main`, close #18 as superseded). If permission/review denied, push remaining work and leave PRs open. **No force-push. No `--no-verify`. No production deploy.**
+**Merge results (executed):**
+
+- `git fetch origin` — `origin/main` still `16ba2c3`; no divergence rewrite.
+- `git push origin feat/p0-p1-public-shell` — `b5081ed..3d1b68b` succeeded.
+- `gh pr merge 17 --merge` — **denied**: “the base branch policy prohibits the merge.” Ruleset requires 1 approving review; no bypass actor.
+- `--auto` merge — **denied**: repository does not have `enablePullRequestAutoMerge`.
+- `--admin` was **not** used (ruleset `current_user_can_bypass: never`).
+- Local `main` not fast-forwarded (nothing new on origin).
+- PRs #17/#18/#19 left open with comments. Issues #3/#4/#5/#6/#8 left open with comments.
+
+**No force-push. No `--no-verify`. No production deploy.** Local `feat/p0-p1-public-shell` == `origin/feat/p0-p1-public-shell` at `3d1b68b`. Local `main` == `origin/main` at `16ba2c3`.
 
 PR #17 body incorrectly said Demo 6 HTML was missing; the file exists (806,463 bytes). Corrected in PR comment, not by rewriting history.
 
