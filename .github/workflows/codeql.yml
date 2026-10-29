@@ -23,6 +23,9 @@ jobs:
       - uses: github/codeql-action/init@v3
         with:
           languages: javascript-typescript
+          config: |
+            paths-ignore:
+              - reference/demo6/**
       - uses: github/codeql-action/analyze@v3
         with:
           category: /language:javascript-typescript

@@ -42,7 +42,7 @@ cp .env.example .env.local
 npm run dev
 ```
 
-Open `http://localhost:3000`. GitHub Actions use `npm install` until the first local developer installs, validates and commits `package-lock.json`; then CI must migrate to `npm ci`. This is a **foundation**, not a finished deployed application.
+Open `http://localhost:3000`. CI uses `npm ci` against the committed `package-lock.json`. This is a **foundation**, not a finished deployed application.
 
 ## Production release policy
 
