@@ -17,7 +17,7 @@ const en = {
     solutions: 'Solutions',
     signIn: 'Sign in',
   },
-  theme: { light: 'Light theme', dark: 'Dark theme', toggle: 'Toggle color theme' },
+  theme: { light: 'Light theme', dark: 'Dark theme', toggle: 'Toggle color theme', short: 'Theme' },
   locale: { en: 'English', es: 'Español', switchTo: 'Switch language' },
   footer: {
     notice: 'Practice-first revenue operations',
@@ -59,6 +59,12 @@ const en = {
       { title: 'Understand a problem', href: '/solutions' },
       { title: 'Explore services', href: '/services' },
       { title: 'See a workspace', href: '/preview/client' },
+    ],
+    tabletTiles: [
+      { title: 'RCM', href: '/services' },
+      { title: 'DIRT intelligence', href: '/technology' },
+      { title: 'Credentialing', href: '/services' },
+      { title: 'Practice operations', href: '/company' },
     ],
     bands: [
       'Discover → Assess → Scope → Onboard → Connect → Execute → Monitor → Optimize',
@@ -126,14 +132,14 @@ const en = {
     body: 'Leadership, careers and partnership pages remain placeholders until biographies, logos and certifications are evidenced.',
   },
   consultation: {
-    title: 'Start with a conversation.',
-    body: 'Describe operational friction without sharing patient information. HubSpot sync is disabled in this environment.',
+    title: 'Talk with a revenue expert',
+    body: 'Describe concerns without sharing patient information. HubSpot sync is disabled in this environment.',
     submit: 'Send business inquiry',
     received: 'Inquiry stored locally as a receipt. CRM sync is disabled.',
   },
   account: {
-    title: 'Create a workspace—without a software switch.',
-    body: 'Planned: email or Google/Microsoft sign-in after Appwrite is approved. This form collects business information only.',
+    title: 'Start without financial commitment',
+    body: 'Email or Google/Microsoft sign-in is planned; onboarding collects business information, not PHI.',
     steps: ['Create an account', 'Verify email', 'Identify organization', 'Choose a goal', 'Enter limited workspace'],
   },
   diagnostic: {
@@ -142,8 +148,8 @@ const en = {
     steps: ['Scope and exclusions', 'Billing summary', 'Secure payment (planned)', 'Onboarding', 'Deliverable tracking'],
   },
   custom: {
-    title: 'Designed around your practice.',
-    body: 'Custom RCM/MSO work is scoped in writing. Subscription checkout is planned, not live.',
+    title: 'Choose managed services',
+    body: 'Define inclusion, responsibility, rate structure and dependencies in writing. Subscription checkout is planned, not live.',
     steps: ['Compare plan', 'Request scope', 'Approve contract', 'Subscribe (planned)', 'View entitlement'],
   },
   signIn: {
@@ -161,6 +167,27 @@ const en = {
     consent: 'I confirm this is a business inquiry and does not include patient information.',
     required: 'Required',
     working: 'Working…',
+    concernOptions: {
+      consultation: 'Consultation',
+      diagnostic: 'Diagnostic',
+      managed: 'Managed RCM',
+      custom: 'Custom MSO',
+    },
+  },
+  workspace: {
+    client: 'Client workspace',
+    staff: 'ROOT staff',
+    orgPreview: 'Organization preview',
+    tenantNote:
+      'Switching tenants requires server membership. This control is labeled preview-only and cannot grant access.',
+    overview: 'Overview',
+    requests: 'Requests',
+    dirt: 'DIRT',
+    credentialing: 'Credentialing',
+    billing: 'Billing',
+    onboarding: 'Onboarding',
+    subscriptions: 'Subscriptions',
+    queue: 'Queue',
   },
   status: {
     loading: 'Loading',
@@ -195,7 +222,7 @@ const es: Messages = {
     solutions: 'Soluciones',
     signIn: 'Iniciar sesión',
   },
-  theme: { light: 'Tema claro', dark: 'Tema oscuro', toggle: 'Cambiar tema' },
+  theme: { light: 'Tema claro', dark: 'Tema oscuro', toggle: 'Cambiar tema', short: 'Tema' },
   locale: { en: 'English', es: 'Español', switchTo: 'Cambiar idioma' },
   footer: {
     notice: 'Operaciones de ingresos centradas en la práctica',
@@ -237,6 +264,12 @@ const es: Messages = {
       { title: 'Entender un problema', href: '/solutions' },
       { title: 'Explorar servicios', href: '/services' },
       { title: 'Ver un espacio de trabajo', href: '/preview/client' },
+    ],
+    tabletTiles: [
+      { title: 'RCM', href: '/services' },
+      { title: 'Inteligencia DIRT', href: '/technology' },
+      { title: 'Credencialización', href: '/services' },
+      { title: 'Operaciones de la práctica', href: '/company' },
     ],
     bands: [
       'Descubrir → Evaluar → Definir alcance → Incorporar → Conectar → Ejecutar → Monitorear → Optimizar',
@@ -304,14 +337,14 @@ const es: Messages = {
     body: 'Liderazgo, empleo y alianzas permanecen como marcadores de posición hasta evidenciar biografías, logotipos y certificaciones.',
   },
   consultation: {
-    title: 'Empiece con una conversación.',
-    body: 'Describa la fricción operativa sin compartir información de pacientes. La sincronización con HubSpot está desactivada en este entorno.',
+    title: 'Hable con un experto en ingresos',
+    body: 'Describa preocupaciones sin compartir información de pacientes. La sincronización con HubSpot está desactivada en este entorno.',
     submit: 'Enviar consulta empresarial',
     received: 'La consulta se guardó localmente como recibo. La sincronización CRM está desactivada.',
   },
   account: {
-    title: 'Cree un espacio de trabajo—sin cambiar de software.',
-    body: 'Planificado: inicio de sesión con correo o Google/Microsoft cuando Appwrite esté aprobado. Este formulario solo pide datos empresariales.',
+    title: 'Empiece sin compromiso financiero',
+    body: 'El inicio de sesión con correo o Google/Microsoft está planificado; el alta recoge información empresarial, no PHI.',
     steps: [
       'Crear una cuenta',
       'Verificar correo',
@@ -332,8 +365,8 @@ const es: Messages = {
     ],
   },
   custom: {
-    title: 'Diseñado alrededor de su práctica.',
-    body: 'El trabajo RCM/MSO a medida se define por escrito. El alta de suscripción está planificada, no activa.',
+    title: 'Elija servicios administrados',
+    body: 'Defina inclusión, responsabilidad, estructura de tarifas y dependencias por escrito. El alta de suscripción está planificada, no activa.',
     steps: [
       'Comparar plan',
       'Solicitar alcance',
@@ -357,6 +390,27 @@ const es: Messages = {
     consent: 'Confirmo que esta es una consulta empresarial y no incluye información de pacientes.',
     required: 'Obligatorio',
     working: 'Procesando…',
+    concernOptions: {
+      consultation: 'Consulta',
+      diagnostic: 'Diagnóstico',
+      managed: 'RCM administrado',
+      custom: 'MSO a medida',
+    },
+  },
+  workspace: {
+    client: 'Espacio del cliente',
+    staff: 'Personal ROOT',
+    orgPreview: 'Vista previa de organización',
+    tenantNote:
+      'Cambiar de inquilino requiere membresía en el servidor. Este control está etiquetado como vista previa y no otorga acceso.',
+    overview: 'Resumen',
+    requests: 'Solicitudes',
+    dirt: 'DIRT',
+    credentialing: 'Credencialización',
+    billing: 'Facturación',
+    onboarding: 'Incorporación',
+    subscriptions: 'Suscripciones',
+    queue: 'Cola',
   },
   status: {
     loading: 'Cargando',

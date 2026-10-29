@@ -68,10 +68,10 @@ export function BusinessInquiryForm({ locale }: { locale: Locale }) {
         autoComplete="organization"
       />
       <SelectField id="concern" name="concern" label={t.form.concern} error={errors.concern}>
-        <option value="consultation">Consultation</option>
-        <option value="diagnostic">Diagnostic</option>
-        <option value="managed">Managed RCM</option>
-        <option value="custom">Custom MSO</option>
+        <option value="consultation">{t.form.concernOptions.consultation}</option>
+        <option value="diagnostic">{t.form.concernOptions.diagnostic}</option>
+        <option value="managed">{t.form.concernOptions.managed}</option>
+        <option value="custom">{t.form.concernOptions.custom}</option>
       </SelectField>
       <TextArea id="message" name="message" label={t.form.message} error={errors.message} />
       <label className="flex items-start gap-3 text-sm">

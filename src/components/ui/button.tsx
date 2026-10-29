@@ -26,7 +26,7 @@ export function Button({
       aria-busy={loading}
       data-node-id="3:21"
     >
-      {loading ? 'Working…' : children}
+      {children}
     </button>
   );
 }

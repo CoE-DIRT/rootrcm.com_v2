@@ -7,6 +7,12 @@ type Common = {
   hint?: string;
 };
 
+export function describedById(id: string, error?: string, hint?: string) {
+  if (error) return `${id}-error`;
+  if (hint) return `${id}-hint`;
+  return undefined;
+}
+
 export function FormField({
   id,
   label,
@@ -14,13 +20,12 @@ export function FormField({
   hint,
   children,
 }: Common & { children: ReactNode }) {
-  const describedBy = error ? `${id}-error` : hint ? `${id}-hint` : undefined;
   return (
     <div className="field" data-node-id="3:42">
       <label htmlFor={id} className="font-bold">
         {label}
       </label>
-      <div aria-describedby={describedBy}>{children}</div>
+      {children}
       {hint && !error ? (
         <p id={`${id}-hint`} className="muted text-sm">
           {hint}
@@ -39,7 +44,12 @@ export function TextInput(props: Common & InputHTMLAttributes<HTMLInputElement>)
   const { id, label, error, hint, ...rest } = props;
   return (
     <FormField id={id} label={label} error={error} hint={hint}>
-      <input id={id} aria-invalid={Boolean(error)} {...rest} />
+      <input
+        {...rest}
+        id={id}
+        aria-invalid={Boolean(error)}
+        aria-describedby={describedById(id, error, hint)}
+      />
     </FormField>
   );
 }
@@ -48,7 +58,12 @@ export function TextArea(props: Common & TextareaHTMLAttributes<HTMLTextAreaElem
   const { id, label, error, hint, ...rest } = props;
   return (
     <FormField id={id} label={label} error={error} hint={hint}>
-      <textarea id={id} aria-invalid={Boolean(error)} {...rest} />
+      <textarea
+        {...rest}
+        id={id}
+        aria-invalid={Boolean(error)}
+        aria-describedby={describedById(id, error, hint)}
+      />
     </FormField>
   );
 }
@@ -57,7 +72,12 @@ export function SelectField(props: Common & SelectHTMLAttributes<HTMLSelectEleme
   const { id, label, error, hint, children, ...rest } = props;
   return (
     <FormField id={id} label={label} error={error} hint={hint}>
-      <select id={id} aria-invalid={Boolean(error)} {...rest}>
+      <select
+        {...rest}
+        id={id}
+        aria-invalid={Boolean(error)}
+        aria-describedby={describedById(id, error, hint)}
+      >
         {children}
       </select>
     </FormField>

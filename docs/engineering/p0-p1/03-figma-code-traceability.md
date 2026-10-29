@@ -12,10 +12,10 @@
 | 4:2 | `/en` | Home | Desktop / Dark | Yes | `get_design_context` screenshot used as target | Responsive titles swap; not pixel-perfect spacing | implemented |
 | 4:40 | `/en/services` | Services | Desktop / Dark | Yes | Metadata copy | Tile hrefs are IA routes, not unique service nodes | implemented |
 | 4:88 | `/en/plans` | Plans | Desktop / Dark | Yes | Catalog cards + node IDs 4:100–4:116 | No live checkout | implemented |
-| 4:126 | `/en` | Home | Mobile / Dark | Partial | CSS `md:hidden` title/tiles | 375px browser pass limited this session | partial |
-| 4:153 | `/en` | Home | Tablet / Dark | Partial | CSS `md` title | 768px not fully exercised in browser this session | partial |
-| 5:46 | `/en/account` | Free account | Conversion | Partial | Step list only | Auth disabled | partial |
-| 5:69 | `/en/consultation` | Consultation | Conversion | Partial | Form + disabled API | Node on page was 6:78 in an earlier draft; copy matches 5:69 | partial |
+| 4:126 | `/en` | Home | Mobile / Dark | Yes | 375px `next start` 2026-10-30; no horizontal overflow after header fix | Theme/locale remain in header (product requirement vs Figma ROOT+☰ only) | implemented |
+| 4:153 | `/en` | Home | Tablet / Dark | Yes | 768px title + RCM/DIRT/Credentialing/Practice operations tiles | Desktop nav hidden until `lg`; Figma tablet nav overflowed its own 768 frame | implemented |
+| 5:46 | `/en/account` | Free account | Conversion | Partial | Step list + inquiry form; title matches Figma | Auth disabled | partial |
+| 5:69 | `/en/consultation` | Consultation | Conversion | Partial | Form + disabled API; node id corrected to 5:69 | No live HubSpot | partial |
 | 5:92 | `/en/diagnostic` | Diagnostic $2,500 | Conversion | Partial | Steps; no Stripe | Payment labeled planned | partial |
 | 5:115 | `/en/custom` `/en/custom-rcm` | Custom MSO | Conversion | Partial | Same catalog, two routes | Subscribe planned | partial |
 | 5:138 | `/en/preview/client` | Client workspace | Synthetic | Partial | App shell + sample org | Not a live portal | partial |

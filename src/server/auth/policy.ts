@@ -1,5 +1,5 @@
-import { type Permission, type Role, roleHas } from '../../domain/identity/roles';
-import { getFeatureFlags } from '../../lib/flags';
+import { type Permission, type Role, roleHas } from '../../domain/identity/roles.ts';
+import { getFeatureFlags } from '../../lib/flags.ts';
 
 export type SessionPrincipal = {
   userId: string;

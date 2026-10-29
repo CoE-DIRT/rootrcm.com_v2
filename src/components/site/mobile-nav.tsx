@@ -44,6 +44,9 @@ export function MobileNav({ locale }: { locale: Locale }) {
               {t.nav[item.key]}
             </Link>
           ))}
+          <Link href={localizedPath(locale, '/sign-in')} onClick={() => setOpen(false)}>
+            {t.nav.signIn}
+          </Link>
           <Link
             className="btn-primary"
             href={localizedPath(locale, '/consultation')}

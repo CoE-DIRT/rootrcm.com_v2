@@ -6,7 +6,7 @@ Recorded 2026-10-30 on Node v24.19.0 / npm 11.13.0 / Next.js 16.4.3. Commands ru
 | --- | --- | --- |
 | `npm run lint` | **0** | ESLint clean (PostCSS anonymous-export warning previously fixed) |
 | `npm run typecheck` | **0** | `next typegen && tsc --noEmit` |
-| `npm run test` | **0** | 20 pass / 0 fail (`tests/*.test.ts` + `tests/*.test.mjs`) |
+| `npm run test` | **0** | 20 pass / 0 fail. Reconciliation pass includes executable `tests/policy.test.ts` (two-tenant PDP) with `--test-concurrency=1`. |
 | `npm run build` | **0** | 57 routes generated; inquiry API + locale pages present |
 
 Build warning (not a failure): Next.js 16 reports the `middleware` file convention is deprecated in favor of `proxy`. Not migrated this phase.

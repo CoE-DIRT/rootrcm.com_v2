@@ -15,7 +15,7 @@ export function ThemeToggle({ locale }: { locale: Locale }) {
 
   return (
     <button type="button" className="btn-ghost" onClick={toggle} aria-label={t.theme.toggle}>
-      {t.theme.toggle}
+      {t.theme.short}
     </button>
   );
 }

@@ -8,4 +8,8 @@ test('EN and ES copy live in one messages module', () => {
   assert.match(src, /const es: Messages/);
   assert.match(src, /Handing Over the Keys/);
   assert.match(src, /Entregar las llaves/);
+  assert.match(src, /Talk with a revenue expert/);
+  assert.match(src, /Hable con un experto en ingresos/);
+  assert.match(src, /tabletTiles/);
+  assert.match(src, /concernOptions/);
 });

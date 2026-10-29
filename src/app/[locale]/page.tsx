@@ -1,9 +1,21 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { PageHero } from '@/components/site/page-hero';
 import { BandList, TileGrid } from '@/components/site/tile-grid';
 import { copy } from '@/content/messages';
 import { requireLocale } from '@/lib/locale';
+import { publicPageMetadata } from '@/lib/metadata';
 import { localizedPath } from '@/lib/paths';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const locale = await requireLocale(params);
+  const t = copy(locale);
+  return publicPageMetadata(locale, t.home.titleDesktop, t.home.bodyDesktop);
+}
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const locale = await requireLocale(params);
@@ -44,7 +56,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <div className="md:hidden">
         <TileGrid locale={locale} tiles={t.home.mobileTiles} hint={t.home.tileHint} />
       </div>
-      <div className="hidden md:block">
+      <div className="hidden md:block lg:hidden">
+        <TileGrid locale={locale} tiles={t.home.tabletTiles} hint={t.home.tileHint} />
+      </div>
+      <div className="hidden lg:block">
         <TileGrid locale={locale} tiles={t.home.tiles} hint={t.home.tileHint} />
       </div>
       <BandList items={t.home.bands} />
