@@ -1,0 +1,31 @@
+{
+  "_notice": "Illustrative tiers only; final entitlements are derived from signed scopes and validated Stripe/Appwrite data.",
+  "tiers": [
+    "Free",
+    "Growth",
+    "Managed",
+    "Add-on"
+  ],
+  "capabilities": [
+    {
+      "key": "dashboard",
+      "minTier": "Free"
+    },
+    {
+      "key": "service_requests",
+      "minTier": "Free"
+    },
+    {
+      "key": "advanced_ar",
+      "minTier": "Growth"
+    },
+    {
+      "key": "managed_followup",
+      "minTier": "Managed"
+    },
+    {
+      "key": "payer_analytics",
+      "minTier": "Add-on"
+    }
+  ]
+}

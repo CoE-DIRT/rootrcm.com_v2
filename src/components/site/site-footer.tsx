@@ -1,0 +1,1 @@
+export function SiteFooter(){return <footer className="page-width border-t py-8 text-sm" style={{borderColor:'var(--border)',color:'var(--muted)'}}>© 2026 ROOT — Revenue Operations & Outcomes Technology. Do not submit patient information.</footer>}

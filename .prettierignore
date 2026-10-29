@@ -1,0 +1,4 @@
+node_modules
+.next
+coverage
+reference/demo6/*.html

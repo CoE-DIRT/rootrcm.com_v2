@@ -1,0 +1,1 @@
+import Link from 'next/link';export function SiteHeader(){return <header className="page-width flex items-center justify-between gap-5 py-5"><Link href="/" className="text-2xl font-extrabold">ROOT</Link><nav aria-label="Primary"><Link href="/en">EN</Link> <span aria-hidden="true">·</span> <Link href="/es">ES</Link></nav></header>}

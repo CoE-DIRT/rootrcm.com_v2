@@ -1,0 +1,5 @@
+---
+description: Mandatory ROOT V2 design, architecture, security and PR rules
+alwaysApply: true
+---
+Follow AGENTS.md, docs/architecture.md and approved Figma before editing. Implement one small vertical slice at a time; no duplicate layouts, nav/footer or pricing. Preserve ROOT palette, EN/ES and dark/light. No PHI, secrets or real client data. No production deployments. Appwrite is the agreed identity/database, HubSpot CRM, Stripe billing, Apollo prospecting. Include test results and touched files in every summary.

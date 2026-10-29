@@ -1,0 +1,21 @@
+name: Vertical slice
+description: Plan one tested, Figma-mapped feature
+title: "[Feature] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: requirements
+    attributes:
+      label: Problem and acceptance criteria
+    validations:
+      required: true
+  - type: input
+    id: figma
+    attributes:
+      label: Figma node or documented design exception
+    validations:
+      required: true
+  - type: textarea
+    id: privacy
+    attributes:
+      label: Tenant/privacy and data contract

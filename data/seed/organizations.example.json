@@ -1,0 +1,33 @@
+{
+  "_notice": "Entirely fictional. Never use patient-level data here.",
+  "organizations": [
+    {
+      "id": "sample-solo",
+      "name": "Cedar Grove Family Practice",
+      "type": "solo",
+      "plan": "Free",
+      "specialty": "Family Medicine"
+    },
+    {
+      "id": "sample-group",
+      "name": "Bayview Multi-Specialty Group",
+      "type": "group",
+      "plan": "Managed",
+      "specialty": "Multi-specialty"
+    },
+    {
+      "id": "sample-neuro",
+      "name": "Northline Behavioral Care",
+      "type": "solo",
+      "plan": "Growth",
+      "specialty": "Behavioral Health"
+    },
+    {
+      "id": "sample-cardiac",
+      "name": "Summit Cardiology Associates",
+      "type": "group",
+      "plan": "Managed",
+      "specialty": "Cardiology"
+    }
+  ]
+}

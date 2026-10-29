@@ -1,0 +1,10 @@
+@import 'tailwindcss';
+:root{--bg:#f5f9fe;--surface:#fff;--surface-2:#edf5fd;--text:#0a243e;--muted:#526d85;--cyan:#007fa6;--blue:#1167df;--border:#d5e4f2}
+:root[data-theme='dark']{--bg:#061225;--surface:#0d2137;--surface-2:#132b45;--text:#f2f8ff;--muted:#9bb4ce;--cyan:#11e1ee;--blue:#1680ff;--border:#274562}
+html{scroll-behavior:smooth}body{background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif;line-height:1.6}
+*{box-sizing:border-box}:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
+.page-width{width:min(calc(100% - 36px),1200px);margin:auto}
+.surface{background:var(--surface);border:1px solid var(--border);border-radius:18px}
+.btn-primary{background:var(--cyan);color:#031a2d;border-radius:11px;padding:12px 18px;display:inline-flex;min-height:46px;align-items:center;font-weight:750}
+.btn-outline{border:1px solid var(--border);border-radius:11px;padding:12px 18px;min-height:46px;display:inline-flex;align-items:center}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}

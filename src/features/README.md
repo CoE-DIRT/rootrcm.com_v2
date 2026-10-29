@@ -1,0 +1,1 @@
+Build one feature per vertical slice: public/marketing, conversion, organizations, billing, service-requests, analytics, credentialing, resources. Each has typed data contracts, tests, a11y and a Figma node link.
