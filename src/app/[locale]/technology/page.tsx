@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { EcosystemMarquees } from '@/components/commercial/ecosystem-marquees';
 import { MarketingPage } from '@/components/site/marketing-page';
 import { StatusBanner } from '@/components/ui/status';
 import { copy } from '@/content/messages';
@@ -32,6 +33,7 @@ export default async function TechnologyPage({ params }: { params: Promise<{ loc
       <div className="mt-8">
         <StatusBanner tone="warning">{t.preview}</StatusBanner>
       </div>
+      <EcosystemMarquees locale={locale} />
     </MarketingPage>
   );
 }

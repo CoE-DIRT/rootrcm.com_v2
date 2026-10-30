@@ -250,3 +250,135 @@ a {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Commercial marquees — append-only. Pause on hover/focus, GPU transform, reduced-motion static list. */
+.commercial-section {
+  padding-top: 8px;
+}
+
+.marquee-row {
+  display: grid;
+  gap: 10px;
+}
+
+.marquee-viewport {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: root-marquee 42s linear infinite;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+}
+
+.marquee-viewport:hover .marquee-track,
+.marquee-viewport:focus-within .marquee-track {
+  animation-play-state: paused;
+}
+
+.marquee-group {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  padding: 12px;
+  list-style: none;
+  margin: 0;
+}
+
+.ecosystem-tile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 210px;
+  min-height: 56px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.ecosystem-tile strong {
+  font-size: 0.92rem;
+  overflow-wrap: anywhere;
+}
+
+.ecosystem-glyph {
+  display: grid;
+  place-items: center;
+  width: 33px;
+  height: 33px;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--cyan);
+  flex-shrink: 0;
+}
+
+.marquee-static-list {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+  list-style: none;
+}
+
+@keyframes root-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@media (pointer: coarse) {
+  .marquee-viewport {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .marquee-track {
+    animation: none;
+    transform: none;
+    will-change: auto;
+  }
+
+  .marquee-track .marquee-group:last-child {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-viewport {
+    display: none !important;
+  }
+
+  .marquee-static-list {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    clip: auto;
+    overflow: visible;
+    white-space: normal;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+}

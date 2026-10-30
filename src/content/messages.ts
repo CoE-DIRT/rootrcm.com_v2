@@ -11,6 +11,8 @@ const en = {
     plans: 'Plans',
     resources: 'Resources',
     company: 'Company',
+    specialties: 'Specialties',
+    locations: 'New York',
     consultation: 'Consultation',
     openMenu: 'Open menu',
     closeMenu: 'Close menu',
@@ -255,17 +257,35 @@ const en = {
   account: {
     title: 'Start without financial commitment',
     body: 'Email or Google/Microsoft sign-in is planned; onboarding collects business information, not PHI.',
-    steps: ['Create an account', 'Verify email', 'Identify organization', 'Choose a goal', 'Enter limited workspace'],
+    steps: [
+      'Create an account',
+      'Verify email',
+      'Identify organization',
+      'Choose a goal',
+      'Enter limited workspace',
+    ],
   },
   diagnostic: {
     title: 'Revenue Optimization Diagnostic · $2,500',
     body: 'Fixed-fee assessment; additional work is quoted separately. Payment is not collected in this build.',
-    steps: ['Scope and exclusions', 'Billing summary', 'Secure payment (planned)', 'Onboarding', 'Deliverable tracking'],
+    steps: [
+      'Scope and exclusions',
+      'Billing summary',
+      'Secure payment (planned)',
+      'Onboarding',
+      'Deliverable tracking',
+    ],
   },
   custom: {
     title: 'Choose managed services',
     body: 'Define inclusion, responsibility, rate structure and dependencies in writing. Subscription checkout is planned, not live.',
-    steps: ['Compare plan', 'Request scope', 'Approve contract', 'Subscribe (planned)', 'View entitlement'],
+    steps: [
+      'Compare plan',
+      'Request scope',
+      'Approve contract',
+      'Subscribe (planned)',
+      'View entitlement',
+    ],
   },
   signIn: {
     title: 'Choose your ROOT workspace.',
@@ -316,6 +336,100 @@ const en = {
     cookiesTitle: 'Cookie Preferences',
     body: 'Legal text is a placeholder pending counsel review. Public forms accept business contacts only. Indexing is off in this environment.',
   },
+  commercial: {
+    servicesEyebrow: 'Services',
+    servicesCta: 'See the full service map',
+    specialtiesEyebrow: 'Specialty revenue operations',
+    specialtiesTitle: 'Built for how each specialty actually bills',
+    specialtiesBody:
+      'Ten first-class practices, plus the rest of the catalog. Copy is administrative RCM — not a clinical protocol and not a name-swap.',
+    specialtiesCta: 'Browse all specialties',
+    specialtiesIndexTitle: 'Specialty catalog',
+    specialtiesIndexBody:
+      'Every specialty below has its own administrative brief. Featured ten appear first on the homepage. Infectious Disease has a dedicated page.',
+    specialtyKicker: 'Specialty RCM',
+    idKicker: 'Dedicated page',
+    idHeadline: 'Infectious Disease Revenue Operations — From Authorization to Reimbursement',
+    idLead:
+      'Authorization, infusion and OPAT billing pathways, J-code unit hygiene, and medical versus pharmacy benefit routing — as administrative revenue operations for ID groups.',
+    idClinicalDisclaimer:
+      'This is not clinical care, stewardship advice or a treatment protocol. ROOT does not diagnose, prescribe or manage patients.',
+    idSections: [
+      {
+        title: 'OPAT as billing work',
+        body: 'Outpatient parenteral antimicrobial therapy creates a chain of site-of-service, supply and visit claims. ROOT tracks the administrative sequence and the owner of each packet. We do not design the regimen.',
+      },
+      {
+        title: 'Infusion: buy-and-bill vs specialty pharmacy',
+        body: 'The same infusion can travel as a medical-benefit buy-and-bill claim or as a pharmacy-benefit specialty fill. The operations problem is routing, units and who bills. Product choice stays with the practice.',
+      },
+      {
+        title: 'J-code unit hygiene',
+        body: 'Drug-unit claims fail on wastage documentation, calendar alignment and unit math. Specific HCPCS and CPT codes are omitted until the founder validates the current set with a billing lead. Do not treat this page as a code list.',
+      },
+      {
+        title: 'Authorization sequencing',
+        body: 'ID schedules stall when authorization, start of care and the first billed unit are out of order. ROOT names the next administrative action. Coverage decisions remain with the plan.',
+      },
+      {
+        title: 'Medical vs pharmacy benefit',
+        body: 'Benefit routing is an enrollment and claims problem: which side of the plan the drug falls on, and which portal the packet uses. It is not a clinical substitution decision.',
+      },
+    ],
+    ecosystemEyebrow: 'Technology ecosystem',
+    ecosystemTitle: 'Built Around the Systems Healthcare Practices Already Use',
+    ecosystemBody:
+      'An evaluation directory of EHR/PM platforms, clearinghouses and payer enrollment workflows observed in the Demo 6 prototype. Status must be verified per engagement.',
+    ecosystemDisclaimer:
+      'Mention of a vendor does not imply endorsement, certification, a commercial relationship or a working API connection.',
+    nyEyebrow: 'New York market',
+    nyTitle: 'A New York payer landscape — not a contract list',
+    nyBody:
+      'Plans that operate in New York, with program type and a public source. ROOT is not claiming a network contract, delegated credentialing or a physical NYC office.',
+    nyCta: 'Open the New York market pages',
+    nyNoContract:
+      'Listing a plan is market orientation. It is not evidence that ROOT is contracted, in-network or delegated with that payer.',
+    nyNoOffice: 'ROOT does not claim a physical New York City office on these pages.',
+    nyNoOfficeConfirm:
+      'All work is scoped remotely or at a practice site the client names in writing.',
+    nyPageTitle: 'New York revenue operations landscape',
+    nyPageBody:
+      'Statewide orientation for practices that bill New York payers. Boroughs are listed because NYC mix differs from the rest of the state. Sources: NYS DOH, NYC DOHMH and NYHPA, last reviewed 2026-10-30.',
+    nycTitle: 'New York City — five boroughs',
+    nycBody:
+      'Manhattan, Brooklyn, Queens, Bronx and Staten Island. This page is a market map for NYC payer mix. It is not a storefront, clinic or ROOT office listing.',
+    nyDirectoryTitle: 'Payer directory (public sources)',
+    boroughsLabel: 'NYC boroughs',
+    lastReviewed: 'Last reviewed',
+    source: 'Source',
+    programType: {
+      commercial: 'Commercial',
+      medicaid_mco: 'Medicaid MCO',
+      medicare_advantage: 'Medicare Advantage',
+      marketplace: 'Marketplace',
+      medicare: 'Medicare',
+      medicaid: 'Medicaid',
+    },
+    dirtEyebrow: 'DIRT intelligence',
+    dirtTitle: 'Purposeful intelligence. Traceable next actions.',
+    dirtBody:
+      'DIRT is ROOT’s embedded intelligence capability, not a standalone product. Dashboards in this build are synthetic previews until an import is authorized.',
+    dirtCta: 'Read the technology brief',
+    proofEyebrow: 'Proof & voices',
+    proofTitle: 'Editorial slots pending verification',
+    proofBody:
+      'Customer voices publish only after founder review. Empty states are intentional. No quotes, licenses, certifications or case-study metrics are invented here.',
+    proofEmptyTitle: 'Unpublished',
+    proofEmptyBody:
+      'This slot is unpublished. A quote appears only with editorialStatus published and founder-approved attribution. Nothing is fabricated to fill the grid.',
+    pricingEyebrow: 'Plans',
+    conversionTitle: 'Start with a business conversation',
+    conversionBody:
+      'Describe operational concerns without patient information. Consultation is free. HubSpot sync remains disabled in this environment.',
+    conversionCta: 'Book a free consultation',
+    codeDisclaimer:
+      'No CPT, HCPCS or ICD examples are listed. Code sets change and must be founder-validated before publication.',
+  },
 };
 
 type Messages = typeof en;
@@ -331,6 +445,8 @@ const es: Messages = {
     plans: 'Planes',
     resources: 'Recursos',
     company: 'Empresa',
+    specialties: 'Especialidades',
+    locations: 'Nueva York',
     consultation: 'Consulta',
     openMenu: 'Abrir menú',
     closeMenu: 'Cerrar menú',
@@ -362,7 +478,8 @@ const es: Messages = {
     bodyDesktop:
       'Un MSO híbrido para RCM, operaciones e inteligencia de ingresos. Conserve sus flujos clínicos y haga visible cada siguiente acción.',
     bodyTablet: 'Un socio operativo que conecta servicios, tecnología y responsabilidad.',
-    bodyMobile: 'Menos incertidumbre. Facturación, credencialización y operaciones claras con ROOT.',
+    bodyMobile:
+      'Menos incertidumbre. Facturación, credencialización y operaciones claras con ROOT.',
     ctaDesktop: 'Reserve una consulta gratuita',
     ctaTablet: 'Vea una guía',
     ctaMobile: 'Hable con ROOT',
@@ -570,7 +687,8 @@ const es: Messages = {
     body: 'Describa preocupaciones sin compartir información de pacientes. La sincronización con HubSpot está desactivada en este entorno.',
     submit: 'Enviar consulta empresarial',
     received: 'Se ha recibido su consulta empresarial.',
-    unavailable: 'Las consultas en línea aún no están activas. No se enviará ni guardará información.',
+    unavailable:
+      'Las consultas en línea aún no están activas. No se enviará ni guardará información.',
   },
   account: {
     title: 'Empiece sin compromiso financiero',
@@ -653,6 +771,101 @@ const es: Messages = {
     termsTitle: 'Términos de uso',
     cookiesTitle: 'Preferencias de cookies',
     body: 'El texto legal es un marcador de posición pendiente de revisión jurídica. Los formularios públicos solo aceptan contactos empresariales. La indexación está desactivada.',
+  },
+  commercial: {
+    servicesEyebrow: 'Servicios',
+    servicesCta: 'Ver el mapa completo de servicios',
+    specialtiesEyebrow: 'Operaciones de ingresos por especialidad',
+    specialtiesTitle: 'Diseñado para cómo factura realmente cada especialidad',
+    specialtiesBody:
+      'Diez prácticas de primer nivel, más el resto del catálogo. El texto es RCM administrativo: no es un protocolo clínico ni un intercambio de nombres.',
+    specialtiesCta: 'Ver todas las especialidades',
+    specialtiesIndexTitle: 'Catálogo de especialidades',
+    specialtiesIndexBody:
+      'Cada especialidad tiene su propio resumen administrativo. Las diez destacadas aparecen primero en la portada. Enfermedades infecciosas tiene una página dedicada.',
+    specialtyKicker: 'RCM por especialidad',
+    idKicker: 'Página dedicada',
+    idHeadline:
+      'Operaciones de ingresos en enfermedades infecciosas — de la autorización al reembolso',
+    idLead:
+      'Autorización, vías de facturación de infusión y OPAT, higiene de unidades J-code y enrutamiento de beneficio médico frente a de farmacia: operaciones administrativas de ingresos para grupos de ID.',
+    idClinicalDisclaimer:
+      'Esto no es atención clínica, consejo de stewardship ni un protocolo de tratamiento. ROOT no diagnostica, receta ni gestiona pacientes.',
+    idSections: [
+      {
+        title: 'OPAT como trabajo de facturación',
+        body: 'La terapia antimicrobiana parenteral ambulatoria crea una cadena de reclamos de sitio de servicio, insumos y visitas. ROOT sigue la secuencia administrativa y el responsable de cada paquete. No diseñamos el régimen.',
+      },
+      {
+        title: 'Infusión: buy-and-bill frente a farmacia especializada',
+        body: 'La misma infusión puede viajar como reclamo buy-and-bill de beneficio médico o como dispensación de farmacia especializada. El problema operativo es el enrutamiento, las unidades y quién factura. La elección del producto queda en la práctica.',
+      },
+      {
+        title: 'Higiene de unidades J-code',
+        body: 'Los reclamos de unidades de medicamento fallan por documentación de desperdicio, alineación de calendario y matemática de unidades. Se omiten códigos HCPCS y CPT concretos hasta que el fundador valide el conjunto vigente. No trate esta página como una lista de códigos.',
+      },
+      {
+        title: 'Secuencia de autorización',
+        body: 'Las agendas de ID se detienen cuando la autorización, el inicio de atención y la primera unidad facturada están fuera de orden. ROOT nombra la siguiente acción administrativa. Las decisiones de cobertura siguen en el plan.',
+      },
+      {
+        title: 'Beneficio médico frente a de farmacia',
+        body: 'El enrutamiento de beneficio es un problema de inscripción y reclamos: de qué lado del plan cae el medicamento y qué portal usa el paquete. No es una decisión de sustitución clínica.',
+      },
+    ],
+    ecosystemEyebrow: 'Ecosistema tecnológico',
+    ecosystemTitle: 'Construido alrededor de los sistemas que las prácticas ya usan',
+    ecosystemBody:
+      'Directorio de evaluación de plataformas EHR/PM, intermediarios y flujos de inscripción observados en el prototipo Demo 6. El estado debe verificarse por compromiso.',
+    ecosystemDisclaimer:
+      'Mencionar una marca no implica respaldo, certificación, relación comercial ni una conexión API funcional.',
+    nyEyebrow: 'Mercado de Nueva York',
+    nyTitle: 'Un panorama de pagadores de Nueva York — no una lista de contratos',
+    nyBody:
+      'Planes que operan en Nueva York, con tipo de programa y una fuente pública. ROOT no afirma un contrato de red, credencialización delegada ni una oficina física en NYC.',
+    nyCta: 'Abrir las páginas del mercado de Nueva York',
+    nyNoContract:
+      'Listar un plan es orientación de mercado. No es evidencia de que ROOT esté contratado, dentro de la red o delegado con ese pagador.',
+    nyNoOffice: 'ROOT no afirma una oficina física en la ciudad de Nueva York en estas páginas.',
+    nyNoOfficeConfirm:
+      'Todo el trabajo se delimita en remoto o en un sitio de práctica que el cliente nombre por escrito.',
+    nyPageTitle: 'Panorama de operaciones de ingresos en Nueva York',
+    nyPageBody:
+      'Orientación estatal para prácticas que facturan a pagadores de Nueva York. Se listan los condados urbanos porque la mezcla de NYC difiere del resto del estado. Fuentes: NYS DOH, NYC DOHMH y NYHPA, última revisión 2026-10-30.',
+    nycTitle: 'Ciudad de Nueva York — cinco boroughs',
+    nycBody:
+      'Manhattan, Brooklyn, Queens, Bronx y Staten Island. Esta página es un mapa de mercado para la mezcla de pagadores de NYC. No es un local, clínica ni listado de oficina de ROOT.',
+    nyDirectoryTitle: 'Directorio de pagadores (fuentes públicas)',
+    boroughsLabel: 'Boroughs de NYC',
+    lastReviewed: 'Última revisión',
+    source: 'Fuente',
+    programType: {
+      commercial: 'Comercial',
+      medicaid_mco: 'MCO de Medicaid',
+      medicare_advantage: 'Medicare Advantage',
+      marketplace: 'Mercado',
+      medicare: 'Medicare',
+      medicaid: 'Medicaid',
+    },
+    dirtEyebrow: 'Inteligencia DIRT',
+    dirtTitle: 'Inteligencia con propósito. Siguientes acciones trazables.',
+    dirtBody:
+      'DIRT es la capacidad de inteligencia embebida de ROOT, no un producto aparte. Los tableros de esta versión son vistas sintéticas hasta autorizar una importación.',
+    dirtCta: 'Leer el resumen de tecnología',
+    proofEyebrow: 'Pruebas y voces',
+    proofTitle: 'Espacios editoriales pendientes de verificación',
+    proofBody:
+      'Las voces de clientes se publican solo después de revisión del fundador. Los estados vacíos son intencionales. Aquí no se inventan citas, licencias, certificaciones ni métricas de casos.',
+    proofEmptyTitle: 'Sin publicar',
+    proofEmptyBody:
+      'Este espacio está sin publicar. Una cita aparece solo con editorialStatus published y atribución aprobada por el fundador. Nada se fabrica para llenar la cuadrícula.',
+    pricingEyebrow: 'Planes',
+    conversionTitle: 'Empiece con una conversación empresarial',
+    conversionBody:
+      'Describa preocupaciones operativas sin información de pacientes. La consulta es gratuita. La sincronización con HubSpot sigue desactivada en este entorno.',
+    conversionCta: 'Reserve una consulta gratuita',
+    codeDisclaimer:
+      'No se listan ejemplos CPT, HCPCS ni CIE. Los conjuntos de códigos cambian y deben ser validados por el fundador antes de publicarse.',
   },
 };
 
