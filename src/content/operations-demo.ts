@@ -51,7 +51,7 @@ function stagesAt(index: number): StageProgress[] {
   return phaseLabels.map((s, i) => ({
     id: s.id,
     label: s.label,
-    state: i < index ? 'complete' : i === index ? 'current' : 'upcoming',
+    state: (i < index ? 'complete' : i === index ? 'current' : 'upcoming') as StageState,
   }));
 }
 
