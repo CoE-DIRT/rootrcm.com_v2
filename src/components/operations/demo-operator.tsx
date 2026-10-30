@@ -1,57 +1,103 @@
 'use client';
 
-import { useState } from 'react';
-import { RotateCcw, ShieldAlert } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { RotateCcw } from 'lucide-react';
 import type { Locale } from '@/i18n/locales';
 import { workspaceDemoText } from '@/content/operations-demo';
-import { localize, type OpsApplication, type OpsClaim } from '@/lib/ops-client';
+import {
+  OPS_ORG_IDS,
+  type OpsApplication,
+  type OpsClaim,
+  type OpsOrganization,
+  type OpsPersona,
+} from '@/lib/ops-client';
 import { opsButton, opsCard, opsControl, opsSubtle } from './ui';
+
+const TERMINAL = new Set(['effective', 'rejected', 'withdrawn']);
 
 export function DemoOperator({
   locale,
+  orgId,
+  persona,
+  tier,
+  origin,
+  organizations,
   claims,
   applications,
   pending,
   onAdvance,
   onDeny,
   onReset,
+  onAdvanceTimeline,
+  onSetPersona,
+  onSetTier,
+  onSelectPractice,
 }: {
   locale: Locale;
+  orgId: string;
+  persona: OpsPersona;
+  tier: string;
+  origin: string;
+  organizations: readonly OpsOrganization[];
   claims: readonly OpsClaim[];
   applications: readonly OpsApplication[];
   pending: boolean;
   onAdvance: (applicationId: string) => void;
   onDeny: (claimId: string) => void;
   onReset: () => void;
+  onAdvanceTimeline: () => void;
+  onSetPersona: (persona: OpsPersona) => void;
+  onSetTier: () => void;
+  onSelectPractice: (orgId: string) => void;
 }) {
   const t = workspaceDemoText[locale];
-  const [applicationId, setApplicationId] = useState(applications[0]?.id ?? '');
-  const [claimId, setClaimId] = useState(claims[0]?.id ?? '');
-  const selectedApp = applicationId || applications[0]?.id || '';
-  const selectedClaim = claimId || claims[0]?.id || '';
+  const preferredApp =
+    applications.find((item) => item.id === 'cred-bv-004') ??
+    applications.find((item) => !TERMINAL.has(item.status)) ??
+    applications[0];
+  const preferredClaim =
+    claims.find((item) => item.id === 'clm-bv-1001') ??
+    claims.find((item) => item.status !== 'denied') ??
+    claims[0];
+  const [applicationId, setApplicationId] = useState(preferredApp?.id ?? '');
+  const [claimId, setClaimId] = useState(preferredClaim?.id ?? '');
+  const selectedApp = applications.some((item) => item.id === applicationId)
+    ? applicationId
+    : (preferredApp?.id ?? '');
+  const selectedClaim = claims.some((item) => item.id === claimId) ? claimId : (preferredClaim?.id ?? '');
+  const nextPersona: OpsPersona = persona === 'staff' ? 'client' : 'staff';
+  const practiceOptions = useMemo(() => {
+    const names = new Map(organizations.map((org) => [org.id, org.legalName]));
+    return OPS_ORG_IDS.map((id) => ({ id, name: names.get(id) ?? id }));
+  }, [organizations]);
 
   return (
     <aside data-testid="demo-operator" className={opsCard} aria-label={t.demoOperator}>
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.13em] text-[var(--warning)]">
-            <ShieldAlert className="size-4" aria-hidden="true" />
-            {t.demoOperator}
-          </p>
-          <p className={`mt-2 max-w-xl text-sm ${opsSubtle}`}>{t.demoOperatorHint}</p>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="min-w-0">
+          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[var(--muted)]">{t.demoOperator}</p>
+          <p className={`mt-1 max-w-xl text-xs ${opsSubtle}`}>{t.demoOperatorHint}</p>
         </div>
-        <button
-          type="button"
-          data-testid="reset-demo"
-          className={opsButton}
-          disabled={pending}
-          onClick={onReset}
-        >
-          <RotateCcw className="size-4" aria-hidden="true" />
-          {t.resetDemo}
-        </button>
+        <span className="inline-flex items-center rounded-full border border-[var(--border)] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-[var(--muted)]">
+          {origin || t.syntheticTag}
+        </span>
       </div>
-      <div className="mt-4 grid gap-3 md:grid-cols-2">
+      <div className="mt-4 grid gap-3 md:grid-cols-3">
+        <label className="grid min-w-0 gap-1 text-xs font-bold uppercase tracking-wide text-[var(--muted)]">
+          {t.selectPractice}
+          <select
+            data-testid="select-practice"
+            className={opsControl}
+            value={orgId}
+            onChange={(event) => onSelectPractice(event.target.value)}
+          >
+            {practiceOptions.map((org) => (
+              <option key={org.id} value={org.id}>
+                {org.name}
+              </option>
+            ))}
+          </select>
+        </label>
         <label className="grid min-w-0 gap-1 text-xs font-bold uppercase tracking-wide text-[var(--muted)]">
           {t.selectApplication}
           <select
@@ -61,7 +107,7 @@ export function DemoOperator({
           >
             {applications.map((item) => (
               <option key={item.id} value={item.id}>
-                {item.id} · {item.payer} · {localize(item.providerAlias, locale)}
+                {item.id} · {item.payer}
               </option>
             ))}
           </select>
@@ -75,7 +121,7 @@ export function DemoOperator({
           >
             {claims.map((item) => (
               <option key={item.id} value={item.id}>
-                {item.id} · {item.payer} · {localize(item.state, locale)}
+                {item.id} · {item.payer}
               </option>
             ))}
           </select>
@@ -97,6 +143,43 @@ export function DemoOperator({
           onClick={() => selectedClaim && onDeny(selectedClaim)}
         >
           {t.operatorDeny}
+        </button>
+        <button
+          type="button"
+          data-testid="advance-timeline"
+          className={opsButton}
+          disabled={pending}
+          onClick={onAdvanceTimeline}
+        >
+          {t.advanceTimeline}
+        </button>
+        <button
+          type="button"
+          data-testid="set-persona"
+          className={opsButton}
+          disabled={pending}
+          onClick={() => onSetPersona(nextPersona)}
+        >
+          {t.setPersona}: {nextPersona}
+        </button>
+        <button
+          type="button"
+          data-testid="set-tier"
+          className={opsButton}
+          disabled={pending}
+          onClick={onSetTier}
+        >
+          {t.setTier}: {tier}
+        </button>
+        <button
+          type="button"
+          data-testid="reset-demo"
+          className={opsButton}
+          disabled={pending}
+          onClick={onReset}
+        >
+          <RotateCcw className="size-4" aria-hidden="true" />
+          {t.resetDemo}
         </button>
       </div>
     </aside>

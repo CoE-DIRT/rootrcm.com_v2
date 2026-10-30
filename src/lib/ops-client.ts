@@ -1,31 +1,24 @@
-import type { ApiResponse } from '@/domain/http';
-import { phaseLabels, type Pair, type StageProgress, type StageState } from '@/content/operations-demo';
+import type { ApiResponse } from '../domain/http.ts';
+import {
+  opsActionTypes,
+  opsOrgIds,
+  type OpsActionRequest as DomainOpsActionRequest,
+  type OpsActionType,
+  type OpsOrgId,
+  type OpsPersona,
+  type PreviewTier,
+} from '../domain/operations/types.ts';
+import { phaseLabels, type Pair, type StageProgress, type StageState } from '../content/operations-demo.ts';
 
 export const OPS_STATE_PATH = '/api/v1/ops/state';
 export const OPS_ACTIONS_PATH = '/api/v1/ops/actions';
-export const OPS_DEMO_ORG_ID = 'bayview';
+export const OPS_DEMO_ORG_ID: OpsOrgId = 'bayview';
+export const OPS_ORG_IDS = opsOrgIds;
+export const OPS_ACTION_TYPES = opsActionTypes;
 
-export type OpsPersona = 'client' | 'staff';
+export type { OpsActionType, OpsOrgId, OpsPersona, PreviewTier };
 
-export const OPS_ACTION_TYPES = [
-  'reset',
-  'advance_credentialing',
-  'deny_claim',
-  'advance_timeline',
-  'set_persona',
-  'set_tier',
-] as const;
-
-export type OpsActionType = (typeof OPS_ACTION_TYPES)[number];
-
-export type OpsActionRequest = {
-  type: OpsActionType;
-  orgId: string;
-  persona: OpsPersona;
-  applicationId?: string;
-  claimId?: string;
-  tier?: string;
-};
+export type OpsActionRequest = DomainOpsActionRequest;
 
 export type OpsHistoryEntry = {
   id: string;
@@ -119,9 +112,16 @@ export type OpsMetrics = {
   daysInArRatio: OpsRatio | null;
 };
 
+export type OpsOrganization = {
+  id: string;
+  legalName: string;
+};
+
 export type OpsState = {
+  origin: string;
   orgId: string;
   persona: OpsPersona;
+  preview: { orgId: string; persona: OpsPersona; tier: string };
   claims: OpsClaim[];
   applications: OpsApplication[];
   appointments: OpsAppointment[];
@@ -129,6 +129,7 @@ export type OpsState = {
   auditEvents: OpsAuditEvent[];
   metrics: OpsMetrics;
   eligibility: OpsEligibility[];
+  organizations: OpsOrganization[];
 };
 
 export class OpsClientError extends Error {
@@ -340,12 +341,7 @@ function asMetrics(value: unknown, claims: OpsClaim[]): OpsMetrics {
     const numeric = asNumber(count);
     if (numeric !== null) claimCountsByStage[key] = numeric;
   }
-  if (Object.keys(claimCountsByStage).length === 0) {
-    for (const claim of claims) {
-      const key = claim.status || claim.queue || 'unspecified';
-      claimCountsByStage[key] = (claimCountsByStage[key] ?? 0) + 1;
-    }
-  }
+  void claims;
   const denialRateRatio = asRatio(rec.denialRate);
   const daysInArRatio = asRatio(rec.daysInAr ?? rec.daysInAR);
   return {
@@ -506,9 +502,16 @@ export function normalizeOpsState(raw: unknown, fallbackOrgId: string, persona: 
             ),
     };
   });
+  const previewRec = isRecord(record.preview) ? record.preview : {};
   return {
+    origin: asString(record.origin, 'synthetic'),
     orgId,
     persona: asString(record.persona, persona) === 'staff' ? 'staff' : 'client',
+    preview: {
+      orgId: asString(previewRec.orgId, orgId),
+      persona: asString(previewRec.persona, persona) === 'staff' ? 'staff' : 'client',
+      tier: asString(previewRec.tier, 'Free'),
+    },
     claims,
     applications,
     appointments,
@@ -518,6 +521,13 @@ export function normalizeOpsState(raw: unknown, fallbackOrgId: string, persona: 
     ),
     metrics: asMetrics(record.metrics, claims),
     eligibility: eligibilityRows.map((item, index) => asEligibility(item, index, catalog)),
+    organizations: firstArray(record, 'organizations').map((item, index) => {
+      const rec = isRecord(item) ? item : {};
+      return {
+        id: asString(rec.id, `org-${index}`),
+        legalName: asString(rec.legalName, asString(rec.name, asString(rec.id, `Organization ${index + 1}`))),
+      };
+    }),
   };
 }
 
@@ -570,11 +580,18 @@ function looksLikeState(value: unknown): boolean {
 }
 
 export async function postOpsAction(action: OpsActionRequest): Promise<OpsState | null> {
+  const body: DomainOpsActionRequest = {
+    type: action.type,
+    orgId: action.orgId,
+    persona: action.persona,
+  };
+  if (action.applicationId) body.applicationId = action.applicationId;
+  if (action.claimId) body.claimId = action.claimId;
   const res = await fetch(OPS_ACTIONS_PATH, {
     ...fetchInit,
     method: 'POST',
     headers: { ...fetchInit.headers, 'content-type': 'application/json' },
-    body: JSON.stringify(action),
+    body: JSON.stringify(body),
   });
   const envelope = await readEnvelope(res);
   throwIfFailed(res, envelope, `Operations action '${action.type}' failed (HTTP ${res.status}).`);

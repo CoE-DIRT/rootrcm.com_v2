@@ -196,6 +196,8 @@ export const workspaceDemoText = {
     searchApplications: 'Search applications', operatorAdvance: 'Advance selected enrollment',
     operatorDeny: 'Deny selected claim', selectApplication: 'Enrollment application',
     selectClaim: 'Claim', appointmentLoad: 'Scheduled volume',
+    selectPractice: 'Practice', advanceTimeline: 'Advance week',
+    setPersona: 'Persona', setTier: 'Catalog tier',
     metricsNote: 'Values are computed by the server from the current synthetic store. Missing values are shown as dashes — they are not estimated here.',
   },
   es: {
@@ -245,6 +247,8 @@ export const workspaceDemoText = {
     searchApplications: 'Buscar solicitudes', operatorAdvance: 'Avanzar inscripción seleccionada',
     operatorDeny: 'Denegar reclamo seleccionado', selectApplication: 'Solicitud de inscripción',
     selectClaim: 'Reclamo', appointmentLoad: 'Volumen programado',
+    selectPractice: 'Práctica', advanceTimeline: 'Avanzar semana',
+    setPersona: 'Persona', setTier: 'Nivel de catálogo',
     metricsNote: 'Los valores los calcula el servidor a partir del almacén sintético. Si faltan, se muestra un guion; no se estiman aquí.',
   },
 } as const;

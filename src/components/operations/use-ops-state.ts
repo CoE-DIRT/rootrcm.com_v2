@@ -22,45 +22,60 @@ export function useOpsState(orgId: string, persona: OpsPersona) {
       const next = await fetchOpsState(orgId, persona);
       setState(next);
       setError(null);
-      setLoading(false);
     } catch (err) {
       setState(null);
       setError(err instanceof OpsClientError ? err.message : 'Operations state could not be loaded.');
+    } finally {
       setLoading(false);
     }
   }, [orgId, persona]);
 
   useEffect(() => {
     let cancelled = false;
-    async function load() {
+    void (async () => {
       try {
         const next = await fetchOpsState(orgId, persona);
-        if (cancelled) return;
-        setState(next);
-        setError(null);
-        setLoading(false);
+        if (!cancelled) {
+          setState(next);
+          setError(null);
+        }
       } catch (err) {
-        if (cancelled) return;
-        setState(null);
-        setError(err instanceof OpsClientError ? err.message : 'Operations state could not be loaded.');
-        setLoading(false);
+        if (!cancelled) {
+          setState(null);
+          setError(
+            err instanceof OpsClientError ? err.message : 'Operations state could not be loaded.',
+          );
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
       }
-    }
-    void load();
+    })();
     return () => {
       cancelled = true;
     };
   }, [orgId, persona]);
 
   const runAction = useCallback(
-    async (action: Omit<OpsActionRequest, 'orgId' | 'persona'> & Partial<Pick<OpsActionRequest, 'orgId' | 'persona'>>) => {
+    async (
+      action: Omit<OpsActionRequest, 'orgId' | 'persona'> &
+        Partial<Pick<OpsActionRequest, 'orgId' | 'persona'>>,
+    ) => {
       setPending(true);
       setError(null);
       try {
-        const next = await postOpsAction({ orgId, persona, ...action });
-        setState(next ?? (await fetchOpsState(orgId, persona)));
+        const payload: OpsActionRequest = {
+          type: action.type,
+          orgId: action.orgId ?? orgId,
+          persona: action.persona ?? persona,
+        };
+        if (action.applicationId) payload.applicationId = action.applicationId;
+        if (action.claimId) payload.claimId = action.claimId;
+        const next = await postOpsAction(payload);
+        setState(next ?? (await fetchOpsState(payload.orgId, payload.persona)));
       } catch (err) {
-        setError(err instanceof OpsClientError ? err.message : 'The operations action could not be completed.');
+        setError(
+          err instanceof OpsClientError ? err.message : 'The operations action could not be completed.',
+        );
         throw err;
       } finally {
         setPending(false);

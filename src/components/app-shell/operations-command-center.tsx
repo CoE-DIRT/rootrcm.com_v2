@@ -36,6 +36,8 @@ const tabs: readonly { id: Tab; icon: typeof Activity }[] = [
   { id: 'practice', icon: CalendarDays },
 ];
 
+const EMPTY_APPLICATIONS: OpsApplication[] = [];
+
 const card = 'rounded-[18px] border border-[var(--border)] bg-[var(--surface)] p-4 shadow-[var(--shadow)] md:p-5 min-w-0';
 const subtle = 'text-[var(--muted)]';
 const button = 'inline-flex min-h-[48px] min-w-[48px] items-center justify-center gap-2 rounded-xl border border-[var(--border)] px-3 py-2 text-sm font-bold transition hover:border-[var(--cyan)] focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-60';
@@ -121,6 +123,12 @@ function scheduleVolume(state: OpsState): string {
   const loads = state.appointments.map((item) => item.load).filter((value): value is number => value !== null);
   if (loads.length > 0) return String(loads.reduce((sum, value) => sum + value, 0));
   return state.appointments.length ? String(state.appointments.length) : '—';
+}
+
+function metricSum(counts: Record<string, number>): string {
+  const values = Object.values(counts);
+  if (values.length === 0) return '—';
+  return String(values.reduce((sum, count) => sum + count, 0));
 }
 
 function CredentialTimeline({
@@ -229,11 +237,16 @@ export function OperationsCommandCenter({
   const [sortKey, setSortKey] = useState<OpsSortKey>('id');
   const [sortDir, setSortDir] = useState<OpsSortDir>('asc');
   const [selected, setSelected] = useState<{ kind: 'claim' | 'application'; id: string } | null>(null);
+  const [activeOrgId, setActiveOrgId] = useState(orgId);
+  const [activePersona, setActivePersona] = useState<OpsPersona>(role);
   const t = workspaceDemoText[locale];
-  const { state, loading, error, pending, refresh, runAction } = useOpsState(orgId, role);
+  const { state, loading, error, pending, refresh, runAction } = useOpsState(activeOrgId, activePersona);
   const canOperate = role === 'staff';
 
-  const applications = useMemo(() => state?.applications ?? [], [state]);
+  const applications = useMemo(
+    () => state?.applications ?? EMPTY_APPLICATIONS,
+    [state?.applications],
+  );
   const phases = useMemo(() => uniqueSorted(applications.map((item) => item.phase || item.status)), [applications]);
   const visibleApps = useMemo(() => {
     return applications
@@ -283,6 +296,13 @@ export function OperationsCommandCenter({
       /* Error copy is surfaced in the ops-error banner. */
     }
   };
+  const runQuiet = async (action: Parameters<typeof runAction>[0]) => {
+    try {
+      await runAction(action);
+    } catch {
+      /* Error copy is surfaced in the ops-error banner. */
+    }
+  };
 
   const shownApps = activeTab === 'overview' ? visibleApps.slice(0, 2) : visibleApps;
 
@@ -327,8 +347,8 @@ export function OperationsCommandCenter({
       {state ? (
         <div data-testid="ops-ready" className="space-y-5">
           <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
-            <Metric title={t.claims} value={String(state.claims.length)} note={t.synthetic} icon={ClipboardList} />
-            <Metric title={t.activeCredentials} value={formatMetric(state.metrics.openEnrollments) === '—' ? String(state.applications.length) : formatMetric(state.metrics.openEnrollments)} note={t.synthetic} icon={FileCheck2} />
+            <Metric title={t.claims} value={metricSum(state.metrics.claimCountsByStage)} note={t.synthetic} icon={ClipboardList} />
+            <Metric title={t.activeCredentials} value={formatMetric(state.metrics.openEnrollments)} note={state.metrics.openEnrollments === null ? t.metricUnavailable : t.synthetic} icon={FileCheck2} />
             <Metric title={t.schedule} value={scheduleVolume(state)} note={t.synthetic} icon={CalendarDays} />
             <Metric title={t.exceptions} value={formatMetric(state.metrics.exceptionCount)} note={state.metrics.exceptionCount === null ? t.metricUnavailable : t.synthetic} icon={Wallet} />
           </div>
@@ -419,12 +439,27 @@ export function OperationsCommandCenter({
           {canOperate ? (
             <DemoOperator
               locale={locale}
+              orgId={activeOrgId}
+              persona={activePersona}
+              tier={state.preview.tier}
+              origin={state.origin}
+              organizations={state.organizations}
               claims={state.claims}
               applications={state.applications}
               pending={pending}
               onAdvance={(applicationId) => void advance(applicationId)}
               onDeny={(claimId) => void deny(claimId)}
               onReset={() => void resetDemo()}
+              onAdvanceTimeline={() => void runQuiet({ type: 'advance_timeline' })}
+              onSetPersona={(next) => {
+                setActivePersona(next);
+                void runQuiet({ type: 'set_persona', persona: next });
+              }}
+              onSetTier={() => void runQuiet({ type: 'set_tier' })}
+              onSelectPractice={(nextOrgId) => {
+                setActiveOrgId(nextOrgId);
+                void runQuiet({ type: 'set_persona', orgId: nextOrgId, persona: activePersona });
+              }}
             />
           ) : null}
 
