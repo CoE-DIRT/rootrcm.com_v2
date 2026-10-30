@@ -1,4 +1,5 @@
 import { AppShell } from '@/components/app-shell/app-shell';
+import { OperationsCommandCenter } from '@/components/app-shell/operations-command-center';
 import { copy } from '@/content/messages';
 import { credentialingStages, previewOrgs } from '@/content/preview-fixtures';
 import { requireLocale } from '@/lib/locale';
@@ -8,7 +9,7 @@ export default async function CredentialingPreviewPage({ params }: { params: Pro
   const t = copy(locale);
   return (
     <main id="main">
-      <AppShell locale={locale} role="client" orgName={previewOrgs[0].name} title={t.workspace.credentialingTitle}>
+      <AppShell locale={locale} role="client" orgName={previewOrgs[1].name} title={t.workspace.credentialingTitle}>
         <ol className="grid gap-3 md:grid-cols-5">
           {credentialingStages.map((stage, index) => (
             <li key={stage.en} className="surface p-4">
@@ -17,6 +18,7 @@ export default async function CredentialingPreviewPage({ params }: { params: Pro
             </li>
           ))}
         </ol>
+        <div className="mt-6"><OperationsCommandCenter locale={locale} initialTab="credentialing" /></div>
       </AppShell>
     </main>
   );
