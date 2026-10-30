@@ -8,6 +8,9 @@ import { SelectField, TextArea, TextInput } from '@/components/ui/form-field';
 import { StatusBanner } from '@/components/ui/status';
 import type { FieldErrors } from '@/lib/validation/business-contact';
 
+// Set true only after a reviewed server-side durable inquiry contract is deployed.
+const inquirySubmissionEnabled = false;
+
 export function BusinessInquiryForm({ locale }: { locale: Locale }) {
   const t = copy(locale);
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -16,9 +19,15 @@ export function BusinessInquiryForm({ locale }: { locale: Locale }) {
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (!inquirySubmissionEnabled) {
+      setStatus('error');
+      setMessage(t.consultation.unavailable);
+      return;
+    }
     setStatus('loading');
     setErrors({});
-    const form = new FormData(event.currentTarget);
+    const formElement = event.currentTarget;
+    const form = new FormData(formElement);
     const payload = {
       name: form.get('name'),
       email: form.get('email'),
@@ -27,24 +36,30 @@ export function BusinessInquiryForm({ locale }: { locale: Locale }) {
       message: form.get('message'),
       consent: form.get('consent') === 'on',
     };
-    const response = await fetch('/api/v1/public/inquiries', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
-    const json = (await response.json()) as {
-      error?: { message?: string; fieldErrors?: FieldErrors };
-      data?: { status: string };
-    };
-    if (!response.ok) {
+    try {
+      const response = await fetch('/api/v1/public/inquiries', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const json = (await response.json()) as {
+        error?: { message?: string; fieldErrors?: FieldErrors };
+        data?: { status?: string };
+      };
+      // HTTP 200 is not sufficient: only verified durable acceptance is success.
+      if (!response.ok || json.data?.status !== 'accepted_persisted') {
+        setStatus('error');
+        setErrors(json.error?.fieldErrors ?? {});
+        setMessage(json.error?.message ?? t.consultation.unavailable);
+        return;
+      }
+      setStatus('success');
+      setMessage(t.consultation.received);
+      formElement.reset();
+    } catch {
       setStatus('error');
-      setErrors(json.error?.fieldErrors ?? {});
-      setMessage(json.error?.message ?? t.status.error);
-      return;
+      setMessage(t.status.error);
     }
-    setStatus('success');
-    setMessage(`${t.consultation.received} ${t.status.disabled}`);
-    event.currentTarget.reset();
   }
 
   return (
@@ -81,7 +96,8 @@ export function BusinessInquiryForm({ locale }: { locale: Locale }) {
         </span>
       </label>
       {errors.consent ? <p className="field-error">{errors.consent}</p> : null}
-      <Button type="submit" loading={status === 'loading'}>
+      {!inquirySubmissionEnabled ? <StatusBanner tone="warning">{t.consultation.unavailable}</StatusBanner> : null}
+      <Button type="submit" loading={status === 'loading'} disabled={!inquirySubmissionEnabled}>
         {t.consultation.submit}
       </Button>
       {status === 'success' ? <StatusBanner tone="warning">{message}</StatusBanner> : null}
