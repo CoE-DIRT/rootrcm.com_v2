@@ -1,0 +1,69 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { asPair, formatMetric, normalizeOpsState } from '../src/lib/ops-client.ts';
+import { compareValues, matchesQuery } from '../src/lib/ops-query.ts';
+
+test('normalizeOpsState maps collection aliases without inventing metrics', () => {
+  const state = normalizeOpsState(
+    {
+      orgId: 'bayview',
+      payers: [{ id: 'payer-hf', name: 'Healthfirst' }],
+      providers: [{ id: 'prv-bv-a', alias: 'Sample Clinician A' }],
+      credentialingApplications: [
+        {
+          id: 'cred-bv-001',
+          payerId: 'payer-hf',
+          providerId: 'prv-bv-a',
+          status: 'payer_review',
+          nextAction: 'Request payer review status',
+          enrollmentType: 'initial',
+        },
+      ],
+      claims: [{ id: 'clm-bv-1001', payerId: 'payer-hf', status: 'denied', nextAction: 'Prepare appeal' }],
+      notifications: [{ id: 'n1', title: 'Enrollment moved' }],
+      auditEvents: [
+        {
+          id: 'a1',
+          action: 'advance_credentialing',
+          resourceId: 'cred-bv-001',
+          fromStatus: 'submitted',
+          toStatus: 'payer_acknowledged',
+        },
+      ],
+      metrics: {
+        denialRate: { numerator: 1, denominator: 4, value: 0.25 },
+        openEnrollments: 6,
+        exceptionCount: 3,
+      },
+    },
+    'bayview',
+    'staff',
+  );
+  assert.equal(state.applications.length, 1);
+  assert.equal(state.applications[0].id, 'cred-bv-001');
+  assert.equal(state.applications[0].payer, 'Healthfirst');
+  assert.equal(state.applications[0].providerAlias.en, 'Sample Clinician A');
+  assert.equal(state.claims[0].status, 'denied');
+  assert.equal(state.claims[0].payer, 'Healthfirst');
+  assert.equal(state.metrics.denialRate, 0.25);
+  assert.equal(state.metrics.denialRateRatio?.numerator, 1);
+  assert.equal(state.metrics.daysInAr, null);
+  assert.equal(state.metrics.exceptionCount, 3);
+  assert.equal(state.notifications.length, 1);
+  assert.equal(state.auditEvents[0].from, 'submitted');
+  assert.equal(formatMetric(null), '—');
+  assert.equal(formatMetric(6), '6');
+});
+
+test('workspaceDemoText EN and ES expose the same keys', async () => {
+  const { workspaceDemoText } = await import('../src/content/operations-demo.ts');
+  assert.deepEqual(Object.keys(workspaceDemoText.en).sort(), Object.keys(workspaceDemoText.es).sort());
+});
+
+test('asPair and query helpers keep locale and filter behavior honest', () => {
+  assert.deepEqual(asPair('Follow up'), { en: 'Follow up', es: 'Follow up' });
+  assert.deepEqual(asPair({ en: 'Owner', es: 'Responsable' }), { en: 'Owner', es: 'Responsable' });
+  assert.equal(matchesQuery('cred', ['DEMO-CRED-001', 'Healthfirst']), true);
+  assert.equal(matchesQuery('zzz', ['DEMO-CRED-001']), false);
+  assert.ok(compareValues('DEMO-2', 'DEMO-10', 'asc') < 0);
+});

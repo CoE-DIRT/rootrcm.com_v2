@@ -21,7 +21,7 @@ export default async function StaffPreviewPage({ params }: { params: Promise<{ l
             />
           ))}
         </div>
-        <div className="mt-6"><OperationsCommandCenter locale={locale} initialTab="credentialing" /></div>
+        <div className="mt-6"><OperationsCommandCenter locale={locale} role="staff" initialTab="credentialing" /></div>
       </AppShell>
     </main>
   );
