@@ -1,9 +1,9 @@
-import { expect, test, type APIRequestContext, type APIResponse } from '@playwright/test';
+import { expect, test, type APIRequestContext, type APIResponse, type Browser } from '@playwright/test';
 
 /**
  * API-level cascade for the locked operations preview.
- * UI coverage lives in ops-interactions.spec.ts — this file uses request
- * context only. Serial because the engine is process-local.
+ * Mutations require the signed staff-preview cookie (PR #30), not a JSON persona.
+ * Serial because each presentation session has its own in-memory snapshot.
  */
 
 const STATE = '/api/v1/ops/state';
@@ -77,6 +77,13 @@ async function postAction(
   return request.post(ACTIONS, { data: body });
 }
 
+async function operatorRequest(browser: Browser, baseURL: string | undefined) {
+  const context = await browser.newContext({ baseURL });
+  const page = await context.newPage();
+  await page.goto('/en/preview/staff');
+  return { context, request: context.request };
+}
+
 async function resetBayview(request: APIRequestContext): Promise<OpsView> {
   const response = await postAction(request, { type: 'reset', orgId: ORG, persona: PERSONA });
   expect(response.status(), 'reset must return 200').toBe(200);
@@ -132,9 +139,14 @@ test.describe('ops cascade API', () => {
     expect((await readJson<null>(missingOrg)).error?.code).toBe('invalid_request');
   });
 
-  test('GET bayview+client 200 with synthetic origin and denialRate ratio', async ({ request }) => {
-    await resetBayview(request);
-    const response = await getState(request, ORG, PERSONA);
+  test('GET bayview+client 200 with synthetic origin and denialRate ratio', async ({
+    browser,
+    baseURL,
+  }) => {
+    const session = await operatorRequest(browser, baseURL);
+    try {
+    await resetBayview(session.request);
+    const response = await getState(session.request, ORG, PERSONA);
     expect(response.status()).toBe(200);
     const view = (await readJson<OpsView>(response)).data as OpsView;
     expect(view.origin).toBe('synthetic');
@@ -152,11 +164,16 @@ test.describe('ops cascade API', () => {
     expectMetricsReconcile(view);
     expect(view.claims.some((claim) => claim.id === DENIED_SEED_CLAIM)).toBe(true);
     expect(view.credentialingApplications.some((app) => app.id === CRED_BOTTLENECK)).toBe(true);
+    } finally {
+      await session.context.close();
+    }
   });
 
-  test('POST reset then GET returns a consistent snapshot', async ({ request }) => {
-    const resetView = await resetBayview(request);
-    const getResponse = await getState(request, ORG, PERSONA);
+  test('POST reset then GET returns a consistent snapshot', async ({ browser, baseURL }) => {
+    const session = await operatorRequest(browser, baseURL);
+    try {
+    const resetView = await resetBayview(session.request);
+    const getResponse = await getState(session.request, ORG, PERSONA);
     expect(getResponse.status()).toBe(200);
     const getView = (await readJson<OpsView>(getResponse)).data as OpsView;
     expect(getView.origin).toBe(resetView.origin);
@@ -170,12 +187,18 @@ test.describe('ops cascade API', () => {
       resetView.credentialingApplications.map((row) => row.id).sort(),
     );
     expectMetricsReconcile(getView);
+    } finally {
+      await session.context.close();
+    }
   });
 
   test('POST advance_credentialing for cred-bv-004 cascades status, task, notification, audit, metrics', async ({
-    request,
+    browser,
+    baseURL,
   }) => {
-    const before = await resetBayview(request);
+    const session = await operatorRequest(browser, baseURL);
+    try {
+    const before = await resetBayview(session.request);
     const appBefore = before.credentialingApplications.find((row) => row.id === CRED_BOTTLENECK);
     expect(appBefore?.status).toBe('additional_information');
     const taskBefore = before.tasks.find((row) => row.relatedId === CRED_BOTTLENECK);
@@ -186,7 +209,7 @@ test.describe('ops cascade API', () => {
     const auditBefore = before.auditEvents.length;
     const openBefore = before.metrics.openEnrollments;
 
-    const response = await postAction(request, {
+    const response = await postAction(session.request, {
       type: 'advance_credentialing',
       orgId: ORG,
       persona: PERSONA,
@@ -226,12 +249,18 @@ test.describe('ops cascade API', () => {
 
     expect(view.metrics.openEnrollments).toBe(openBefore);
     expectMetricsReconcile(view);
+    } finally {
+      await session.context.close();
+    }
   });
 
   test('POST deny_claim for clm-bv-1002 keeps denial, task, notification, audit, and metrics together', async ({
-    request,
+    browser,
+    baseURL,
   }) => {
-    const seed = await resetBayview(request);
+    const session = await operatorRequest(browser, baseURL);
+    try {
+    const seed = await resetBayview(session.request);
     expect(seed.claims.find((row) => row.id === DENIED_SEED_CLAIM)?.status).toBe('denied');
     const denialsBefore = seed.denials.filter((row) => row.claimId === DENIED_SEED_CLAIM).length;
     const tasksBefore = seed.tasks.filter(
@@ -242,7 +271,7 @@ test.describe('ops cascade API', () => {
     const auditBefore = seed.auditEvents.length;
     const rateBefore = seed.metrics.denialRate;
 
-    const response = await postAction(request, {
+    const response = await postAction(session.request, {
       type: 'deny_claim',
       orgId: ORG,
       persona: PERSONA,
@@ -265,6 +294,9 @@ test.describe('ops cascade API', () => {
     expect(view.metrics.denialRate.numerator).toBe(rateBefore.numerator);
     expect(view.metrics.denialRate.denominator).toBe(rateBefore.denominator);
     expectMetricsReconcile(view);
+    } finally {
+      await session.context.close();
+    }
   });
 
   test('POST client persona against root-internal is 403', async ({ request }) => {
@@ -291,21 +323,23 @@ test.describe('ops cascade API', () => {
     expect(body.error?.code).toBe('unknown_action');
   });
 
-  test('POST reset restores the same seed IDs and statuses', async ({ request }) => {
-    await resetBayview(request);
-    await postAction(request, {
+  test('POST reset restores the same seed IDs and statuses', async ({ browser, baseURL }) => {
+    const session = await operatorRequest(browser, baseURL);
+    try {
+    await resetBayview(session.request);
+    await postAction(session.request, {
       type: 'advance_credentialing',
       orgId: ORG,
       persona: PERSONA,
       applicationId: CRED_BOTTLENECK,
     });
 
-    const mutated = (await readJson<OpsView>(await getState(request, ORG, PERSONA))).data as OpsView;
+    const mutated = (await readJson<OpsView>(await getState(session.request, ORG, PERSONA))).data as OpsView;
     expect(mutated.credentialingApplications.find((row) => row.id === CRED_BOTTLENECK)?.status).toBe(
       'payer_review',
     );
 
-    const restored = await resetBayview(request);
+    const restored = await resetBayview(session.request);
     expect(restored.claims.find((row) => row.id === DENIED_SEED_CLAIM)?.status).toBe('denied');
     expect(restored.credentialingApplications.find((row) => row.id === CRED_BOTTLENECK)?.status).toBe(
       'additional_information',
@@ -314,5 +348,8 @@ test.describe('ops cascade API', () => {
     expect(restored.tasks.some((row) => row.id === 'task-bv-denial-1002')).toBe(true);
     expect(restored.denials.some((row) => row.claimId === DENIED_SEED_CLAIM)).toBe(true);
     expectMetricsReconcile(restored);
+    } finally {
+      await session.context.close();
+    }
   });
 });
