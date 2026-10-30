@@ -58,7 +58,7 @@ export function AppShell({
           ))}
         </nav>
       </aside>
-      <div>
+      <div className="min-w-0">
         <StatusBanner tone="warning">{t.preview}</StatusBanner>
         <h1 className="mt-5 text-3xl font-extrabold">{title}</h1>
         <div className="mt-6">{children}</div>
