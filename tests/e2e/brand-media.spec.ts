@@ -4,11 +4,11 @@ test('ROOT visual hero displays branded artwork and the real brand asset', async
   await page.goto('/en');
   const logo = page.locator('header').getByTestId('root-brand-lockup');
   await expect(logo).toBeVisible();
-  await expect(logo.locator('img')).toHaveAttribute('src', /\/brand\/logo\.webp/);
+  await expect(logo.locator('img')).toHaveAttribute('src', /brand(%2F|\/)logo\.webp/);
   const hero = page.locator('[data-testid="root-visual-hero"]:visible').first();
   await expect(hero).toBeVisible();
   const media = hero.locator('img');
-  await expect(media).toHaveAttribute('src', /\/brand\/story\.webp/);
+  await expect(media).toHaveAttribute('src', /brand(%2F|\/)story\.webp/);
   await expect(hero.getByRole('link')).toHaveCount(1);
   await expect.poll(async () => media.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBeTruthy();
 });
