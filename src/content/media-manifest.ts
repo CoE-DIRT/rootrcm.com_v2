@@ -14,6 +14,42 @@ export type PublishedMedia = {
 
 export const publishedMedia = [
   {
+    id: 'brand-mark',
+    origin: 'root-original',
+    publicPath: '/brand/mark.webp',
+    alt: { en: 'ROOT mark', es: 'Marca ROOT' },
+  },
+  {
+    id: 'brand-logo',
+    origin: 'root-original',
+    publicPath: '/brand/logo.webp',
+    alt: { en: 'ROOT wordmark', es: 'Logotipo ROOT' },
+  },
+  {
+    id: 'brand-banner',
+    origin: 'root-original',
+    publicPath: '/brand/banner.webp',
+    alt: { en: 'ROOT revenue operations banner', es: 'Banner de operaciones de ingresos ROOT' },
+  },
+  {
+    id: 'brand-story',
+    origin: 'root-original',
+    publicPath: '/brand/story.webp',
+    alt: { en: 'ROOT cinematic story still', es: 'Imagen cinematográfica de ROOT' },
+  },
+  {
+    id: 'brand-poster',
+    origin: 'root-original',
+    publicPath: '/brand/poster.webp',
+    alt: { en: 'ROOT operations poster', es: 'Póster de operaciones ROOT' },
+  },
+  {
+    id: 'brand-wave',
+    origin: 'root-original',
+    publicPath: '/brand/waveLower.webp',
+    alt: { en: 'ROOT lower wave motif', es: 'Motivo de onda inferior ROOT' },
+  },
+  {
     id: 'root-revenue-hero',
     origin: 'root-original',
     publicPath: '/media/root-revenue-hero.svg',

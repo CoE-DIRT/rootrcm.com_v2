@@ -2,10 +2,19 @@ import Link from 'next/link';
 import Image from 'next/image';
 import type { Locale } from '@/i18n/locales';
 
+const visuals = {
+  illustration: { src: '/media/root-revenue-hero.svg', width: 1200, height: 840 },
+  story: { src: '/brand/story.webp', width: 1300, height: 732 },
+  banner: { src: '/brand/banner.webp', width: 1350, height: 450 },
+  poster: { src: '/brand/poster.webp', width: 900, height: 900 },
+} as const;
+
+export type HeroVisual = keyof typeof visuals;
+
 /**
  * Shared cinematic commercial hero.
- * The illustration is original ROOT-owned SVG, with a CSS mask to preserve
- * headline contrast. Content and node IDs follow the approved Figma IA.
+ * Homepage uses the Demo 6 story still; inner pages may use banner/poster
+ * or the original ROOT SVG. CSS mask preserves headline contrast.
  */
 export function PageHero({
   eyebrow,
@@ -15,6 +24,7 @@ export function PageHero({
   ctaHref,
   nodeId,
   locale = 'en',
+  visual = 'illustration',
 }: {
   eyebrow: string;
   title: string;
@@ -23,7 +33,10 @@ export function PageHero({
   ctaHref?: string;
   nodeId?: string;
   locale?: Locale;
+  visual?: HeroVisual;
 }) {
+  const art = visuals[visual];
+  const brandStill = visual !== 'illustration';
   return (
     <section
       className="root-visual-hero group relative isolate mt-5 min-h-[480px] overflow-hidden rounded-[26px] border border-[#2e5773] bg-[#071b32] px-6 py-9 text-white shadow-[0_28px_80px_rgba(3,14,29,0.25)] sm:px-9 sm:py-12 lg:min-h-[540px] lg:px-14 lg:py-16"
@@ -31,17 +44,29 @@ export function PageHero({
       data-testid="root-visual-hero"
     >
       <Image
-        src="/media/root-revenue-hero.svg"
+        src={art.src}
         alt=""
         aria-hidden="true"
         fill
         priority={nodeId === '4:2' || nodeId === '4:126' || nodeId === '4:153'}
         sizes="(max-width: 768px) 100vw, 1300px"
-        className="pointer-events-none absolute inset-0 object-cover object-right opacity-[0.94] transition-transform duration-700 ease-out motion-reduce:transform-none group-hover:scale-[1.018]"
+        className={`pointer-events-none absolute inset-0 object-cover opacity-[0.96] transition-transform duration-700 ease-out motion-reduce:transform-none group-hover:scale-[1.018] ${brandStill ? 'object-center' : 'object-right'}`}
       />
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(5,16,33,0.97)_0%,rgba(5,18,35,0.94)_37%,rgba(5,18,35,0.76)_61%,rgba(5,18,35,0.22)_100%)] lg:bg-[linear-gradient(90deg,rgba(5,16,33,0.98)_0%,rgba(5,18,35,0.95)_38%,rgba(5,18,35,0.64)_62%,rgba(5,18,35,0.16)_100%)]" />
+      <div
+        className={
+          brandStill
+            ? 'pointer-events-none absolute inset-0 bg-[linear-gradient(105deg,rgba(5,16,33,0.78)_0%,rgba(5,18,35,0.42)_46%,rgba(5,18,35,0.12)_100%)]'
+            : 'pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(5,16,33,0.97)_0%,rgba(5,18,35,0.94)_37%,rgba(5,18,35,0.76)_61%,rgba(5,18,35,0.22)_100%)] lg:bg-[linear-gradient(90deg,rgba(5,16,33,0.98)_0%,rgba(5,18,35,0.95)_38%,rgba(5,18,35,0.64)_62%,rgba(5,18,35,0.16)_100%)]'
+        }
+      />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_25%_85%,rgba(17,225,238,0.14),transparent_55%)]" />
-      <div className="relative z-[1] max-w-[890px]">
+      <div
+        className={
+          brandStill
+            ? 'relative z-[1] max-w-[640px] rounded-[22px] border border-white/15 bg-[#071326]/78 px-5 py-6 shadow-[0_24px_60px_rgba(3,14,29,0.38)] backdrop-blur-xl sm:px-8 sm:py-7'
+            : 'relative z-[1] max-w-[890px]'
+        }
+      >
         <p className="eyebrow !text-[#7ff7ff]">{eyebrow}</p>
         <h1 className="mt-5 text-balance text-[clamp(2.15rem,4vw,3.45rem)] font-extrabold leading-[1.12] tracking-[-0.035em] text-[#f5fbff] drop-shadow-[0_2px_8px_rgba(2,9,21,0.45)]">
           {title}

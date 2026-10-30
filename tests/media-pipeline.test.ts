@@ -25,7 +25,7 @@ test('published manifest only lists original ROOT files that exist locally', () 
   assert.ok(publishedMedia.length >= 2);
   for (const asset of publishedMedia) {
     assert.equal(asset.origin, 'root-original');
-    assert.equal(asset.publicPath.startsWith('/media/'), true);
+    assert.ok(asset.publicPath.startsWith('/media/') || asset.publicPath.startsWith('/brand/'));
     assert.equal(existsSync(`public${asset.publicPath}`), true);
   }
 });

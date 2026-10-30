@@ -32,6 +32,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           cta={t.home.ctaDesktop}
           ctaHref={localizedPath(locale, '/consultation')}
           nodeId="4:2"
+          visual="story"
         />
       </div>
       <div className="hidden md:block lg:hidden">
@@ -43,6 +44,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           cta={t.home.ctaTablet}
           ctaHref={localizedPath(locale, '/consultation')}
           nodeId="4:153"
+          visual="story"
         />
       </div>
       <div className="md:hidden">
@@ -54,6 +56,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           cta={t.home.ctaMobile}
           ctaHref={localizedPath(locale, '/consultation')}
           nodeId="4:126"
+          visual="story"
         />
       </div>
       <p className="eyebrow mt-10">{t.home.explore}</p>

@@ -1,3 +1,9 @@
 asset_id,origin,public_path,source_url,photographer,license_url,license_checked_at,people_rights_reviewed,trademark_rights_reviewed,approved,notes
+brand-mark,root-original,/brand/mark.webp,Demo 6 ROOT_ASSETS,ROOT,founder,2026-10-31,n/a,n/a,true,Byte-identical WebP from ROOT_V2_Interactive_Browser_Demo_6.html. sha256 27a8a3f275f7bff729aa7b22001a80919d09686207fa19f57d8a118ce2ea459e
+brand-logo,root-original,/brand/logo.webp,Demo 6 ROOT_ASSETS,ROOT,founder,2026-10-31,n/a,n/a,true,Byte-identical. sha256 837ca87d16d11eef1bbb44f3a333fce5b34e1056dc491aeef6686575672d3395
+brand-banner,root-original,/brand/banner.webp,Demo 6 ROOT_ASSETS,ROOT,founder,2026-10-31,n/a,n/a,true,Byte-identical. sha256 211d5e88fb489fcb56716b7bd84e48bdbb5e765d1bb22215d567f6251282b32b
+brand-story,root-original,/brand/story.webp,Demo 6 ROOT_ASSETS,ROOT,founder,2026-10-31,n/a,n/a,true,Byte-identical. sha256 419459ac6a7fb318cada8b0c0b0351d15f3d57718cc9c633039bd778631d86e8
+brand-poster,root-original,/brand/poster.webp,Demo 6 ROOT_ASSETS,ROOT,founder,2026-10-31,n/a,n/a,true,Byte-identical. sha256 6cdc657bf3d1bd8a9a89ab9941c2e8c9f6ab5c8055893dd8a0ae5b7baf99416a
+brand-wave,root-original,/brand/waveLower.webp,Demo 6 ROOT_ASSETS,ROOT,founder,2026-10-31,n/a,n/a,true,Byte-identical. sha256 6316738d4b99de9d4b416135953743711097db378b473af8b3cea8e60f12521e
 root-revenue-hero,root-original,/media/root-revenue-hero.svg,n/a,ROOT,n/a,2026-10-31,n/a,n/a,true,Original ROOT SVG. Not a stock photograph. Does not depict real people.
 root-workflow-network,root-original,/media/root-workflow-network.svg,n/a,ROOT,n/a,2026-10-31,n/a,n/a,true,Original ROOT SVG. Not a stock photograph. Does not depict real people.

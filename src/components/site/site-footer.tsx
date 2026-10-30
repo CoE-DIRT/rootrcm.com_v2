@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowUpRight, MapPin, Phone, Mail, MessageCircle } from 'lucide-react';
 import type { Locale } from '@/i18n/locales';
 import { localizedPath } from '@/lib/paths';
@@ -40,6 +41,14 @@ export function SiteFooter({ locale }: { locale: Locale }) {
   const es = locale === 'es';
   return (
     <footer className="relative mt-20 overflow-hidden border-t border-[var(--border)] bg-[var(--surface)] text-sm" data-node-id="4:39" data-testid="root-rich-footer">
+      <Image
+        src="/brand/waveLower.webp"
+        width={1600}
+        height={138}
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-16 w-full object-cover opacity-40"
+      />
       <div className="pointer-events-none absolute -left-32 top-0 size-[420px] rounded-full bg-[var(--cyan)] opacity-[0.045] blur-[90px]" aria-hidden="true" />
       <div className="pointer-events-none absolute -right-48 bottom-0 size-[520px] rounded-full bg-[var(--blue)] opacity-[0.06] blur-[90px]" aria-hidden="true" />
       <div className="page-width relative pb-28 pt-12 md:pt-16">

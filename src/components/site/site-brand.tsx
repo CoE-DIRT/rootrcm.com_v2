@@ -2,17 +2,40 @@ import Image from 'next/image';
 import type { Locale } from '@/i18n/locales';
 
 /**
- * Uses the existing ROOT icon.svg asset, rather than an invented third-party logo.
- * The favicon mark and navigation brand stay in sync across breakpoints.
+ * Founder-approved Demo 6 originals in public/brand/.
+ * Native ratios: mark 250×243, logo 346×220. Do not redraw.
  */
 export function SiteBrand({ compact = false, locale = 'en' }: { compact?: boolean; locale?: Locale }) {
+  const tagline = locale === 'es' ? 'Operaciones y resultados de ingresos' : 'Revenue operations & outcomes';
   return (
     <span className="inline-flex min-h-11 items-center gap-2.5" data-testid="root-brand-lockup">
-      <Image src="/icon.svg" width={40} height={40} alt="" aria-hidden="true" className="size-10 shrink-0 rounded-[11px] border border-[var(--border)] shadow-[0_6px_18px_rgba(0,0,0,.14)]" />
-      <span className="flex flex-col justify-center">
-        <span className="text-[25px] font-black leading-[0.98] tracking-[-0.06em] sm:text-[29px]">ROOT<span className="text-[var(--cyan)]">.</span></span>
-        {!compact && <span className="mt-1 hidden text-[8px] font-bold uppercase leading-tight tracking-[0.18em] text-[var(--muted)] xl:block">{locale === 'es' ? 'Operaciones y resultados de ingresos' : 'Revenue operations & outcomes'}</span>}
+      <span className="inline-flex shrink-0 items-center justify-center rounded-[11px] border border-[var(--border)] bg-[#071326] px-1.5 py-1 shadow-[0_6px_18px_rgba(0,0,0,.14)]">
+        {compact ? (
+          <Image
+            src="/brand/mark.webp"
+            width={250}
+            height={243}
+            alt=""
+            aria-hidden="true"
+            className="h-9 w-auto object-contain"
+            priority
+          />
+        ) : (
+          <Image
+            src="/brand/logo.webp"
+            width={346}
+            height={220}
+            alt="ROOT"
+            priority
+            className="h-9 w-auto object-contain sm:h-10"
+          />
+        )}
       </span>
+      {!compact && (
+        <span className="hidden text-[8px] font-bold uppercase leading-tight tracking-[0.18em] text-[var(--muted)] xl:block">
+          {tagline}
+        </span>
+      )}
     </span>
   );
 }

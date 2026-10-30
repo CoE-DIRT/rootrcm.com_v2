@@ -19,8 +19,14 @@ export const metadata: Metadata = {
     'A technology-enabled operating partner for medical practices. Revenue cycle management, credentialing, DIRT intelligence and practice operations.',
   applicationName: 'ROOT',
   icons: {
-    icon: '/icon.svg',
-    apple: '/apple-icon',
+    icon: [{ url: '/brand/mark.webp', type: 'image/webp' }, { url: '/icon.svg' }],
+    apple: '/brand/mark.webp',
+  },
+  openGraph: {
+    title: 'ROOT | Revenue Operations & Outcomes Technology',
+    description:
+      'A technology-enabled operating partner for medical practices. Revenue cycle management, credentialing, DIRT intelligence and practice operations.',
+    images: [{ url: '/brand/banner.webp', width: 1350, height: 450, alt: 'ROOT' }],
   },
   robots: { index: false, follow: false },
 };
