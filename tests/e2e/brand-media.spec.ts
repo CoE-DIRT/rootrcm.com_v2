@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 test('ROOT visual hero displays branded artwork and the real brand asset', async ({ page }) => {
   await page.goto('/en');
-  const logo = page.getByTestId('root-brand-lockup');
+  const logo = page.locator('header').getByTestId('root-brand-lockup');
   await expect(logo).toBeVisible();
   await expect(logo.locator('img')).toHaveAttribute('src', /icon\.svg/);
   const hero = page.locator('[data-testid="root-visual-hero"]:visible').first();
@@ -30,5 +30,5 @@ test('DIRT imagery and bilingual hero are present in the commercial story', asyn
   await expect(page.locator('[data-testid="root-visual-hero"]:visible').first()).toBeVisible();
   await expect(page.locator('img[src*="root-workflow-network.svg"]')).toBeVisible();
   await expect(page.locator('[data-testid="root-visual-hero"]:visible').first()).toContainText('Operaciones de ingresos · inteligencia conectada');
-  await expect(page.getByTestId('root-brand-lockup')).toContainText('Operaciones y resultados de ingresos');
+  await expect(page.locator('header').getByTestId('root-brand-lockup')).toContainText('Operaciones y resultados de ingresos');
 });
