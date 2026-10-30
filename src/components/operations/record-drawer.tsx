@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { ShieldCheck, X } from 'lucide-react';
 import type { Locale } from '@/i18n/locales';
+import { translateOpsAction } from '@/content/ops-actions';
 import { workspaceDemoText } from '@/content/operations-demo';
 import { localize, type OpsHistoryEntry } from '@/lib/ops-client';
 import { opsButton, opsSubtle } from './ui';
@@ -97,9 +98,11 @@ export function RecordDrawer({
               <li key={entry.id} className="rounded-xl border border-[var(--border)] p-3">
                 <p className="text-sm font-bold">{localize(entry.summary, locale)}</p>
                 <p className={`mt-1 wrap-break-word text-xs ${opsSubtle}`}>
-                  {entry.actor}
+                  {localize(translateOpsAction(entry.actor), locale)}
                   {entry.at ? ` · ${entry.at}` : ''}
-                  {entry.from || entry.to ? ` · ${entry.from ?? '—'} → ${entry.to ?? '—'}` : ''}
+                  {entry.from || entry.to
+                    ? ` · ${entry.from ? localize(translateOpsAction(entry.from), locale) : '—'} → ${entry.to ? localize(translateOpsAction(entry.to), locale) : '—'}`
+                    : ''}
                 </p>
               </li>
             ))}

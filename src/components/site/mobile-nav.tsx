@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useId, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { copy } from '@/content/messages';
 import type { Locale } from '@/i18n/locales';
 import { localizedPath, publicNav } from '@/lib/paths';
@@ -10,18 +10,22 @@ export function MobileNav({ locale }: { locale: Locale }) {
   const t = copy(locale);
   const [open, setOpen] = useState(false);
   const panelId = useId();
+  const toggleRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
-      if (event.key === 'Escape') setOpen(false);
+      if (event.key !== 'Escape' || !open) return;
+      setOpen(false);
+      toggleRef.current?.focus();
     }
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, []);
+  }, [open]);
 
   return (
     <div className="lg:hidden">
       <button
+        ref={toggleRef}
         type="button"
         className="btn-ghost text-2xl"
         aria-expanded={open}

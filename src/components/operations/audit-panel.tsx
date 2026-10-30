@@ -2,6 +2,7 @@
 
 import { ScrollText } from 'lucide-react';
 import type { Locale } from '@/i18n/locales';
+import { translateOpsAction } from '@/content/ops-actions';
 import { workspaceDemoText } from '@/content/operations-demo';
 import { localize, type OpsAuditEvent } from '@/lib/ops-client';
 import { opsCard, opsSubtle } from './ui';
@@ -22,7 +23,7 @@ export function AuditPanel({ locale, events }: { locale: Locale; events: readonl
             <li key={item.id} data-testid="audit-event" className="rounded-xl bg-[var(--surface-2)] p-3">
               <p className="wrap-break-word text-sm font-bold">{localize(item.summary, locale)}</p>
               <p className={`mt-1 wrap-break-word text-xs ${opsSubtle}`}>
-                {item.type} · {item.actor}
+                {localize(translateOpsAction(item.type), locale)} · {localize(translateOpsAction(item.actor), locale)}
                 {item.resourceId ? ` · ${item.resourceId}` : ''}
                 {item.at ? ` · ${item.at}` : ''}
               </p>

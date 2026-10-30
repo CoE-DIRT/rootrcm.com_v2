@@ -1,7 +1,9 @@
 'use client';
 
 import type { Locale } from '@/i18n/locales';
+import { translateOpsAction } from '@/content/ops-actions';
 import { workspaceDemoText } from '@/content/operations-demo';
+import { localize } from '@/lib/ops-client';
 import type { OpsSortDir, OpsSortKey } from '@/lib/ops-query';
 import { opsControl } from './ui';
 
@@ -64,7 +66,7 @@ export function ListControls({
           <option value="">{allLabel}</option>
           {filterOptions.map((option) => (
             <option key={option} value={option}>
-              {option}
+              {localize(translateOpsAction(option), locale)}
             </option>
           ))}
         </select>

@@ -68,6 +68,12 @@ const featureLabels: Record<string, { en: string; es: string }> = {
   multi_location: { en: 'Multi-location controls', es: 'Controles de múltiples ubicaciones' },
 };
 
+const specialtyCopy: Record<SalesScenario['id'], { en: string; es: string }> = {
+  bayview: { en: 'Cardiology and internal medicine', es: 'Cardiología y medicina interna' },
+  'cedar-grove': { en: 'Primary care', es: 'Atención primaria' },
+  'metro-asc': { en: 'Ambulatory surgery', es: 'Cirugía ambulatoria' },
+};
+
 const card = 'rounded-[18px] border border-[var(--border)] bg-[var(--surface)] p-4 md:p-5';
 const control = 'min-h-11 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] px-3 py-2 text-sm font-semibold focus-visible:outline-offset-2';
 const allFeatures = Object.keys(featureLabels);
@@ -126,7 +132,7 @@ export function SalesJourneySimulator({ locale }: { locale: Locale }) {
           </label>
         </div>
         <div className="mt-4 flex flex-wrap items-center gap-2 text-sm">
-          <span className="font-semibold">{scenario.specialty}</span>
+          <span className="font-semibold">{specialtyCopy[scenario.id][locale]}</span>
           <span className="muted">· {scenario.providerCount} {l.provider}</span>
           <span className="muted">· {l.score}: <strong>{score.score}/100</strong></span>
         </div>

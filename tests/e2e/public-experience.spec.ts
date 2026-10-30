@@ -45,12 +45,15 @@ test.describe('public IA', () => {
   test('mobile navigation is expanded navigation, not a broken modal', async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 844 });
     await page.goto('/en');
+    await expect(page.locator('header span.hidden.lg\\:inline-flex')).toBeHidden();
+    await expect(page.locator('header span.hidden.sm\\:inline-flex')).toBeHidden();
     await page.getByRole('button', { name: 'Open menu' }).click();
     const menu = page.getByRole('navigation', { name: 'Primary navigation' });
     await expect(menu).toBeVisible();
     await expect(menu).not.toHaveAttribute('aria-modal', 'true');
     await page.keyboard.press('Escape');
     await expect(menu).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'Open menu' })).toBeFocused();
     await noHorizontalOverflow(page);
   });
 
@@ -91,11 +94,15 @@ test.describe('public IA', () => {
   test('Spanish preview workspaces use Spanish page-owned copy', async ({ page }) => {
     await page.goto('/es/preview/client');
     await expect(page.getByRole('heading', { level: 1 })).toContainText('Su práctica, bajo control');
+    const clientNav = page.getByRole('navigation', { name: 'Navegación principal' });
+    await expect(clientNav.getByRole('link', { name: 'Resumen' })).toBeVisible();
+    await expect(clientNav.getByRole('link', { name: 'Solicitudes' })).toBeVisible();
     await page.goto('/es/preview/credentialing');
     await expect(page.getByRole('heading', { level: 1 })).toContainText('Preparación de credencialización');
     await expect(page.getByText('Fuente primaria')).toBeVisible();
     await page.goto('/es/preview/staff');
     await expect(page.getByRole('heading', { level: 1 })).toContainText('Su trabajo asignado, en contexto');
+    await expect(page.getByRole('navigation', { name: 'Navegación principal' }).getByRole('link', { name: 'Cola' })).toBeVisible();
   });
 });
 

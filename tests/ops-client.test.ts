@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { asPair, formatMetric, normalizeOpsState } from '../src/lib/ops-client.ts';
+import { asPair, formatMetric, formatRatio, normalizeOpsState } from '../src/lib/ops-client.ts';
 import { compareValues, matchesQuery } from '../src/lib/ops-query.ts';
 
 test('normalizeOpsState maps collection aliases without inventing metrics', () => {
@@ -65,7 +65,19 @@ test('asPair and query helpers keep locale and filter behavior honest', () => {
   assert.equal(asPair('Request payer review status').es, 'Solicitar el estado de revisión del pagador');
   assert.notEqual(asPair('Request payer review status').es, asPair('Request payer review status').en);
   assert.deepEqual(asPair({ en: 'Owner', es: 'Responsable' }), { en: 'Owner', es: 'Responsable' });
+  assert.equal(asPair('denied').es, 'Denegado');
+  assert.equal(asPair('payer_processing').es, 'Procesamiento del pagador');
+  assert.notEqual(asPair('payer_processing').es, asPair('payer_processing').en);
+  assert.equal(asPair('Morning clinic block').es, 'Bloque matutino de consulta');
+  assert.equal(asPair('preview-staff').es, 'Personal ROOT (vista previa)');
+  assert.match(asPair('cred-bv-001 moved from submitted to payer_acknowledged.').es, /pasó de/);
   assert.equal(matchesQuery('cred', ['DEMO-CRED-001', 'Healthfirst']), true);
   assert.equal(matchesQuery('zzz', ['DEMO-CRED-001']), false);
   assert.ok(compareValues('DEMO-2', 'DEMO-10', 'asc') < 0);
+});
+
+test('formatMetric shows computed days in A/R instead of ratio weights', () => {
+  assert.equal(formatMetric(32.5), '32.5');
+  assert.equal(formatRatio({ numerator: 650, denominator: 20, value: 32.5 }, 32.5), '650/20');
+  assert.notEqual(formatMetric(32.5), formatRatio({ numerator: 650, denominator: 20, value: 32.5 }, 32.5));
 });
