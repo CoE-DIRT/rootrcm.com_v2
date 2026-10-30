@@ -32,12 +32,10 @@ export function MobileNav({ locale }: { locale: Locale }) {
         {open ? '×' : '☰'}
       </button>
       {open ? (
-        <div
+        <nav
           id={panelId}
           className="surface absolute inset-x-4 top-16 z-20 flex flex-col gap-3 p-5"
-          role="dialog"
-          aria-modal="true"
-          aria-label={t.nav.openMenu}
+          aria-label={t.workspace.primaryNav}
         >
           {publicNav.map((item) => (
             <Link key={item.href} href={localizedPath(locale, item.href)} onClick={() => setOpen(false)}>
@@ -54,7 +52,7 @@ export function MobileNav({ locale }: { locale: Locale }) {
           >
             {t.nav.consultation} →
           </Link>
-        </div>
+        </nav>
       ) : null}
     </div>
   );
