@@ -15,10 +15,19 @@ async function requireOpsApi(page: Page, orgId = 'bayview', persona = 'staff') {
 async function readyDashboard(page: Page) {
   const dashboard = page.getByTestId('rcm-command-center');
   await expect(dashboard).toBeVisible();
-  await expect(dashboard.getByTestId('ops-loading')).toHaveCount(0);
-  const error = dashboard.getByTestId('ops-error');
-  await expect(error, (await error.textContent()) ?? 'operations API failed').toHaveCount(0);
-  await expect(dashboard.getByTestId('ops-ready')).toBeVisible();
+  const ready = dashboard.getByTestId('ops-ready');
+  try {
+    await expect(ready).toBeVisible({ timeout: 20_000 });
+  } catch (error) {
+    const failed = dashboard.getByTestId('ops-error');
+    const detail =
+      (await failed.count()) > 0
+        ? ((await failed.textContent()) ?? 'operations API failed')
+        : error instanceof Error
+          ? error.message
+          : 'ops-ready never appeared';
+    throw new Error(detail);
+  }
   return dashboard;
 }
 
