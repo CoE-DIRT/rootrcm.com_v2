@@ -28,7 +28,7 @@ Do not treat this hostname as a client demo once the process exits.
 
 ## Issue #29
 
-Engine isolation is on the consolidated candidate via [PR #30](https://github.com/CoE-DIRT/rootrcm.com_v2/pull/30) (`5c025cd`): signed httpOnly presentation cookies, per-session snapshots, operator capability from `/preview/staff` (not JSON `persona`). Skip-free Playwright coverage is `tests/e2e/ops-session-isolation.spec.ts`. Durable **cross-instance** storage still needs an authorized Appwrite V2/KV project; the Node process Map is not a multi-instance store.
+Engine isolation is on the consolidated candidate via [PR #30](https://github.com/CoE-DIRT/rootrcm.com_v2/pull/30) (`5c025cd`): signed httpOnly presentation cookies, per-session snapshots, operator capability from `/preview/staff` (not JSON `persona`). Skip-free Playwright coverage is `tests/e2e/ops-session-isolation.spec.ts`. Omitted capability now fails closed to `client`. A documented persistence adapter exists (`memory` + fail-closed durable stub via `ROOT_DEMO_SESSION_BACKEND`). The memory Map is still **per-process**; keep #29 open until a reviewed Appwrite V2/KV driver is provisioned. Do not invent those credentials.
 
 ## Remaining founder actions (exact)
 
@@ -38,6 +38,8 @@ Engine isolation is on the consolidated candidate via [PR #30](https://github.co
 4. Approve (or reject) a **new** `v2.dirtrcm.app` CNAME to the chosen isolated host. Do not edit existing apex/MX/SPF/DKIM records.
 5. Optional Netlify: authenticate CLI and link a **draft-only** site for this V2 repo if Appwrite Sites is delayed. Not production.
 6. Independent human approval of [PR #19](https://github.com/CoE-DIRT/rootrcm.com_v2/pull/19) before `main`. Author cannot self-approve. This agent will not merge it.
+7. Reconnect HubSpot MCP from **Settings → Cursor Settings → Tools & MCP → Connect** (sandbox only). Do not loop agent `mcp_auth`. Keep CRM writes off.
+8. Leave Apollo as Info Desk prospecting-only. No credit spend, no sequences, `ROOT_ENABLE_PROSPECTING` stays false.
 
 ## Explicit non-actions
 

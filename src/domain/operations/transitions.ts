@@ -258,13 +258,26 @@ export function advanceTimeline(input: OpsSnapshot, params: { orgId: OpsOrgId; p
   return { snapshot, changed: true };
 }
 
+function previewTierForOrg(snapshot: OpsSnapshot, orgId: OpsOrgId): PreviewTier {
+  return (
+    snapshot.entitlements.find((row) => row.orgId === orgId && row.source === 'preview')?.tier ??
+    snapshot.preview.tier
+  );
+}
+
 export function setPersona(
   input: OpsSnapshot,
   params: { orgId: OpsOrgId; persona: OpsPersona },
 ): TransitionResult {
   const snapshot = cloneSnapshot(input);
   const from = snapshot.preview.persona;
-  snapshot.preview = { ...snapshot.preview, orgId: params.orgId, persona: params.persona };
+  snapshot.preview = {
+    ...snapshot.preview,
+    orgId: params.orgId,
+    persona: params.persona,
+    // Switching practices must not keep the previous org's catalog label.
+    tier: previewTierForOrg(snapshot, params.orgId),
+  };
   appendAudit(snapshot, {
     orgId: params.orgId,
     actorId: actorFor(params.persona),
@@ -283,7 +296,11 @@ function nextTier(current: PreviewTier): PreviewTier {
   return previewTiers[(index + 1) % previewTiers.length] ?? 'Free';
 }
 
-/** Preview catalog label only. Never writes a Stripe entitlement. */
+/**
+ * Preview catalog label only. Never writes a Stripe entitlement.
+ * Mutates the selected org's seed grant. Callers must project
+ * `preview.tier` from that org grant, not from the global snapshot label.
+ */
 export function setTier(
   input: OpsSnapshot,
   params: { orgId: OpsOrgId; persona: OpsPersona },

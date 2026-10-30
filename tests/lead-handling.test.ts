@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import {
   assembleBusinessLead,
+  businessLeadPayloadHash,
   createLeadDedupKey,
   isDurableInquiryDeliveryEnabled,
   mayPersistPublicInquiry,
@@ -58,8 +59,23 @@ test('public inquiry delivery stays fail-closed', () => {
   assert.equal(mayPersistPublicInquiry(), false);
 
   const route = readFileSync('src/app/api/v1/public/inquiries/route.ts', 'utf8');
+  const gate = readFileSync('src/server/leads/inquiry.ts', 'utf8');
   assert.match(route, /publicInquiryUnavailableResponse/);
+  assert.match(route + gate, /status:\s*503/);
   assert.doesNotMatch(route, /request\.json\(/);
   assert.doesNotMatch(route, /MemoryInquiryOutbox/);
+  assert.doesNotMatch(route, /enqueueSuppressedBusinessContact/);
   assert.doesNotMatch(route, /from ['"][^'"]*outbox/);
+});
+
+test('lead payload hash is digest-only and never stores contact fields', () => {
+  const result = assembleBusinessLead(contact, 'corr-lead-hash');
+  assert.equal(result.ok, true);
+  if (!result.ok) return;
+  const hash = businessLeadPayloadHash(result.lead);
+  assert.match(hash, /^sha256:[a-f0-9]{64}$/);
+  assert.equal(hash.includes(contact.email), false);
+  assert.equal(hash.includes(contact.name), false);
+  assert.equal(hash.includes(contact.organization), false);
+  assert.equal(result.lead.delivery, 'unavailable');
 });
