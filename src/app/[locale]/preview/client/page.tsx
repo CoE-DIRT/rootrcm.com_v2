@@ -1,4 +1,5 @@
 import { AppShell } from '@/components/app-shell/app-shell';
+import { OperationsCommandCenter } from '@/components/app-shell/operations-command-center';
 import { Card } from '@/components/ui/card';
 import { copy } from '@/content/messages';
 import { clientQueue, previewOrgs } from '@/content/preview-fixtures';
@@ -14,7 +15,9 @@ export default async function ClientPreviewPage({ params }: { params: Promise<{ 
         <p className="muted">
           {org.name} · {org.plan} · {t.preview}
         </p>
-        <div className="mt-6 grid gap-3 md:grid-cols-2">
+        <div className="mt-6"><OperationsCommandCenter locale={locale} /></div>
+        <h2 className="mt-8 text-xl font-extrabold">{t.workspace.requests}</h2>
+        <div className="mt-4 grid gap-3 md:grid-cols-2">
           {clientQueue.map((item) => (
             <Card
               key={item.id}
