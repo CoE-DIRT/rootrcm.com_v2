@@ -14,6 +14,7 @@ test('disabled public inquiry endpoint fails closed without consuming contact da
   assert.match(api, /Cache-Control/);
   assert.doesNotMatch(api, /request\.json\(/);
   assert.doesNotMatch(api, /received_local_only/);
+  assert.doesNotMatch(api, /from ['"][^'"]*outbox/);
 });
 
 test('client cannot submit or claim success without durable acceptance', () => {

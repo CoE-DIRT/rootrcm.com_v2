@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { requireMembership } from '../src/server/auth/policy.ts';
+import { requireEntitlement, requireMembership } from '../src/server/auth/policy.ts';
 import type { AuthContext } from '../src/server/auth/policy.ts';
+import { requireOrgMembership } from '../src/server/auth/membership.ts';
 
 const cedar: AuthContext = {
   session: { userId: 'user-a', email: 'owner@example.invalid' },
@@ -48,5 +49,60 @@ test('auditor cannot invite members', () => {
   assert.equal(read.allow, true);
   assert.equal(invite.allow, false);
   if (!invite.allow) assert.equal(invite.code, 'forbidden');
+  delete process.env.ROOT_ENABLE_AUTH;
+});
+
+test('two-tenant: ROOT_SUPERADMIN still cannot read an org they are not a member of', () => {
+  process.env.ROOT_ENABLE_AUTH = 'true';
+  const superadmin: AuthContext = {
+    session: { userId: 'user-root', email: 'superadmin@example.invalid' },
+    memberships: [{ orgId: 'sample-solo', role: 'ROOT_SUPERADMIN' }],
+  };
+  const own = requireMembership(superadmin, 'sample-solo', 'root_admin.manage');
+  const cross = requireMembership(superadmin, 'sample-group', 'organization.read');
+  assert.equal(own.allow, true);
+  assert.equal(cross.allow, false);
+  if (!cross.allow) assert.equal(cross.code, 'not_a_member');
+  delete process.env.ROOT_ENABLE_AUTH;
+});
+
+test('org membership helper is the same PDP as requireMembership', () => {
+  process.env.ROOT_ENABLE_AUTH = 'true';
+  const viaHelper = requireOrgMembership(cedar, 'sample-group', 'organization.read');
+  const viaPolicy = requireMembership(cedar, 'sample-group', 'organization.read');
+  assert.equal(viaHelper.allow, false);
+  assert.equal(viaPolicy.allow, false);
+  if (!viaHelper.allow && !viaPolicy.allow) {
+    assert.equal(viaHelper.code, viaPolicy.code);
+    assert.equal(viaHelper.code, 'not_a_member');
+  }
+  delete process.env.ROOT_ENABLE_AUTH;
+});
+
+test('entitlement cannot bypass tenant membership or browser-style missing grants', () => {
+  process.env.ROOT_ENABLE_AUTH = 'true';
+  const activeOnA = requireEntitlement(cedar, 'sample-solo', 'billing.read', {
+    orgId: 'sample-solo',
+    featureCode: 'dashboard',
+    state: 'active',
+  });
+  const missingGrant = requireEntitlement(cedar, 'sample-solo', 'billing.read', null);
+  const otherOrgGrant = requireEntitlement(cedar, 'sample-solo', 'billing.read', {
+    orgId: 'sample-group',
+    featureCode: 'dashboard',
+    state: 'active',
+  });
+  const crossTenant = requireEntitlement(cedar, 'sample-group', 'billing.read', {
+    orgId: 'sample-group',
+    featureCode: 'dashboard',
+    state: 'active',
+  });
+  assert.equal(activeOnA.allow, true);
+  assert.equal(missingGrant.allow, false);
+  if (!missingGrant.allow) assert.equal(missingGrant.code, 'entitlement_inactive');
+  assert.equal(otherOrgGrant.allow, false);
+  if (!otherOrgGrant.allow) assert.equal(otherOrgGrant.code, 'entitlement_inactive');
+  assert.equal(crossTenant.allow, false);
+  if (!crossTenant.allow) assert.equal(crossTenant.code, 'not_a_member');
   delete process.env.ROOT_ENABLE_AUTH;
 });
