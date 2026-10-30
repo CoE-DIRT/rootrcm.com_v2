@@ -40,8 +40,11 @@ test('integrations remain typed disabled adapters', () => {
   const adapter = fs.readFileSync('src/integrations/disabled.ts', 'utf8');
   assert.match(adapter, /status: 'disabled'/);
   const inquiry = fs.readFileSync('src/app/api/v1/public/inquiries/route.ts', 'utf8');
-  assert.match(inquiry, /hubspotAdapter/);
-  assert.match(inquiry, /received_local_only/);
+  assert.match(adapter, /hubspotAdapter/);
+  // Delivery is disabled: the route must not claim to store or forward leads.
+  assert.match(inquiry, /inquiry_submission_unavailable/);
+  assert.match(inquiry, /status:\\s*503/);
+  assert.doesNotMatch(inquiry, /received_local_only/);
 });
 
 test('business contact validation rejects PHI hints', () => {
