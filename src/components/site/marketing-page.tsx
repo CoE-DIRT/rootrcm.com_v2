@@ -39,6 +39,7 @@ export function MarketingPage({
         ]}
       />
       <PageHero
+        locale={locale}
         eyebrow={t.home.eyebrow}
         title={title}
         body={body}
