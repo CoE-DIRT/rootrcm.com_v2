@@ -5,7 +5,7 @@ import path from 'node:path';
 import { platforms, platformsInRow, platformRows } from '../src/content/ecosystem.ts';
 import { featuredSpecialties, specialties, specialtyBySlug } from '../src/content/specialties.ts';
 import { nyBoroughs, nyMarketMeta, nyPayers } from '../src/content/markets/ny-payers.ts';
-import { proofSlots } from '../src/content/credibility.ts';
+import { proofSlots, publishedProof } from '../src/content/credibility.ts';
 import { messages } from '../src/content/messages.ts';
 
 const demo6Ehr = [
@@ -144,7 +144,10 @@ test('NY payer records are sourced, dated, and do not claim contracts or an offi
 });
 
 test('credibility slots default to unpublished empty states', () => {
-  assert.ok(proofSlots.length >= 3);
+  assert.ok(proofSlots.length >= 5);
+  assert.ok(proofSlots.some((slot) => slot.id === 'case-study'));
+  assert.ok(proofSlots.some((slot) => slot.id === 'certification'));
+  assert.equal(publishedProof().length, 0);
   for (const slot of proofSlots) {
     assert.equal(slot.editorialStatus, 'unpublished');
     assert.equal(slot.quote, undefined);

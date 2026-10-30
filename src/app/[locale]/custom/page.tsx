@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { CheckoutRequest } from '@/components/commercial/checkout-request';
 import { CommercialNextActions } from '@/components/commercial/next-actions';
 import { BusinessInquiryForm } from '@/components/forms/business-inquiry-form';
 import { MarketingPage, StepList } from '@/components/site/marketing-page';
@@ -22,7 +23,8 @@ export default async function CustomPage({ params }: { params: Promise<{ locale:
   return (
     <MarketingPage locale={locale} title={t.custom.title} body={t.custom.body} nodeId="5:115">
       <StepList steps={t.custom.steps} />
-      <BusinessInquiryForm locale={locale} />
+      <BusinessInquiryForm locale={locale} defaultConcern="managed" />
+      <CheckoutRequest locale={locale} offerId="managed-rcm" />
       <CommercialNextActions locale={locale} offerId="managed-rcm" />
     </MarketingPage>
   );

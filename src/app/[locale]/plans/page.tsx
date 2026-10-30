@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { EntitlementWall } from '@/components/commercial/entitlement-wall';
 import { CommercialNextActions } from '@/components/commercial/next-actions';
 import { MarketingPage } from '@/components/site/marketing-page';
 import { Card } from '@/components/ui/card';
@@ -43,6 +44,7 @@ export default async function PlansPage({ params }: { params: Promise<{ locale: 
           />
         ))}
       </div>
+      <EntitlementWall locale={locale} />
       <CommercialNextActions locale={locale} />
     </MarketingPage>
   );

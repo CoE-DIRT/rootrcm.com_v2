@@ -11,3 +11,19 @@ export async function noHorizontalOverflow(page: Page) {
 /** Matches the shipped EcosystemMarquees markup, not a speculative class. */
 export const MARQUEE_LOCATOR = '[data-marquee], .marquee-viewport';
 export const MARQUEE_TRACK_LOCATOR = '[data-marquee-track], .marquee-track';
+
+/** Persist a decided preference so the banner does not cover controls. */
+export async function dismissCookieBanner(page: Page) {
+  await page.addInitScript(() => {
+    window.localStorage.setItem(
+      'root-cookie-preferences',
+      JSON.stringify({
+        v: 1,
+        necessary: true,
+        analytics: false,
+        marketing: false,
+        decidedAt: '2026-10-31T00:00:00.000Z',
+      }),
+    );
+  });
+}

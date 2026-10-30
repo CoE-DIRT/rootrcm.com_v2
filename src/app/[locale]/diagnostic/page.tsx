@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { CheckoutRequest } from '@/components/commercial/checkout-request';
 import { CommercialNextActions } from '@/components/commercial/next-actions';
 import { BusinessInquiryForm } from '@/components/forms/business-inquiry-form';
 import { MarketingPage, StepList } from '@/components/site/marketing-page';
@@ -26,7 +27,8 @@ export default async function DiagnosticPage({ params }: { params: Promise<{ loc
         <StatusBanner tone="warning">{t.adaptersOff}</StatusBanner>
       </div>
       <StepList steps={t.diagnostic.steps} />
-      <BusinessInquiryForm locale={locale} />
+      <BusinessInquiryForm locale={locale} defaultConcern="diagnostic" />
+      <CheckoutRequest locale={locale} offerId="revenue-diagnostic" />
       <CommercialNextActions locale={locale} offerId="revenue-diagnostic" />
     </MarketingPage>
   );

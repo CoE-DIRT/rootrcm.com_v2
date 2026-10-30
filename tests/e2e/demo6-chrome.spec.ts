@@ -1,4 +1,9 @@
 import { expect, test } from '@playwright/test';
+import { dismissCookieBanner } from './helpers';
+
+test.beforeEach(async ({ page }) => {
+  await dismissCookieBanner(page);
+});
 
 test('Demo 6 six-category mega menu is keyboard, mouse and touch accessible', async ({ page }) => {
   await page.setViewportSize({ width: 1366, height: 850 });

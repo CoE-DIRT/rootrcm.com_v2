@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { CookieConsent } from '@/components/site/cookie-consent';
 import { SiteFooter } from '@/components/site/site-footer';
 import { SiteHeader } from '@/components/site/site-header';
 import { RootGuide } from '@/components/site/root-guide';
@@ -34,6 +35,7 @@ export default async function LocaleLayout({
       {children}
       <SiteFooter locale={locale} />
       <RootGuide key={locale} locale={locale} />
+      <CookieConsent locale={locale} />
     </>
   );
 }

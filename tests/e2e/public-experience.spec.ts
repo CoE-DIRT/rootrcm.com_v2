@@ -1,7 +1,11 @@
 import { expect, test } from '@playwright/test';
-import { noHorizontalOverflow } from './helpers';
+import { dismissCookieBanner, noHorizontalOverflow } from './helpers';
 
 test.describe('public IA', () => {
+  test.beforeEach(async ({ page }) => {
+    await dismissCookieBanner(page);
+  });
+
   test('navigates primary routes and exposes a skip link', async ({ page }) => {
     await page.goto('/en');
     await expect(page.getByRole('link', { name: 'Skip to content' })).toHaveCount(1);
@@ -66,12 +70,21 @@ test.describe('public IA', () => {
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
   });
 
-  test('consultation form is visible but cannot submit while inquiries are disabled', async ({ page }) => {
+  test('consultation form submits and fail-closes with 503', async ({ page }) => {
     await page.goto('/en/consultation');
     await expect(page.getByRole('heading', { level: 1, name: 'Talk with a revenue expert' })).toBeVisible();
     await expect(page.getByText('Online inquiries are not active yet')).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Send business inquiry' })).toBeDisabled();
-    await expect(page.locator('main form')).toBeVisible();
+    const form = page.getByTestId('business-inquiry-form');
+    await expect(form.getByRole('button', { name: 'Send business inquiry' })).toBeEnabled();
+    await form.getByLabel('Name').fill('Jordan Lee');
+    await form.getByLabel('Business email').fill('jordan@example.invalid');
+    await form.getByLabel('Organization').fill('Cedar Grove Family Practice');
+    await form.getByLabel('I confirm this is a business inquiry', { exact: false }).check();
+    const responsePromise = page.waitForResponse((response) => response.url().includes('/api/v1/public/inquiries'));
+    await form.getByRole('button', { name: 'Send business inquiry' }).click();
+    const response = await responsePromise;
+    expect(response.status()).toBe(503);
+    await expect(form.getByText('No inquiry was sent or stored')).toBeVisible();
   });
 
   test('keyboard can reach skip link and primary CTA', async ({ page }) => {

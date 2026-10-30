@@ -31,6 +31,16 @@ export const proofSlots: readonly ProofSlot[] = [
     role: { en: 'Finance lead', es: 'Responsable de finanzas' },
     editorialStatus: 'unpublished',
   },
+  {
+    id: 'case-study',
+    role: { en: 'Case study', es: 'Caso de estudio' },
+    editorialStatus: 'unpublished',
+  },
+  {
+    id: 'certification',
+    role: { en: 'Certification / license', es: 'Certificación / licencia' },
+    editorialStatus: 'unpublished',
+  },
 ];
 
 export function publishedProof(slots: readonly ProofSlot[] = proofSlots) {

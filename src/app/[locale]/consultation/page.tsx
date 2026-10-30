@@ -21,7 +21,7 @@ export default async function ConsultationPage({ params }: { params: Promise<{ l
   const t = copy(locale);
   return (
     <MarketingPage locale={locale} title={t.consultation.title} body={t.consultation.body} nodeId="5:69">
-      <BusinessInquiryForm locale={locale} />
+      <BusinessInquiryForm locale={locale} defaultConcern="consultation" />
       <CommercialNextActions locale={locale} offerId="free-account-consultation" />
     </MarketingPage>
   );
