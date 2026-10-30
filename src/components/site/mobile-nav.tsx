@@ -49,7 +49,7 @@ export function MobileNav({ locale }: { locale: Locale }) {
         <nav
           id={panelId}
           className="absolute inset-x-2 top-full z-40 max-h-[min(76dvh,680px)] overflow-y-auto overscroll-contain rounded-b-[22px] border border-[var(--border)] bg-[var(--surface)] p-3 shadow-[0_25px_75px_rgba(3,16,33,.3)] backdrop-blur-xl"
-          aria-label={es ? 'Navegación móvil' : 'Mobile site navigation'}
+          aria-label={es ? 'Navegación principal' : 'Primary navigation'}
           data-testid="root-mobile-mega-menu"
         >
           {publicNav.map((item, index) => {
