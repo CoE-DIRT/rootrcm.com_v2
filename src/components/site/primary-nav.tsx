@@ -95,7 +95,7 @@ export function PrimaryNav({ locale }: { locale: Locale }) {
                 aria-label={locale === 'es' ? `Opciones de ${t.nav[entry.key]}` : `Show ${t.nav[entry.key]} options`}
                 aria-expanded={shown}
                 aria-controls={`root-menu-${index}`}
-                onClick={() => setOpen(shown ? null : index)}
+                onClick={() => setOpen(index)}
                 onKeyDown={(event) => {
                   if (event.key === 'ArrowDown') {
                     event.preventDefault();
