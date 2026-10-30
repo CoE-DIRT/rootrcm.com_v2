@@ -43,7 +43,7 @@ test('integrations remain typed disabled adapters', () => {
   assert.match(adapter, /hubspotAdapter/);
   // Delivery is disabled: the route must not claim to store or forward leads.
   assert.match(inquiry, /inquiry_submission_unavailable/);
-  assert.match(inquiry, /status:\\s*503/);
+  assert.ok(inquiry.includes('status: 503'));
   assert.doesNotMatch(inquiry, /received_local_only/);
 });
 
