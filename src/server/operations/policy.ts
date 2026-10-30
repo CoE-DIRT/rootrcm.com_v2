@@ -49,11 +49,12 @@ function previewGrant(orgId: OpsOrgId): EntitlementGrant {
 /**
  * Tenant PDP for the synthetic operations engine.
  * Browser persona/orgId are selectors. Capability comes from the signed
- * presentation cookie, never from the JSON body.
+ * presentation cookie, never from the JSON body. Omitted capability is
+ * fail-closed to `client` — never operator.
  * Entitlement source is always preview — Stripe is never consulted.
  */
 export function authorizeOpsPreview(request: OpsAccessRequest): OpsAccessOk | OpsAccessDenied {
-  const capability = request.capability ?? 'operator';
+  const capability = request.capability ?? 'client';
   const requestedPersona = capability === 'client' ? 'client' : request.persona;
   if (!isOpsPersona(requestedPersona)) {
     return { allow: false, decision: { allow: false, code: 'forbidden' } };

@@ -26,6 +26,10 @@ import {
 } from '../../domain/operations/types.ts';
 import { authorizeOpsPreview } from './policy.ts';
 import {
+  getDemoSessionBackend,
+  type DemoSessionRecord,
+} from './persistence.ts';
+import {
   OPS_ACTION_LIMIT,
   OPS_ACTION_WINDOW_MS,
   OPS_SESSION_TTL_MS,
@@ -33,34 +37,35 @@ import {
   type OpsSessionContext,
 } from './session.ts';
 
-type SessionSlot = {
-  snapshot: OpsSnapshot;
-  expiresAt: number;
-  actionTimes: number[];
-};
-
-const sessions = new Map<string, SessionSlot>();
-
-function pruneSessions(now = Date.now()): void {
-  for (const [id, slot] of sessions) {
-    if (slot.expiresAt <= now) sessions.delete(id);
-  }
+function persist(record: DemoSessionRecord): void {
+  getDemoSessionBackend().save(record);
 }
 
-function slotFor(session: OpsSessionContext, now = Date.now()): SessionSlot {
-  pruneSessions(now);
-  let slot = sessions.get(session.id);
-  if (!slot || slot.expiresAt <= now) {
-    slot = {
+function slotFor(session: OpsSessionContext, now = Date.now()): DemoSessionRecord {
+  const backend = getDemoSessionBackend();
+  backend.prune(now);
+  const existing = backend.load(session.id);
+  if (!existing || existing.expiresAt <= now) {
+    const fresh: DemoSessionRecord = {
+      sessionId: session.id,
       snapshot: createSeedSnapshot(),
       expiresAt: now + OPS_SESSION_TTL_MS,
       actionTimes: [],
     };
-    sessions.set(session.id, slot);
-  } else {
-    slot.expiresAt = now + OPS_SESSION_TTL_MS;
+    persist(fresh);
+    return fresh;
   }
-  return slot;
+  existing.expiresAt = now + OPS_SESSION_TTL_MS;
+  persist(existing);
+  return existing;
+}
+
+function activePreviewGrant(snapshot: OpsSnapshot, orgId: OpsOrgId) {
+  return (
+    snapshot.entitlements.find(
+      (row) => row.orgId === orgId && row.source === 'preview' && row.state === 'active',
+    ) ?? null
+  );
 }
 
 export function peekOpsSnapshot(session: OpsSessionContext = TEST_OPS_SESSION): OpsSnapshot {
@@ -69,7 +74,8 @@ export function peekOpsSnapshot(session: OpsSessionContext = TEST_OPS_SESSION): 
 
 export function resetOpsStore(session: OpsSessionContext = TEST_OPS_SESSION): OpsSnapshot {
   const snapshot = resetSnapshot();
-  sessions.set(session.id, {
+  persist({
+    sessionId: session.id,
     snapshot,
     expiresAt: Date.now() + OPS_SESSION_TTL_MS,
     actionTimes: [],
@@ -164,7 +170,9 @@ export function projectOpsView(
     appointments,
   });
 
-  const entitlement = snapshot.entitlements.find((row) => row.orgId === orgId);
+  const entitlement = snapshot.entitlements.find(
+    (row) => row.orgId === orgId && row.source === 'preview',
+  );
   return {
     origin: OPS_ORIGIN,
     orgId,
@@ -206,7 +214,11 @@ export function readOpsState(
 ): OpsReadResult {
   const access = authorizeOpsPreview({ orgId, persona, capability: session.capability });
   if (!access.allow) return { ok: false, kind: 'denied', decision: access.decision };
-  return { ok: true, view: projectOpsView(slotFor(session).snapshot, access.orgId, access.persona) };
+  const snapshot = slotFor(session).snapshot;
+  if (!activePreviewGrant(snapshot, access.orgId)) {
+    return { ok: false, kind: 'denied', decision: { allow: false, code: 'entitlement_inactive' } };
+  }
+  return { ok: true, view: projectOpsView(snapshot, access.orgId, access.persona) };
 }
 
 export type OpsWriteResult =
@@ -215,9 +227,10 @@ export type OpsWriteResult =
   | { ok: false; kind: 'unknown_action' }
   | { ok: false; kind: 'unknown_resource' }
   | { ok: false; kind: 'invalid_request' }
-  | { ok: false; kind: 'rate_limited' };
+  | { ok: false; kind: 'rate_limited' }
+  | { ok: false; kind: 'persistence_unavailable' };
 
-function rateLimited(slot: SessionSlot, now = Date.now()): boolean {
+function rateLimited(slot: DemoSessionRecord, now = Date.now()): boolean {
   slot.actionTimes = slot.actionTimes.filter((stamp) => now - stamp < OPS_ACTION_WINDOW_MS);
   if (slot.actionTimes.length >= OPS_ACTION_LIMIT) return true;
   slot.actionTimes.push(now);
@@ -238,14 +251,25 @@ export function applyOpsAction(
   });
   if (!access.allow) return { ok: false, kind: 'denied', decision: access.decision };
 
+  if (!getDemoSessionBackend().writable) {
+    return { ok: false, kind: 'persistence_unavailable' };
+  }
+
   const slot = slotFor(session);
-  if (rateLimited(slot)) return { ok: false, kind: 'rate_limited' };
+  if (!activePreviewGrant(slot.snapshot, access.orgId)) {
+    return { ok: false, kind: 'denied', decision: { allow: false, code: 'entitlement_inactive' } };
+  }
+  if (rateLimited(slot)) {
+    persist(slot);
+    return { ok: false, kind: 'rate_limited' };
+  }
 
   const { orgId, persona } = access;
 
   switch (request.type) {
     case 'reset': {
       slot.snapshot = resetSnapshot();
+      persist(slot);
       return { ok: true, view: projectOpsView(slot.snapshot, orgId, persona), changed: true };
     }
     case 'advance_credentialing': {
@@ -262,6 +286,7 @@ export function applyOpsAction(
         return { ok: false, kind: 'unknown_resource' };
       }
       slot.snapshot = result.snapshot;
+      persist(slot);
       return { ok: true, view: projectOpsView(slot.snapshot, orgId, persona), changed: result.changed };
     }
     case 'deny_claim': {
@@ -272,16 +297,19 @@ export function applyOpsAction(
       }
       if (result.error === 'not_found') return { ok: false, kind: 'unknown_resource' };
       slot.snapshot = result.snapshot;
+      persist(slot);
       return { ok: true, view: projectOpsView(slot.snapshot, orgId, persona), changed: result.changed };
     }
     case 'advance_timeline': {
       const result = advanceTimeline(slot.snapshot, { orgId, persona });
       slot.snapshot = result.snapshot;
+      persist(slot);
       return { ok: true, view: projectOpsView(slot.snapshot, orgId, persona), changed: result.changed };
     }
     case 'set_persona': {
       const result = setPersona(slot.snapshot, { orgId, persona });
       slot.snapshot = result.snapshot;
+      persist(slot);
       return { ok: true, view: projectOpsView(slot.snapshot, orgId, persona), changed: result.changed };
     }
     case 'set_tier': {
@@ -290,6 +318,7 @@ export function applyOpsAction(
         return { ok: false, kind: 'unknown_resource' };
       }
       slot.snapshot = result.snapshot;
+      persist(slot);
       return { ok: true, view: projectOpsView(slot.snapshot, orgId, persona), changed: result.changed };
     }
     default:
@@ -302,7 +331,8 @@ export function replaceOpsStore(
   snapshot: OpsSnapshot,
   session: OpsSessionContext = TEST_OPS_SESSION,
 ): void {
-  sessions.set(session.id, {
+  persist({
+    sessionId: session.id,
     snapshot: cloneSnapshot(snapshot),
     expiresAt: Date.now() + OPS_SESSION_TTL_MS,
     actionTimes: [],

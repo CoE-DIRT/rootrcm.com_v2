@@ -39,6 +39,8 @@ Place values in the Appwrite Sites / GitHub Environment secret store for that en
 | `TURNSTILE_SECRET_KEY` | Cloudflare | Public forms | After inquiry outbox exists |
 | `ROOT_AUDIT_DRIVER` | ROOT | Audit sink | `memory` / future store; default no-op |
 | `ROOT_OUTBOX_DRIVER` | ROOT | Inquiry outbox | Unused by public route until founder activation |
+| `ROOT_DEMO_SESSION_BACKEND` | ROOT | Ops demo snapshots | Unset/`memory` = process Map. Any other value = fail-closed stub. Do not invent Appwrite/KV credentials. |
+| `ROOT_DEMO_SESSION_SECRET` | ROOT | Signed ops cookies | Optional HMAC override; empty uses the preview default |
 
 ## Flag map (default deny)
 
@@ -51,6 +53,16 @@ Place values in the Appwrite Sites / GitHub Environment secret store for that en
 | `ROOT_ENABLE_LIVE_CLAIMS` | never from env | hard false | DIRT/PHI — separate ADR |
 
 Unset, empty, `1`, `yes`, and any value other than the string `true` is deny.
+
+## Founder reconnection (exact; no agent mcp_auth loops)
+
+HubSpot MCP in this workspace is **error** (live tool discovery failed). Do not retry `mcp_auth` from agents.
+
+1. In Cursor: **Settings → Cursor Settings → Tools & MCP** → **Connect** next to HubSpot. Sign in to the ROOT **sandbox** portal, not V1 production.
+2. Keep `ROOT_ENABLE_CRM=false` and `HUBSPOT_PRIVATE_APP_TOKEN` empty in git. After MCP reconnects, still do not write contacts, companies, or deals until consent/dedupe signoff.
+3. Apollo is already connected as Info Desk (`info@rootrcm.com`). Do **not** spend credits, create sequences, or enable `ROOT_ENABLE_PROSPECTING`.
+4. Stripe stays disabled: empty `STRIPE_WEBHOOK_SECRET` continues to fail closed. Browser success URLs must not grant entitlements.
+5. Appwrite V2 is unprovisioned. Create a **new** Cloud project before any `ROOT_ENABLE_AUTH=true`. Do not reuse V1 project IDs or keys.
 
 ## Explicitly out of this step
 

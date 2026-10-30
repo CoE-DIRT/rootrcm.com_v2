@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import type { BusinessLead, LeadDedupKey, LeadOwnership, LeadSource } from './lead.ts';
 import { leadSources } from './lead.ts';
 import {
@@ -20,6 +21,15 @@ export function createLeadDedupKey(email: string, organization: string): LeadDed
   const emailNorm = email.trim().toLowerCase();
   const orgNorm = organization.trim().toLowerCase().replace(/\s+/g, ' ');
   return `lead_v1:${emailNorm}|${orgNorm}` as LeadDedupKey;
+}
+
+/** Hash only — never persist the inquiry body or claim the lead was sent. */
+export function businessLeadPayloadHash(
+  lead: Pick<BusinessLead, 'dedupKey' | 'consentVersion' | 'correlationId'>,
+): string {
+  return `sha256:${createHash('sha256')
+    .update(`${lead.dedupKey}|${lead.consentVersion}|${lead.correlationId}`)
+    .digest('hex')}`;
 }
 
 export function defaultLeadOwnership(): LeadOwnership {

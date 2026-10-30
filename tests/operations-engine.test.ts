@@ -7,6 +7,7 @@ import {
   advanceCredentialing,
   denyClaim,
   reset,
+  setPersona,
 } from '../src/domain/operations/transitions.ts';
 import { claimStatusStates } from '../src/domain/operations/types.ts';
 import { authorizeOpsPreview } from '../src/server/operations/policy.ts';
@@ -19,6 +20,8 @@ import {
 import type { OpsSessionContext } from '../src/server/operations/session.ts';
 
 const PHI_HINT = /\b(npi|dob|date of birth|mrn|ssn|social security)\b/i;
+
+delete process.env.ROOT_DEMO_SESSION_BACKEND;
 
 function uniqueIds(ids: string[]): void {
   assert.equal(new Set(ids).size, ids.length, `duplicate ids: ${ids.join(',')}`);
@@ -364,7 +367,15 @@ test('tenant isolation: client own-org only; staff assigned work; 403 cross-tena
   assert.equal(unknownOrg.allow, false);
   if (!unknownOrg.allow) assert.equal(unknownOrg.decision.code, 'not_a_member');
 
-  const staffInternal = authorizeOpsPreview({ orgId: 'root-internal', persona: 'staff' });
+  const omittedCapability = authorizeOpsPreview({ orgId: 'root-internal', persona: 'staff' });
+  assert.equal(omittedCapability.allow, false);
+  if (!omittedCapability.allow) assert.equal(omittedCapability.decision.code, 'forbidden');
+
+  const staffInternal = authorizeOpsPreview({
+    orgId: 'root-internal',
+    persona: 'staff',
+    capability: 'operator',
+  });
   assert.equal(staffInternal.allow, true);
 
   const cross = applyOpsAction({
@@ -420,6 +431,7 @@ test('ops routes fail closed on cache, unknown action, and PHI-shaped keys', () 
   assert.match(actionRoute, /applicationId/);
   assert.match(actionRoute, /readOpsSessionFromRequest/);
   assert.match(actionRoute, /rate_limited/);
+  assert.match(actionRoute, /persistence_unavailable/);
   assert.match(stateRoute, /readOpsSessionFromRequest/);
   assert.equal(actionRoute.includes('ssn'), false);
   assert.equal(actionRoute.includes('patient'), false);
@@ -469,6 +481,16 @@ test('demo sessions isolate mutations; client capability cannot operate; org tie
   if (!cedar.ok) return;
   assert.equal(cedar.view.preview.tier, 'Free');
   assert.equal(cedar.view.preview.orgId, 'cedar-grove');
+
+  const metro = readOpsState('metro-asc', 'staff', alpha);
+  assert.equal(metro.ok, true);
+  if (!metro.ok) return;
+  assert.equal(metro.view.preview.tier, 'Growth');
+
+  const managed = readOpsState('bayview', 'staff', alpha);
+  assert.equal(managed.ok, true);
+  if (!managed.ok) return;
+  assert.equal(managed.view.preview.tier, 'Managed');
 });
 
 test('client projection never mixes another tenant into metrics', () => {
@@ -485,4 +507,28 @@ test('client projection never mixes another tenant into metrics', () => {
   assert.ok(view.claims.every((row) => row.orgId === 'cedar-grove'));
   assert.equal(view.preview.tier, 'Free');
   assert.equal(view.preview.orgId, 'cedar-grove');
+});
+
+test('switching practices projects the selected org preview entitlement, not the previous label', () => {
+  const session: OpsSessionContext = { id: 'sess-tier-switch', capability: 'operator' };
+  resetOpsStore(session);
+
+  applyOpsAction({ type: 'set_tier', orgId: 'bayview', persona: 'staff' }, session);
+  const bayview = readOpsState('bayview', 'staff', session);
+  assert.equal(bayview.ok, true);
+  if (!bayview.ok) return;
+  assert.equal(bayview.view.preview.tier, 'Free');
+  assert.equal(bayview.view.entitlements[0]?.source, 'preview');
+
+  const switched = applyOpsAction({ type: 'set_persona', orgId: 'metro-asc', persona: 'staff' }, session);
+  assert.equal(switched.ok, true);
+  if (!switched.ok) return;
+  assert.equal(switched.view.preview.orgId, 'metro-asc');
+  assert.equal(switched.view.preview.tier, 'Growth');
+
+  const domain = setPersona(createSeedSnapshot(), { orgId: 'cedar-grove', persona: 'staff' });
+  assert.equal(domain.snapshot.preview.orgId, 'cedar-grove');
+  const projected = projectOpsView(domain.snapshot, 'cedar-grove', 'staff');
+  assert.equal(projected.preview.tier, 'Free');
+  assert.notEqual(projected.preview.tier, 'Managed');
 });

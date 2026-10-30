@@ -93,6 +93,13 @@ export async function POST(request: Request) {
     if (result.kind === 'rate_limited') {
       return jsonError(429, 'rate_limited', 'Too many operations actions for this demo session.');
     }
+    if (result.kind === 'persistence_unavailable') {
+      return jsonError(
+        503,
+        'persistence_unavailable',
+        'Demo session persistence is not available. No live store was written.',
+      );
+    }
     if (result.kind === 'unknown_action') {
       return jsonError(422, 'unknown_action', 'Unknown operations action.');
     }
