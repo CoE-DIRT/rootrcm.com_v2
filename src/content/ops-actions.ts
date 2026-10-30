@@ -281,7 +281,7 @@ function lookupOpsCopy(value: string): Pair | undefined {
 }
 
 function translateOpsPattern(value: string): Pair | undefined {
-  const moved = value.match(/^(\S+) moved from (\S+) to (\S+)\.?$/);
+  const moved = value.match(/^(\S+) moved from (\S+) to ([A-Za-z0-9_]+)\.?$/);
   if (moved) {
     const [, id, from, to] = moved;
     const fromPair = lookupOpsCopy(from) ?? { en: from, es: from };
