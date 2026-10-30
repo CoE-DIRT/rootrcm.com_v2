@@ -25,6 +25,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     <main id="main" className="page-width pb-16 pt-6">
       <div className="hidden lg:block">
         <PageHero
+          locale={locale}
           eyebrow={t.home.eyebrow}
           title={t.home.titleDesktop}
           body={t.home.bodyDesktop}
@@ -35,6 +36,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       </div>
       <div className="hidden md:block lg:hidden">
         <PageHero
+          locale={locale}
           eyebrow={t.home.eyebrow}
           title={t.home.titleTablet}
           body={t.home.bodyTablet}
@@ -45,6 +47,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       </div>
       <div className="md:hidden">
         <PageHero
+          locale={locale}
           eyebrow={t.home.eyebrow}
           title={t.home.titleMobile}
           body={t.home.bodyMobile}
