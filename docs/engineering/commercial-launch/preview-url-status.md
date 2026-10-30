@@ -8,8 +8,8 @@ Canonical live status: [../preview-url-status.md](../preview-url-status.md).
 
 An ephemeral Cloudflare quick tunnel was opened against a local `next start` of this branch. It is **not** a durable client demo and dies when this machine or the tunnel process stops.
 
-- Session URL (ephemeral): see [../preview-url-status.md](../preview-url-status.md) (`https://mixer-ongoing-enjoy-intend.trycloudflare.com/en` as of this workstation session)
-- Verified 2026-10-30: HTTPS 200, Plans catalog including **$2,500** diagnostic, Spanish Infectious Disease page
+- Session URL (ephemeral): see [../preview-url-status.md](../preview-url-status.md) (`https://exhibit-debate-dont-and.trycloudflare.com/en` as of 2026-10-31 00:16 PKT, SHA `5c025cd`, origin `127.0.0.1:3021`)
+- Verified 2026-10-31: HTTP/HTTPS 200 on `/en`, `/en/plans` (canonical **$2,500** diagnostic), Spanish Infectious Disease, sales/client/staff/credentialing previews, and ops state API. Previous trycloudflare hostname expired (504).
 - Indexing remains off (`X-Robots-Tag: none`)
 
 Do not bookmark this hostname. Do not treat it as staging.
