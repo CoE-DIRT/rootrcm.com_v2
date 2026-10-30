@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 620" role="img" aria-label="Abstract network of revenue operations checkpoints">
+<defs>
+  <linearGradient id="bg" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#061225"/><stop offset=".56" stop-color="#102847"/><stop offset="1" stop-color="#0b3757"/></linearGradient>
+  <radialGradient id="glow"><stop stop-color="#11e1ee" stop-opacity=".4"/><stop offset="1" stop-color="#11e1ee" stop-opacity="0"/></radialGradient>
+  <pattern id="dots" width="25" height="25" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="#89d8fa" fill-opacity=".17"/></pattern>
+  <linearGradient id="beam" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#11e1ee"/><stop offset="1" stop-color="#7da9ff"/></linearGradient>
+  <filter id="soft"><feGaussianBlur stdDeviation="24"/></filter>
+  <filter id="drop"><feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#030b19" flood-opacity=".5"/></filter>
+</defs>
+<rect width="1000" height="620" fill="url(#bg)"/><rect width="1000" height="620" fill="url(#dots)"/>
+<ellipse cx="650" cy="330" rx="290" ry="220" fill="url(#glow)" filter="url(#soft)"/>
+<g stroke="url(#beam)" stroke-width="2" stroke-opacity=".56" fill="none">
+  <path d="M148 318 C268 245 265 202 385 216 S570 276 680 180 S845 135 926 172"/>
+  <path d="M155 318 C287 392 349 407 451 362 S628 388 730 395 S875 445 942 385"/>
+  <path d="M386 216 C425 258 438 313 451 362"/><path d="M680 180 C715 255 716 333 730 395"/>
+</g>
+<g fill="#11e1ee" opacity=".85"><circle cx="148" cy="318" r="7"/><circle cx="385" cy="216" r="7"/><circle cx="451" cy="362" r="7"/><circle cx="680" cy="180" r="7"/><circle cx="730" cy="395" r="7"/><circle cx="926" cy="172" r="7"/></g>
+<g filter="url(#drop)">
+  <g transform="translate(292 142)"><rect width="230" height="120" rx="19" fill="#102b43" stroke="#8bcfe8" stroke-opacity=".5"/><rect x="20" y="23" width="95" height="9" rx="5" fill="#b8eeff" opacity=".55"/><rect x="20" y="49" width="180" height="8" rx="4" fill="#426581"/><rect x="20" y="70" width="149" height="8" rx="4" fill="#11e1ee" opacity=".84"/><rect x="20" y="91" width="116" height="8" rx="4" fill="#6c9ef0"/></g>
+  <g transform="translate(570 280)"><rect width="255" height="130" rx="19" fill="#102b43" stroke="#8bcfe8" stroke-opacity=".5"/><rect x="22" y="22" width="120" height="10" rx="5" fill="#b8eeff" opacity=".55"/><path d="M24 98L62 84 91 93 130 58 159 70 185 52 226 41" fill="none" stroke="#11e1ee" stroke-width="4" stroke-linecap="round"/><circle cx="226" cy="41" r="5" fill="#11e1ee"/></g>
+  <g transform="translate(132 328)"><rect width="218" height="120" rx="19" fill="#102b43" stroke="#8bcfe8" stroke-opacity=".5"/><rect x="18" y="22" width="124" height="9" rx="5" fill="#b8eeff" opacity=".55"/><g fill="#6ec8ff"><rect x="22" y="68" width="29" height="33" rx="4" opacity=".43"/><rect x="61" y="54" width="29" height="47" rx="4" opacity=".63"/><rect x="100" y="42" width="29" height="59" rx="4" opacity=".87"/><rect x="139" y="31" width="29" height="70" rx="4" fill="#11e1ee"/></g></g>
+</g>
+<circle cx="727" cy="400" r="120" fill="none" stroke="#11e1ee" stroke-opacity=".12"/><circle cx="727" cy="400" r="162" fill="none" stroke="#11e1ee" stroke-opacity=".08"/>
+</svg>
