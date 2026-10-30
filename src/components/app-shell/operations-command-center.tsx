@@ -323,7 +323,7 @@ export function OperationsCommandCenter({
         </div>
       </header>
 
-      {loading ? (
+      {loading || (!state && !error) ? (
         <p data-testid="ops-loading" className="rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-4 text-sm font-semibold" role="status">{t.loadingOps}</p>
       ) : null}
       {error ? (

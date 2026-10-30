@@ -5,10 +5,12 @@ async function requireOpsApi(page: Page, orgId = 'bayview', persona = 'staff') {
   const response = await page.request.get(
     `/api/v1/ops/state?orgId=${encodeURIComponent(orgId)}&persona=${encodeURIComponent(persona)}`,
   );
-  expect(
-    response.ok(),
-    `GET /api/v1/ops/state returned HTTP ${response.status()} — operations API is required; do not skip.`,
-  ).toBeTruthy();
+  if (!response.ok()) {
+    const body = await response.text();
+    throw new Error(
+      `GET /api/v1/ops/state?orgId=${orgId}&persona=${persona} returned HTTP ${response.status()}: ${body}`,
+    );
+  }
   return response.json();
 }
 
@@ -16,18 +18,12 @@ async function readyDashboard(page: Page) {
   const dashboard = page.getByTestId('rcm-command-center');
   await expect(dashboard).toBeVisible();
   const ready = dashboard.getByTestId('ops-ready');
-  try {
-    await expect(ready).toBeVisible({ timeout: 20_000 });
-  } catch (error) {
-    const failed = dashboard.getByTestId('ops-error');
-    const detail =
-      (await failed.count()) > 0
-        ? ((await failed.textContent()) ?? 'operations API failed')
-        : error instanceof Error
-          ? error.message
-          : 'ops-ready never appeared';
-    throw new Error(detail);
+  const error = dashboard.getByTestId('ops-error');
+  await expect(ready.or(error)).toBeVisible({ timeout: 20000 });
+  if (await error.isVisible()) {
+    throw new Error((await error.innerText()) || 'operations API failed');
   }
+  await expect(ready).toBeVisible();
   return dashboard;
 }
 

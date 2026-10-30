@@ -4,18 +4,12 @@ async function readyDashboard(page: import('@playwright/test').Page) {
   const dashboard = page.getByTestId('rcm-command-center');
   await expect(dashboard).toBeVisible();
   const ready = dashboard.getByTestId('ops-ready');
-  try {
-    await expect(ready).toBeVisible({ timeout: 20_000 });
-  } catch (error) {
-    const failed = dashboard.getByTestId('ops-error');
-    const detail =
-      (await failed.count()) > 0
-        ? ((await failed.textContent()) ?? 'operations API failed')
-        : error instanceof Error
-          ? error.message
-          : 'ops-ready never appeared';
-    throw new Error(detail);
+  const error = dashboard.getByTestId('ops-error');
+  await expect(ready.or(error)).toBeVisible({ timeout: 20000 });
+  if (await error.isVisible()) {
+    throw new Error((await error.innerText()) || 'operations API failed');
   }
+  await expect(ready).toBeVisible();
   return dashboard;
 }
 
