@@ -50,7 +50,7 @@ export function AppShell({
           ))}
         </select>
         <p className="muted mt-2 text-xs">{t.workspace.tenantNote}</p>
-        <nav aria-label="Workspace" className="mt-4 grid gap-2 text-sm">
+        <nav aria-label={t.workspace.primaryNav} className="mt-4 grid gap-2 text-sm">
           {nav.map((item) => (
             <Link key={item.href} href={localizedPath(locale, item.href)}>
               {t.workspace[item.key]}
