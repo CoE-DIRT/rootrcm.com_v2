@@ -1,18 +1,15 @@
 // Package api exposes deterministic PHI-free healthcare transaction previews.
 // It never contacts payers, Stedi, EHR systems, CAQH or PECOS.
+// Identities match the Next.js operations seed; this service is not a second ledger.
 package api
 
 import (
 	"encoding/json"
 	"net/http"
 	"strings"
-)
 
-var demoOrganizations = map[string]bool{
-	"bayview":     true,
-	"cedar-grove": true,
-	"metro-asc":   true,
-}
+	"github.com/CoE-DIRT/rootrcm.com_v2/services/healthcare-go/internal/seed"
+)
 
 func jsonResponse(w http.ResponseWriter, status int, data any) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
@@ -25,10 +22,12 @@ func jsonResponse(w http.ResponseWriter, status int, data any) {
 
 func demoEnvelope(org string, data any) map[string]any {
 	response := map[string]any{
-		"mode":       "demonstration",
-		"source":     "synthetic",
-		"verifiedAt": nil,
-		"data":       data,
+		"mode":            "demonstration",
+		"source":          "synthetic",
+		"verifiedAt":      nil,
+		"identityCatalog": seed.IdentityCatalog,
+		"ledger":          "operations",
+		"data":            data,
 	}
 	if org != "" {
 		response["orgId"] = org
@@ -50,7 +49,7 @@ func getOnly(handler http.HandlerFunc) http.HandlerFunc {
 func withOrg(handler func(http.ResponseWriter, *http.Request, string)) http.HandlerFunc {
 	return getOnly(func(w http.ResponseWriter, r *http.Request) {
 		org := strings.TrimSpace(r.URL.Query().Get("orgId"))
-		if !demoOrganizations[org] {
+		if !seed.Organizations[org] {
 			jsonResponse(w, http.StatusBadRequest, map[string]string{
 				"error": "unknown_synthetic_organization",
 				"hint":  "Supported: bayview, cedar-grove, metro-asc",
@@ -67,43 +66,38 @@ func NewHandler() http.Handler {
 
 	mux.HandleFunc("/healthz", getOnly(func(w http.ResponseWriter, r *http.Request) {
 		jsonResponse(w, http.StatusOK, map[string]any{
-			"status": "ok", "service": "root-healthcare-go",
-			"mode": "demonstration", "livePayerConnection": false,
+			"status":              "ok",
+			"service":             "root-healthcare-go",
+			"mode":                "demonstration",
+			"livePayerConnection": false,
+			"identityCatalog":     seed.IdentityCatalog,
 		})
 	}))
 
 	mux.HandleFunc("/v1/capabilities", getOnly(func(w http.ResponseWriter, r *http.Request) {
 		jsonResponse(w, http.StatusOK, demoEnvelope("", map[string]any{
-			"language": "Go", "live": false,
-			"transactionFamilies": []string{
-				"270/271 eligibility",
-				"276/277 claim status",
-				"credentialing application status",
-			},
+			"language":                    "Go",
+			"live":                        false,
+			"transactionFamilies":         []string{"270/271 eligibility", "276/277 claim status", "credentialing application status"},
 			"plannedPrimaryClearinghouse": "Stedi",
+			"identityCatalog":             seed.IdentityCatalog,
+			"syntheticOrganizations":      seed.OrganizationIDs,
+			"stedi":                       map[string]any{"status": "disabled", "live": false, "role": "planned_primary"},
 			"credentialingNote":           "Payer application status needs authorized evidence; 271/NPPES does not prove enrollment.",
+			"ledgerNote":                  "Next.js operations snapshot is the mutable demonstrator ledger; this service is a static identity-aligned preview.",
 		}))
 	}))
 
 	mux.HandleFunc("/v1/eligibility", withOrg(func(w http.ResponseWriter, r *http.Request, org string) {
-		jsonResponse(w, http.StatusOK, demoEnvelope(org, []map[string]any{
-			{"id": "DEMO-ELG-01", "payer": "Healthfirst", "transaction": "270/271", "state": "review_required", "nextAction": "Confirm coverage after approved integration"},
-			{"id": "DEMO-ELG-02", "payer": "Aetna", "transaction": "270/271", "state": "pending_check", "nextAction": "Prepare benefits inquiry"},
-		}))
+		jsonResponse(w, http.StatusOK, demoEnvelope(org, seed.EligibilityByOrg[org]))
 	}))
 
 	mux.HandleFunc("/v1/claims/status", withOrg(func(w http.ResponseWriter, r *http.Request, org string) {
-		jsonResponse(w, http.StatusOK, demoEnvelope(org, []map[string]any{
-			{"id": "DEMO-CLM-1001", "payer": "Healthfirst", "transaction": "276/277", "stage": "payer_processing", "nextAction": "Request authorized payer status"},
-			{"id": "DEMO-CLM-1002", "payer": "Aetna", "transaction": "276/277", "stage": "denial_review", "nextAction": "Investigate denial and prepare appeal"},
-		}))
+		jsonResponse(w, http.StatusOK, demoEnvelope(org, seed.ClaimsByOrg[org]))
 	}))
 
 	mux.HandleFunc("/v1/credentialing", withOrg(func(w http.ResponseWriter, r *http.Request, org string) {
-		jsonResponse(w, http.StatusOK, demoEnvelope(org, []map[string]any{
-			{"applicationId": "DEMO-CRED-001", "providerAlias": "Sample Clinician A", "payer": "Healthfirst", "phase": "payer_review", "owner": "Enrollment specialist", "nextAction": "Request payer acknowledgement", "effectiveDate": nil},
-			{"applicationId": "DEMO-CRED-002", "providerAlias": "Sample Clinician B", "payer": "Aetna", "phase": "caqh_attestation", "owner": "Credentialing coordinator", "nextAction": "Validate documentation", "effectiveDate": nil},
-		}))
+		jsonResponse(w, http.StatusOK, demoEnvelope(org, seed.CredentialingByOrg[org]))
 	}))
 
 	return mux

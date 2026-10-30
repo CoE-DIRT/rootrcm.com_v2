@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { connectPayer, describePayerConnection } from '../src/integrations/payer/client.ts';
 import { connectEhr, describeEhrConnection } from '../src/integrations/ehr/client.ts';
+import { connectStedi, describeStediConnection } from '../src/integrations/stedi/client.ts';
 
 test('payer connection adapter is disabled and does not claim a partnership', () => {
   const request = {
@@ -15,6 +16,20 @@ test('payer connection adapter is disabled and does not claim a partnership', ()
   assert.equal(described.live, false);
   assert.equal(described.claimedPartnership, false);
   assert.equal(described.approvedIntegration, false);
+});
+
+test('Stedi adapter is typed disabled planned primary and never live', () => {
+  const request = {
+    orgId: 'bayview',
+    payerCode: 'operational.clearinghouse.claim_status',
+    transaction: '276/277' as const,
+  };
+  const result = connectStedi(request);
+  const described = describeStediConnection(request);
+  assert.equal(result.status, 'disabled');
+  assert.equal(described.live, false);
+  assert.equal(described.role, 'planned_primary');
+  assert.equal(described.sandboxAuthorized, false);
 });
 
 test('EHR connection adapter is disabled and is not a familiarity catalog', () => {
