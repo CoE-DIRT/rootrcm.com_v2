@@ -34,3 +34,17 @@ The response envelope includes `mode: demonstration`, `source: synthetic`, `veri
 6. Production credentials arrive as the founder-controlled final step; do not enable live calls without approved test evidence.
 
 The H0-H8 implementation staging plan in PR #36 should be reviewed and reconciled before production vendor activation.
+
+
+## Integrate the Go preview with ROOT V2 Next.js locally
+
+Run the Go service and the Next.js frontend in separate PowerShell terminals. In the Next.js process, set only the **local preview** configuration:
+
+```powershell
+$env:ROOT_GO_HEALTHCARE_PREVIEW_URL = "http://127.0.0.1:8787"
+npm run dev
+```
+
+Open `/en/technology` or `/es/technology` and interact with the new Go healthcare API architecture panel. The Next.js read-only endpoint `/api/v1/healthcare/demo?kind=capabilities` proxies only approved static paths to a **loopback-only** Go process, verifies synthetic provenance and returns HTTP 503 when Go is absent. No live patient, clearinghouse or payer credentials are accepted or required.
+
+This preview bridge is **not** the planned production regulated API. A real hosted Go service requires an authenticated gateway, verified server-only configuration, durable tenant controls, event ingestion, source provenance and approved vendor contracts. Never publish this demo service directly or bind it to a public network interface.
