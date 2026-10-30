@@ -1,4 +1,11 @@
-export type IntegrationName = 'appwrite' | 'hubspot' | 'stripe' | 'apollo';
+export type IntegrationName =
+  | 'appwrite'
+  | 'hubspot'
+  | 'stripe'
+  | 'apollo'
+  | 'payer'
+  | 'ehr'
+  | 'outbox';
 
 export type DisabledAdapterResult = {
   ok: false;
@@ -6,6 +13,20 @@ export type DisabledAdapterResult = {
   integration: IntegrationName;
   message: string;
 };
+
+export class DisabledIntegrationError extends Error {
+  readonly status = 'disabled' as const;
+  readonly integration: IntegrationName;
+
+  constructor(integration: IntegrationName, message?: string) {
+    super(
+      message ??
+        `${integration} adapter is typed and disabled until environment confirmation and owner approval.`,
+    );
+    this.name = 'DisabledIntegrationError';
+    this.integration = integration;
+  }
+}
 
 export function disabledAdapter(integration: IntegrationName): DisabledAdapterResult {
   return {
@@ -20,3 +41,6 @@ export const appwriteAdapter = () => disabledAdapter('appwrite');
 export const hubspotAdapter = () => disabledAdapter('hubspot');
 export const stripeAdapter = () => disabledAdapter('stripe');
 export const apolloAdapter = () => disabledAdapter('apollo');
+export const payerAdapter = () => disabledAdapter('payer');
+export const ehrAdapter = () => disabledAdapter('ehr');
+export const outboxAdapter = () => disabledAdapter('outbox');

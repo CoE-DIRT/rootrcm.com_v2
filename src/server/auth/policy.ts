@@ -1,3 +1,4 @@
+import type { EntitlementState } from '../../domain/entitlement.ts';
 import { type Permission, type Role, roleHas } from '../../domain/identity/roles.ts';
 import { getFeatureFlags } from '../../lib/flags.ts';
 
@@ -16,9 +17,24 @@ export type AuthContext = {
   memberships: Membership[];
 };
 
+export type PolicyDenialCode =
+  | 'unauthenticated'
+  | 'auth_disabled'
+  | 'not_a_member'
+  | 'forbidden'
+  | 'entitlement_inactive';
+
 export type PolicyDecision =
   | { allow: true; membership: Membership }
-  | { allow: false; code: 'unauthenticated' | 'auth_disabled' | 'not_a_member' | 'forbidden' };
+  | { allow: false; code: PolicyDenialCode };
+
+export type EntitlementGrant = {
+  orgId: string;
+  featureCode: string;
+  state: EntitlementState;
+};
+
+const defaultEntitlementStates: readonly EntitlementState[] = ['active', 'grace'];
 
 export function requireSession(ctx: AuthContext): PolicyDecision {
   const flags = getFeatureFlags();
@@ -42,6 +58,25 @@ export function requireMembership(ctx: AuthContext, orgId: string, permission: P
   if (!membership) return { allow: false, code: 'not_a_member' };
   if (!roleHas(membership.role, permission)) return { allow: false, code: 'forbidden' };
   return { allow: true, membership };
+}
+
+/**
+ * Entitlement never bypasses tenant membership. Browser checkout redirects
+ * cannot mint a grant — callers must pass a server-side grant record.
+ */
+export function requireEntitlement(
+  ctx: AuthContext,
+  orgId: string,
+  permission: Permission,
+  grant: EntitlementGrant | null,
+  allowed: readonly EntitlementState[] = defaultEntitlementStates,
+): PolicyDecision {
+  const membership = requireMembership(ctx, orgId, permission);
+  if (!membership.allow) return membership;
+  if (!grant || grant.orgId !== orgId || !allowed.includes(grant.state)) {
+    return { allow: false, code: 'entitlement_inactive' };
+  }
+  return membership;
 }
 
 export function requireOrgRole(ctx: AuthContext, orgId: string, allowed: Role[]): PolicyDecision {
