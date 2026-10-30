@@ -1,12 +1,14 @@
 import { jsonApi, jsonError, policyDenied } from '@/server/http/errors';
+import { applyOpsCookies } from '@/server/operations/session-http';
+import { readOpsSessionFromRequest } from '@/server/operations/session';
 import { readOpsState } from '@/server/operations/store';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 /**
- * Synthetic operations snapshot. Query is orgId + persona only — extra
- * parameters are ignored so a client cannot submit PHI through this route.
+ * Synthetic operations snapshot. Query orgId/persona are selectors.
+ * Authorization comes from the signed presentation cookie, not the query string.
  */
 export async function GET(request: Request) {
   const url = new URL(request.url);
@@ -17,12 +19,14 @@ export async function GET(request: Request) {
     return jsonError(422, 'invalid_request', 'orgId and persona are required.');
   }
 
-  const result = readOpsState(orgId, persona);
+  const session = await readOpsSessionFromRequest(request);
+  const result = readOpsState(orgId, persona, session);
   if (!result.ok) return policyDenied(result.decision);
 
-  return jsonApi(200, {
+  const response = jsonApi(200, {
     data: result.view,
     meta: { correlationId: crypto.randomUUID() },
     error: null,
   });
+  return applyOpsCookies(response, session.id, session.capability);
 }

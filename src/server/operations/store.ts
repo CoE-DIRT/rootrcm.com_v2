@@ -1,7 +1,7 @@
 /**
- * In-memory process store cloned from the synthetic seed.
- * Reset restores seed. Tenant-scope by orgId; staff may see assigned work
- * across demo orgs. Client persona sees only the requested org.
+ * Presentation-session store cloned from the synthetic seed.
+ * Each signed demo session has its own snapshot. Reset restores that session
+ * only. Browser persona is a selector, not authorization.
  */
 import { computeMetrics } from '../../domain/operations/metrics.ts';
 import { createSeedSnapshot } from '../../domain/operations/seed.ts';
@@ -25,16 +25,56 @@ import {
   type OpsTask,
 } from '../../domain/operations/types.ts';
 import { authorizeOpsPreview } from './policy.ts';
+import {
+  OPS_ACTION_LIMIT,
+  OPS_ACTION_WINDOW_MS,
+  OPS_SESSION_TTL_MS,
+  TEST_OPS_SESSION,
+  type OpsSessionContext,
+} from './session.ts';
 
-let live: OpsSnapshot = createSeedSnapshot();
+type SessionSlot = {
+  snapshot: OpsSnapshot;
+  expiresAt: number;
+  actionTimes: number[];
+};
 
-export function peekOpsSnapshot(): OpsSnapshot {
-  return live;
+const sessions = new Map<string, SessionSlot>();
+
+function pruneSessions(now = Date.now()): void {
+  for (const [id, slot] of sessions) {
+    if (slot.expiresAt <= now) sessions.delete(id);
+  }
 }
 
-export function resetOpsStore(): OpsSnapshot {
-  live = resetSnapshot();
-  return live;
+function slotFor(session: OpsSessionContext, now = Date.now()): SessionSlot {
+  pruneSessions(now);
+  let slot = sessions.get(session.id);
+  if (!slot || slot.expiresAt <= now) {
+    slot = {
+      snapshot: createSeedSnapshot(),
+      expiresAt: now + OPS_SESSION_TTL_MS,
+      actionTimes: [],
+    };
+    sessions.set(session.id, slot);
+  } else {
+    slot.expiresAt = now + OPS_SESSION_TTL_MS;
+  }
+  return slot;
+}
+
+export function peekOpsSnapshot(session: OpsSessionContext = TEST_OPS_SESSION): OpsSnapshot {
+  return slotFor(session).snapshot;
+}
+
+export function resetOpsStore(session: OpsSessionContext = TEST_OPS_SESSION): OpsSnapshot {
+  const snapshot = resetSnapshot();
+  sessions.set(session.id, {
+    snapshot,
+    expiresAt: Date.now() + OPS_SESSION_TTL_MS,
+    actionTimes: [],
+  });
+  return snapshot;
 }
 
 function byOrg<T extends { orgId: string }>(rows: readonly T[], orgId: OpsOrgId): T[] {
@@ -124,11 +164,16 @@ export function projectOpsView(
     appointments,
   });
 
+  const entitlement = snapshot.entitlements.find((row) => row.orgId === orgId);
   return {
     origin: OPS_ORIGIN,
     orgId,
     persona,
-    preview: snapshot.preview,
+    preview: {
+      orgId,
+      persona,
+      tier: entitlement?.tier ?? snapshot.preview.tier,
+    },
     metrics,
     organizations,
     locations: byOrg(snapshot.locations, orgId),
@@ -154,10 +199,14 @@ export type OpsReadResult =
   | { ok: true; view: OpsStateView }
   | { ok: false; kind: 'denied'; decision: Extract<import('../auth/policy.ts').PolicyDecision, { allow: false }> };
 
-export function readOpsState(orgId: string, persona: string): OpsReadResult {
-  const access = authorizeOpsPreview({ orgId, persona });
+export function readOpsState(
+  orgId: string,
+  persona: string,
+  session: OpsSessionContext = TEST_OPS_SESSION,
+): OpsReadResult {
+  const access = authorizeOpsPreview({ orgId, persona, capability: session.capability });
   if (!access.allow) return { ok: false, kind: 'denied', decision: access.decision };
-  return { ok: true, view: projectOpsView(live, access.orgId, access.persona) };
+  return { ok: true, view: projectOpsView(slotFor(session).snapshot, access.orgId, access.persona) };
 }
 
 export type OpsWriteResult =
@@ -165,22 +214,43 @@ export type OpsWriteResult =
   | { ok: false; kind: 'denied'; decision: Extract<import('../auth/policy.ts').PolicyDecision, { allow: false }> }
   | { ok: false; kind: 'unknown_action' }
   | { ok: false; kind: 'unknown_resource' }
-  | { ok: false; kind: 'invalid_request' };
+  | { ok: false; kind: 'invalid_request' }
+  | { ok: false; kind: 'rate_limited' };
 
-export function applyOpsAction(request: OpsActionRequest): OpsWriteResult {
-  const access = authorizeOpsPreview({ orgId: request.orgId, persona: request.persona });
+function rateLimited(slot: SessionSlot, now = Date.now()): boolean {
+  slot.actionTimes = slot.actionTimes.filter((stamp) => now - stamp < OPS_ACTION_WINDOW_MS);
+  if (slot.actionTimes.length >= OPS_ACTION_LIMIT) return true;
+  slot.actionTimes.push(now);
+  return false;
+}
+
+export function applyOpsAction(
+  request: OpsActionRequest,
+  session: OpsSessionContext = TEST_OPS_SESSION,
+): OpsWriteResult {
+  if (session.capability !== 'operator') {
+    return { ok: false, kind: 'denied', decision: { allow: false, code: 'forbidden' } };
+  }
+  const access = authorizeOpsPreview({
+    orgId: request.orgId,
+    persona: request.persona,
+    capability: session.capability,
+  });
   if (!access.allow) return { ok: false, kind: 'denied', decision: access.decision };
+
+  const slot = slotFor(session);
+  if (rateLimited(slot)) return { ok: false, kind: 'rate_limited' };
 
   const { orgId, persona } = access;
 
   switch (request.type) {
     case 'reset': {
-      live = resetSnapshot();
-      return { ok: true, view: projectOpsView(live, orgId, persona), changed: true };
+      slot.snapshot = resetSnapshot();
+      return { ok: true, view: projectOpsView(slot.snapshot, orgId, persona), changed: true };
     }
     case 'advance_credentialing': {
       if (!request.applicationId) return { ok: false, kind: 'invalid_request' };
-      const result = advanceCredentialing(live, {
+      const result = advanceCredentialing(slot.snapshot, {
         orgId,
         persona,
         applicationId: request.applicationId,
@@ -191,43 +261,50 @@ export function applyOpsAction(request: OpsActionRequest): OpsWriteResult {
       if (result.error === 'not_found' || result.error === 'terminal') {
         return { ok: false, kind: 'unknown_resource' };
       }
-      live = result.snapshot;
-      return { ok: true, view: projectOpsView(live, orgId, persona), changed: result.changed };
+      slot.snapshot = result.snapshot;
+      return { ok: true, view: projectOpsView(slot.snapshot, orgId, persona), changed: result.changed };
     }
     case 'deny_claim': {
       if (!request.claimId) return { ok: false, kind: 'invalid_request' };
-      const result = denyClaim(live, { orgId, persona, claimId: request.claimId });
+      const result = denyClaim(slot.snapshot, { orgId, persona, claimId: request.claimId });
       if (result.error === 'wrong_tenant') {
         return { ok: false, kind: 'denied', decision: { allow: false, code: 'not_a_member' } };
       }
       if (result.error === 'not_found') return { ok: false, kind: 'unknown_resource' };
-      live = result.snapshot;
-      return { ok: true, view: projectOpsView(live, orgId, persona), changed: result.changed };
+      slot.snapshot = result.snapshot;
+      return { ok: true, view: projectOpsView(slot.snapshot, orgId, persona), changed: result.changed };
     }
     case 'advance_timeline': {
-      const result = advanceTimeline(live, { orgId, persona });
-      live = result.snapshot;
-      return { ok: true, view: projectOpsView(live, orgId, persona), changed: result.changed };
+      const result = advanceTimeline(slot.snapshot, { orgId, persona });
+      slot.snapshot = result.snapshot;
+      return { ok: true, view: projectOpsView(slot.snapshot, orgId, persona), changed: result.changed };
     }
     case 'set_persona': {
-      const result = setPersona(live, { orgId, persona });
-      live = result.snapshot;
-      return { ok: true, view: projectOpsView(live, orgId, persona), changed: result.changed };
+      const result = setPersona(slot.snapshot, { orgId, persona });
+      slot.snapshot = result.snapshot;
+      return { ok: true, view: projectOpsView(slot.snapshot, orgId, persona), changed: result.changed };
     }
     case 'set_tier': {
-      const result = setTier(live, { orgId, persona });
+      const result = setTier(slot.snapshot, { orgId, persona });
       if (result.error === 'not_found' || result.error === 'invalid') {
         return { ok: false, kind: 'unknown_resource' };
       }
-      live = result.snapshot;
-      return { ok: true, view: projectOpsView(live, orgId, persona), changed: result.changed };
+      slot.snapshot = result.snapshot;
+      return { ok: true, view: projectOpsView(slot.snapshot, orgId, persona), changed: result.changed };
     }
     default:
       return { ok: false, kind: 'unknown_action' };
   }
 }
 
-/** Test helper: replace live state without going through actions. */
-export function replaceOpsStore(snapshot: OpsSnapshot): void {
-  live = cloneSnapshot(snapshot);
+/** Test helper: replace session state without going through actions. */
+export function replaceOpsStore(
+  snapshot: OpsSnapshot,
+  session: OpsSessionContext = TEST_OPS_SESSION,
+): void {
+  sessions.set(session.id, {
+    snapshot: cloneSnapshot(snapshot),
+    expiresAt: Date.now() + OPS_SESSION_TTL_MS,
+    actionTimes: [],
+  });
 }

@@ -1,5 +1,11 @@
 import { isOpsActionType, type OpsActionRequest } from '@/domain/operations/types';
 import { jsonApi, jsonError, policyDenied } from '@/server/http/errors';
+import { applyOpsCookies } from '@/server/operations/session-http';
+import {
+  OPS_BODY_LIMIT,
+  assertJsonBudget,
+  readOpsSessionFromRequest,
+} from '@/server/operations/session';
 import { applyOpsAction } from '@/server/operations/store';
 
 export const runtime = 'nodejs';
@@ -10,6 +16,7 @@ const ACTION_KEYS = new Set(['type', 'orgId', 'persona', 'applicationId', 'claim
 /**
  * Whitelist-only body parse. Unknown keys (including any PHI-shaped fields)
  * are not read. Live HubSpot/Stripe/Appwrite are not called.
+ * `persona` is a view selector; operator capability is cookie-signed.
  */
 function parseAction(body: unknown):
   | { ok: true; request: OpsActionRequest }
@@ -48,9 +55,24 @@ function parseAction(body: unknown):
 }
 
 export async function POST(request: Request) {
+  const budget = assertJsonBudget(request);
+  if (!budget.ok) {
+    return jsonError(413, 'payload_too_large', 'Operations action payload exceeds the demo size limit.');
+  }
+
+  let raw: string;
+  try {
+    raw = await request.text();
+  } catch {
+    return jsonError(422, 'invalid_request', 'JSON body is required.');
+  }
+  if (raw.length > OPS_BODY_LIMIT) {
+    return jsonError(413, 'payload_too_large', 'Operations action payload exceeds the demo size limit.');
+  }
+
   let body: unknown;
   try {
-    body = await request.json();
+    body = JSON.parse(raw) as unknown;
   } catch {
     return jsonError(422, 'invalid_request', 'JSON body is required.');
   }
@@ -64,9 +86,13 @@ export async function POST(request: Request) {
     return jsonError(status, 'invalid_request', 'Action type, orgId and persona are required.');
   }
 
-  const result = applyOpsAction(parsed.request);
+  const session = await readOpsSessionFromRequest(request);
+  const result = applyOpsAction(parsed.request, session);
   if (!result.ok) {
     if (result.kind === 'denied') return policyDenied(result.decision);
+    if (result.kind === 'rate_limited') {
+      return jsonError(429, 'rate_limited', 'Too many operations actions for this demo session.');
+    }
     if (result.kind === 'unknown_action') {
       return jsonError(422, 'unknown_action', 'Unknown operations action.');
     }
@@ -76,9 +102,10 @@ export async function POST(request: Request) {
     return jsonError(422, 'invalid_request', 'The action payload is incomplete.');
   }
 
-  return jsonApi(200, {
+  const response = jsonApi(200, {
     data: result.view,
     meta: { correlationId: crypto.randomUUID() },
     error: null,
   });
+  return applyOpsCookies(response, session.id, session.capability);
 }

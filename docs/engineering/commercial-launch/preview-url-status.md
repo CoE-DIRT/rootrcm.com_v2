@@ -1,13 +1,15 @@
 # Isolated HTTPS client demo — preview URL status
 
+Canonical live status: [../preview-url-status.md](../preview-url-status.md).
+
 **Durable Appwrite Sites preview: still blocked.** A GitHub Environment named `preview` now exists. No Appwrite V2 project, Sites host, or production hostname was created. V1 was not touched.
 
 ## What is live in this workstation session
 
 An ephemeral Cloudflare quick tunnel was opened against a local `next start` of this branch. It is **not** a durable client demo and dies when this machine or the tunnel process stops.
 
-- Session URL (ephemeral): `https://closure-pets-byte-odds.trycloudflare.com/en`
-- Verified 2026-10-30: HTTPS 200, Plans catalog including **$2,500** diagnostic, Spanish Infectious Disease page, dark-theme CTA contrast
+- Session URL (ephemeral): see [../preview-url-status.md](../preview-url-status.md) (`https://mixer-ongoing-enjoy-intend.trycloudflare.com/en` as of this workstation session)
+- Verified 2026-10-30: HTTPS 200, Plans catalog including **$2,500** diagnostic, Spanish Infectious Disease page
 - Indexing remains off (`X-Robots-Tag: none`)
 
 Do not bookmark this hostname. Do not treat it as staging.
