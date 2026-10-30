@@ -81,7 +81,7 @@ func NewHandler() http.Handler {
 				"credentialing application status",
 			},
 			"plannedPrimaryClearinghouse": "Stedi",
-			"credentialingNote": "Payer application status needs authorized evidence; 271/NPPES does not prove enrollment.",
+			"credentialingNote":           "Payer application status needs authorized evidence; 271/NPPES does not prove enrollment.",
 		}))
 	}))
 
