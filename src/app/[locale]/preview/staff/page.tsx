@@ -1,4 +1,5 @@
 import { AppShell } from '@/components/app-shell/app-shell';
+import { OperationsCommandCenter } from '@/components/app-shell/operations-command-center';
 import { Card } from '@/components/ui/card';
 import { copy } from '@/content/messages';
 import { staffQueue } from '@/content/preview-fixtures';
@@ -20,6 +21,7 @@ export default async function StaffPreviewPage({ params }: { params: Promise<{ l
             />
           ))}
         </div>
+        <div className="mt-6"><OperationsCommandCenter locale={locale} initialTab="credentialing" /></div>
       </AppShell>
     </main>
   );
