@@ -1,0 +1,19 @@
+{
+  "nowIso": "2026-10-31T03:25:29+05:00",
+  "targetDeadlineIso": "UNSET",
+  "targetDeliverable": "v2-preview-showcase",
+  "integrationHead": "470b76c",
+  "integrationBranch": "feat/p0-p1-public-shell",
+  "sliceBranch": "feat/media-sourcing",
+  "pr19": "open-independent-approval-required",
+  "tasks": [
+    { "taskKey": "ux/mega-nav-footer-ask-root", "status": "DONE_VERIFIED", "pr": 42 },
+    { "taskKey": "visual/cinematic-hero-svg", "status": "DONE_VERIFIED", "pr": 38 },
+    { "taskKey": "healthcare/go-synthetic-api", "status": "DONE_VERIFIED", "pr": 39 },
+    { "taskKey": "healthcare/h0-inventory-docs", "status": "DONE_VERIFIED", "pr": 36 },
+    { "taskKey": "ops/session-persistence", "status": "DONE_VERIFIED", "pr": 34 },
+    { "taskKey": "media/pexels-sourcing-cli", "status": "IN_FLIGHT_LOCAL", "pr": null },
+    { "taskKey": "identity/appwrite-v2-oauth", "status": "BLOCKED_EXTERNAL", "pr": null },
+    { "taskKey": "portal/18-modules", "status": "PARTIAL", "pr": null }
+  ]
+}

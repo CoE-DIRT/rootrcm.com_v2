@@ -11,7 +11,11 @@
     "test": "node --test --test-concurrency=1 --experimental-strip-types tests/*.test.ts tests/*.test.mjs",
     "test:e2e": "playwright test",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "media:search": "node scripts/media/source-free-stock.mjs search",
+    "media:approve": "node scripts/media/approve.mjs",
+    "media:download": "node scripts/media/source-free-stock.mjs download",
+    "media:validate": "node scripts/media/source-free-stock.mjs validate"
   },
   "dependencies": {
     "next": "^16.0.0",

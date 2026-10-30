@@ -27,6 +27,17 @@
 
 ## Cursor execution workflow
 
+CLI (does not publish photos):
+
+```text
+npm run media:search -- --asset=home-clinical
+npm run media:approve
+npm run media:download -- --asset=home-clinical
+npm run media:validate
+```
+
+`PEXELS_API_KEY` stays in the local developer environment. Search writes `docs/design/media-candidates.json`. Approval is a manual edit of `docs/design/media-reviews.json`. Download writes gitignored `assets-inbox/raw/` only. Site publication requires a later transform PR plus provenance.
+
 1. Locate all original Demo 6 assets first, restore them to `public/brand/` with originals, and compare their intrinsic dimensions with `CONTENT_IMAGE_LOCK_V5.json`.
 2. Open the **specific photo page** above in browser (or manually), confirm it says **Free**, select Download. Do not blindly scrape the Pexels website or hotlink CDN images at runtime. Never copy photos from arbitrary Google Image results.
 3. Store original photographer name, original photo page, date, license link and asset-specific context in `docs/design/media-provenance.csv` or an updated manifest. Preserve the untouched original outside `public/` if needed.
