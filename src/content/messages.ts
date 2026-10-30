@@ -135,7 +135,8 @@ const en = {
     title: 'Talk with a revenue expert',
     body: 'Describe concerns without sharing patient information. HubSpot sync is disabled in this environment.',
     submit: 'Send business inquiry',
-    received: 'Inquiry stored locally as a receipt. CRM sync is disabled.',
+    received: 'Your business inquiry has been received.',
+    unavailable: 'Online inquiries are not active yet. No information will be sent or stored.',
   },
   account: {
     title: 'Start without financial commitment',
@@ -340,7 +341,8 @@ const es: Messages = {
     title: 'Hable con un experto en ingresos',
     body: 'Describa preocupaciones sin compartir información de pacientes. La sincronización con HubSpot está desactivada en este entorno.',
     submit: 'Enviar consulta empresarial',
-    received: 'La consulta se guardó localmente como recibo. La sincronización CRM está desactivada.',
+    received: 'Se ha recibido su consulta empresarial.',
+    unavailable: 'Las consultas en línea aún no están activas. No se enviará ni guardará información.',
   },
   account: {
     title: 'Empiece sin compromiso financiero',
