@@ -14,3 +14,5 @@ test-results/
 .cache/
 .opencode/storage/
 .vercel/
+tsconfig.tsbuildinfo
+*.tsbuildinfo
