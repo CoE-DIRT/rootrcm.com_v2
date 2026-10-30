@@ -1,0 +1,37 @@
+name: ROOT Go Healthcare API CI
+
+on:
+  pull_request:
+    branches: [main, 'feat/**']
+    paths:
+      - 'services/healthcare-go/**'
+      - '.github/workflows/go-healthcare.yml'
+  push:
+    branches: [main, 'feat/**']
+    paths:
+      - 'services/healthcare-go/**'
+      - '.github/workflows/go-healthcare.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  go-healthcare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: Verify available Go toolchain
+        run: go version
+      - name: Format, test and vet
+        working-directory: services/healthcare-go
+        shell: bash
+        run: |
+          files="$(gofmt -l ./cmd ./internal)"
+          if [ -n "$files" ]; then
+            echo "::error::Go files require gofmt:"
+            echo "$files"
+            exit 1
+          fi
+          go test -count=1 ./...
+          go vet ./...
