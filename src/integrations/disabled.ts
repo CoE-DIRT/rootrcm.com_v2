@@ -5,7 +5,8 @@ export type IntegrationName =
   | 'apollo'
   | 'payer'
   | 'ehr'
-  | 'outbox';
+  | 'outbox'
+  | 'stedi';
 
 export type DisabledAdapterResult = {
   ok: false;
@@ -44,3 +45,4 @@ export const apolloAdapter = () => disabledAdapter('apollo');
 export const payerAdapter = () => disabledAdapter('payer');
 export const ehrAdapter = () => disabledAdapter('ehr');
 export const outboxAdapter = () => disabledAdapter('outbox');
+export const stediAdapter = () => disabledAdapter('stedi');
