@@ -8,6 +8,7 @@ import {
   type OpsPersona,
   type PreviewTier,
 } from '../domain/operations/types.ts';
+import { translateOpsAction } from '../content/ops-actions.ts';
 import { phaseLabels, type Pair, type StageProgress, type StageState } from '../content/operations-demo.ts';
 
 export const OPS_STATE_PATH = '/api/v1/ops/state';
@@ -181,7 +182,7 @@ function pickString(...values: unknown[]): string {
 }
 
 export function asPair(value: unknown, fallback = ''): Pair {
-  if (typeof value === 'string' && value.trim()) return { en: value, es: value };
+  if (typeof value === 'string' && value.trim()) return translateOpsAction(value);
   if (isRecord(value)) {
     const en = pickString(value.en, value.label, value.title, value.name, value.summary, value.text);
     const nestedLabel = isRecord(value.label) ? pickString(value.label.en, value.label.es) : '';
@@ -190,9 +191,12 @@ export function asPair(value: unknown, fallback = ''): Pair {
       pickString(value.es) ||
       (isRecord(value.label) ? pickString(value.label.es, value.label.en) : '') ||
       resolvedEn;
-    if (resolvedEn || es) return { en: resolvedEn || es, es: es || resolvedEn };
+    if (resolvedEn || es) {
+      if (es === resolvedEn) return translateOpsAction(resolvedEn);
+      return { en: resolvedEn || es, es: es || resolvedEn };
+    }
   }
-  return { en: fallback, es: fallback };
+  return fallback ? translateOpsAction(fallback) : { en: '', es: '' };
 }
 
 function asNumber(value: unknown): number | null {

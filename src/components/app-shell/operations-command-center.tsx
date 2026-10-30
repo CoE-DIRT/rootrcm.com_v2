@@ -436,33 +436,6 @@ export function OperationsCommandCenter({
             )}
           </div>
 
-          {canOperate ? (
-            <DemoOperator
-              locale={locale}
-              orgId={activeOrgId}
-              persona={activePersona}
-              tier={state.preview.tier}
-              origin={state.origin}
-              organizations={state.organizations}
-              claims={state.claims}
-              applications={state.applications}
-              pending={pending}
-              onAdvance={(applicationId) => void advance(applicationId)}
-              onDeny={(claimId) => void deny(claimId)}
-              onReset={() => void resetDemo()}
-              onAdvanceTimeline={() => void runQuiet({ type: 'advance_timeline' })}
-              onSetPersona={(next) => {
-                setActivePersona(next);
-                void runQuiet({ type: 'set_persona', persona: next });
-              }}
-              onSetTier={() => void runQuiet({ type: 'set_tier' })}
-              onSelectPractice={(nextOrgId) => {
-                setActiveOrgId(nextOrgId);
-                void runQuiet({ type: 'set_persona', orgId: nextOrgId, persona: activePersona });
-              }}
-            />
-          ) : null}
-
           <RecordDrawer
             open={Boolean(selectedClaim || selectedApp)}
             locale={locale}
@@ -487,6 +460,39 @@ export function OperationsCommandCenter({
             onClose={() => setSelected(null)}
           />
         </div>
+      ) : null}
+
+      {canOperate ? (
+        <DemoOperator
+          locale={locale}
+          orgId={activeOrgId}
+          persona={activePersona}
+          tier={state?.preview.tier ?? 'Free'}
+          origin={state?.origin ?? t.syntheticTag}
+          organizations={state?.organizations ?? []}
+          claims={state?.claims ?? []}
+          applications={state?.applications ?? []}
+          pending={pending}
+          onAdvance={(applicationId) => void advance(applicationId)}
+          onDeny={(claimId) => void deny(claimId)}
+          onReset={() => void resetDemo()}
+          onAdvanceTimeline={() => void runQuiet({ type: 'advance_timeline' })}
+          onSetPersona={(next) => {
+            const nextOrg =
+              next === 'client' && activeOrgId === 'root-internal' ? OPS_DEMO_ORG_ID : activeOrgId;
+            setActiveOrgId(nextOrg);
+            setActivePersona(next);
+            void runQuiet({ type: 'set_persona', orgId: nextOrg, persona: next });
+          }}
+          onSetTier={() => void runQuiet({ type: 'set_tier' })}
+          onSelectPractice={(nextOrgId) => {
+            const nextPersona =
+              nextOrgId === 'root-internal' && activePersona === 'client' ? 'staff' : activePersona;
+            setActiveOrgId(nextOrgId);
+            setActivePersona(nextPersona);
+            void runQuiet({ type: 'set_persona', orgId: nextOrgId, persona: nextPersona });
+          }}
+        />
       ) : null}
 
       <footer className="rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-4 text-xs text-[var(--muted)]">

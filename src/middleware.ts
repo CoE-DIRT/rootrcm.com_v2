@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { bindPreviewCookies } from '@/server/operations/session-http';
 
 const locales = new Set(['en', 'es']);
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   if (
     pathname.startsWith('/api') ||
@@ -26,7 +27,8 @@ export function middleware(request: NextRequest) {
   requestHeaders.set('x-root-locale', first);
   const rest = pathname.slice(first.length + 1) || '/';
   requestHeaders.set('x-root-path', rest.startsWith('/') ? rest : `/${rest}`);
-  return NextResponse.next({ request: { headers: requestHeaders } });
+  const response = NextResponse.next({ request: { headers: requestHeaders } });
+  return bindPreviewCookies(request, response);
 }
 
 export const config = {

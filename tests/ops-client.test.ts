@@ -62,6 +62,8 @@ test('workspaceDemoText EN and ES expose the same keys', async () => {
 
 test('asPair and query helpers keep locale and filter behavior honest', () => {
   assert.deepEqual(asPair('Follow up'), { en: 'Follow up', es: 'Follow up' });
+  assert.equal(asPair('Request payer review status').es, 'Solicitar el estado de revisión del pagador');
+  assert.notEqual(asPair('Request payer review status').es, asPair('Request payer review status').en);
   assert.deepEqual(asPair({ en: 'Owner', es: 'Responsable' }), { en: 'Owner', es: 'Responsable' });
   assert.equal(matchesQuery('cred', ['DEMO-CRED-001', 'Healthfirst']), true);
   assert.equal(matchesQuery('zzz', ['DEMO-CRED-001']), false);

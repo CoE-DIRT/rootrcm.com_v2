@@ -16,6 +16,7 @@ import {
   readOpsState,
   resetOpsStore,
 } from '../src/server/operations/store.ts';
+import type { OpsSessionContext } from '../src/server/operations/session.ts';
 
 const PHI_HINT = /\b(npi|dob|date of birth|mrn|ssn|social security)\b/i;
 
@@ -417,9 +418,57 @@ test('ops routes fail closed on cache, unknown action, and PHI-shaped keys', () 
   assert.match(actionRoute, /unknown_action/);
   assert.match(actionRoute, /ACTION_KEYS/);
   assert.match(actionRoute, /applicationId/);
+  assert.match(actionRoute, /readOpsSessionFromRequest/);
+  assert.match(actionRoute, /rate_limited/);
+  assert.match(stateRoute, /readOpsSessionFromRequest/);
   assert.equal(actionRoute.includes('ssn'), false);
   assert.equal(actionRoute.includes('patient'), false);
   assert.match(actionRoute, /policyDenied/);
+});
+
+test('demo sessions isolate mutations; client capability cannot operate; org tier is projected', () => {
+  const alpha: OpsSessionContext = { id: 'sess-alpha', capability: 'operator' };
+  const beta: OpsSessionContext = { id: 'sess-beta', capability: 'operator' };
+  const viewer: OpsSessionContext = { id: 'sess-viewer', capability: 'client' };
+  resetOpsStore(alpha);
+  resetOpsStore(beta);
+
+  const denied = applyOpsAction(
+    { type: 'deny_claim', orgId: 'bayview', persona: 'staff', claimId: SEED_IDS.deniableClaim },
+    alpha,
+  );
+  assert.equal(denied.ok, true);
+
+  const betaView = readOpsState('bayview', 'staff', beta);
+  assert.equal(betaView.ok, true);
+  if (!betaView.ok) return;
+  assert.equal(betaView.view.claims.find((row) => row.id === SEED_IDS.deniableClaim)?.status, 'payer_processing');
+
+  const alphaView = readOpsState('bayview', 'staff', alpha);
+  assert.equal(alphaView.ok, true);
+  if (!alphaView.ok) return;
+  assert.equal(alphaView.view.claims.find((row) => row.id === SEED_IDS.deniableClaim)?.status, 'denied');
+
+  const spoofed = applyOpsAction(
+    { type: 'reset', orgId: 'bayview', persona: 'staff' },
+    viewer,
+  );
+  assert.equal(spoofed.ok, false);
+  if (!spoofed.ok) {
+    assert.equal(spoofed.kind, 'denied');
+    if (spoofed.kind === 'denied') assert.equal(spoofed.decision.code, 'forbidden');
+  }
+
+  const asClient = readOpsState('bayview', 'staff', viewer);
+  assert.equal(asClient.ok, true);
+  if (!asClient.ok) return;
+  assert.equal(asClient.view.persona, 'client');
+
+  const cedar = readOpsState('cedar-grove', 'staff', alpha);
+  assert.equal(cedar.ok, true);
+  if (!cedar.ok) return;
+  assert.equal(cedar.view.preview.tier, 'Free');
+  assert.equal(cedar.view.preview.orgId, 'cedar-grove');
 });
 
 test('client projection never mixes another tenant into metrics', () => {
@@ -434,4 +483,6 @@ test('client projection never mixes another tenant into metrics', () => {
   });
   assert.deepEqual(view.metrics, expected);
   assert.ok(view.claims.every((row) => row.orgId === 'cedar-grove'));
+  assert.equal(view.preview.tier, 'Free');
+  assert.equal(view.preview.orgId, 'cedar-grove');
 });

@@ -139,4 +139,43 @@ test('Spanish credentialing tab stays localized', async ({ page }) => {
   await expect(dashboard.getByRole('tab', { name: 'Credencialización' })).toHaveAttribute('aria-selected', 'true');
   await expect(dashboard.getByText('Sin verificación — solo demostración').first()).toBeVisible();
   await expect(dashboard.getByTestId('credentialing-card').first()).toBeVisible();
+  await expect(dashboard.getByText('Solicitar el estado de revisión del pagador').first()).toBeVisible();
+});
+
+test('client cookie cannot reset the demo by spoofing staff persona', async ({ page }) => {
+  await page.goto('/en/preview/client');
+  await readyDashboard(page);
+  const response = await page.request.post('/api/v1/ops/actions', {
+    data: { type: 'reset', orgId: 'bayview', persona: 'staff' },
+  });
+  expect(response.status(), await response.text()).toBe(403);
+});
+
+test('two browser sessions do not share synthetic mutations', async ({ browser }) => {
+  const first = await browser.newContext();
+  const second = await browser.newContext();
+  const pageA = await first.newPage();
+  const pageB = await second.newPage();
+  try {
+    await pageA.goto('/en/preview/staff');
+    await pageB.goto('/en/preview/staff');
+    const dashA = await readyDashboard(pageA);
+    const dashB = await readyDashboard(pageB);
+    await dashA.getByRole('tab', { name: 'Revenue cycle' }).click();
+    await dashB.getByRole('tab', { name: 'Revenue cycle' }).click();
+    const rowA = dashA.getByTestId('claim-row').first();
+    const claimId = (await rowA.getAttribute('data-claim-id')) ?? '';
+    expect(claimId.length).toBeGreaterThan(0);
+    const beforeB = await dashB.locator(`[data-testid="claim-row"][data-claim-id="${claimId}"]`).getAttribute('data-status');
+    await rowA.getByTestId('deny-claim').click();
+    await expect
+      .poll(async () => dashA.locator(`[data-testid="claim-row"][data-claim-id="${claimId}"]`).getAttribute('data-status'))
+      .toMatch(/den/i);
+    await expect
+      .poll(async () => dashB.locator(`[data-testid="claim-row"][data-claim-id="${claimId}"]`).getAttribute('data-status'))
+      .toBe(beforeB);
+  } finally {
+    await first.close();
+    await second.close();
+  }
 });

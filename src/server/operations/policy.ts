@@ -12,10 +12,12 @@ import {
 } from '../../domain/operations/types.ts';
 import type { EntitlementGrant, PolicyDecision } from '../auth/policy.ts';
 import { syntheticPreviewContext } from '../auth/policy.ts';
+import type { OpsCapability } from './session.ts';
 
 export type OpsAccessRequest = {
   orgId: string;
   persona: string;
+  capability?: OpsCapability;
 };
 
 export type OpsAccessOk = {
@@ -46,19 +48,21 @@ function previewGrant(orgId: OpsOrgId): EntitlementGrant {
 
 /**
  * Tenant PDP for the synthetic operations engine.
- * Client persona: own demo org only (not root-internal).
- * Staff persona: assigned-work membership on every demo org, including internal.
+ * Browser persona/orgId are selectors. Capability comes from the signed
+ * presentation cookie, never from the JSON body.
  * Entitlement source is always preview — Stripe is never consulted.
  */
 export function authorizeOpsPreview(request: OpsAccessRequest): OpsAccessOk | OpsAccessDenied {
-  if (!isOpsPersona(request.persona)) {
+  const capability = request.capability ?? 'operator';
+  const requestedPersona = capability === 'client' ? 'client' : request.persona;
+  if (!isOpsPersona(requestedPersona)) {
     return { allow: false, decision: { allow: false, code: 'forbidden' } };
   }
   if (!isOpsOrgId(request.orgId)) {
     return { allow: false, decision: { allow: false, code: 'not_a_member' } };
   }
 
-  const persona = request.persona;
+  const persona = requestedPersona;
   const orgId = request.orgId;
 
   if (persona === 'client' && !isClientOpsOrgId(orgId)) {
