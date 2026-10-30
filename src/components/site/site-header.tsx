@@ -1,9 +1,10 @@
 import Link from 'next/link';
 import { copy } from '@/content/messages';
 import type { Locale } from '@/i18n/locales';
-import { localizedPath, publicNav } from '@/lib/paths';
+import { localizedPath } from '@/lib/paths';
 import { LocaleSwitcher } from './locale-switcher';
 import { MobileNav } from './mobile-nav';
+import { PrimaryNav } from './primary-nav';
 import { ThemeToggle } from './theme-toggle';
 
 export function SiteHeader({ locale }: { locale: Locale }) {
@@ -14,13 +15,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
         <Link href={localizedPath(locale)} className="text-[26px] font-extrabold tracking-tight sm:text-[30px]">
           {t.brand}
         </Link>
-        <nav aria-label="Primary" className="hidden items-center gap-5 text-sm lg:flex">
-          {publicNav.map((item) => (
-            <Link key={item.href} className="muted hover:text-[var(--text)]" href={localizedPath(locale, item.href)}>
-              {t.nav[item.key]}
-            </Link>
-          ))}
-        </nav>
+        <PrimaryNav locale={locale} />
         <div className="flex items-center gap-2">
           <ThemeToggle locale={locale} />
           <LocaleSwitcher locale={locale} />

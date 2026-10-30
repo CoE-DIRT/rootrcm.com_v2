@@ -83,6 +83,28 @@ const en = {
       { title: 'Credentialing: payer readiness', href: '/services' },
       { title: 'Staff: change comfort', href: '/resources' },
     ],
+    sections: [
+      {
+        title: 'Practice owners: control',
+        body: 'Outsourcing should not become a black box. Owners keep an audit trail and aging A/R visibility. No unverified recovery claims.',
+      },
+      {
+        title: 'RCM directors: traceability',
+        body: 'Missed follow-up is a process gap. ROOT shows the next action and owner without inventing collection percentages.',
+      },
+      {
+        title: 'CFO: cash-flow confidence',
+        body: 'Finance sees cash-flow context from scoped work, not screenshots presented as outcomes.',
+      },
+      {
+        title: 'Credentialing: payer readiness',
+        body: 'Enrollment delays are tracked as a readiness checklist. Live payer partnerships are not claimed.',
+      },
+      {
+        title: 'Staff: change comfort',
+        body: 'Modular work, smaller change surface, and systems that stay in place unless a justified change is approved.',
+      },
+    ],
   },
   services: {
     title: 'Everything your practice needs, working together.',
@@ -108,10 +130,46 @@ const en = {
   solutions: {
     title: 'Your systems stay. The process gets sharper.',
     body: 'Typical concerns: revenue leakage, aging A/R, denials, enrollment bottlenecks and operational fragmentation. Evidence stays labeled until verified.',
+    sections: [
+      {
+        title: 'Revenue leakage',
+        body: 'Identify where work stalls between charge, claim, denial and payment. No sample claim is treated as a result.',
+      },
+      {
+        title: 'Aging A/R',
+        body: 'Make aging visible by owner and next action. Figures in this build are synthetic until a tenant import is authorized.',
+      },
+      {
+        title: 'Denials and appeals',
+        body: 'Route denials to a named queue. Outcomes are not advertised without verified evidence.',
+      },
+      {
+        title: 'Enrollment bottlenecks',
+        body: 'Credentialing and payer enrollment steps stay on a checklist. ROOT does not claim approved EHR or payer integrations.',
+      },
+      {
+        title: 'Operational fragmentation',
+        body: 'Keep current systems unless a written change is approved. ROOT is an operating partner, not a forced rip-and-replace.',
+      },
+    ],
   },
   technology: {
     title: 'Purposeful intelligence. Traceable actions.',
     body: 'DIRT is ROOT’s embedded intelligence capability, not a standalone product. Dashboards in this build are synthetic previews.',
+    sections: [
+      {
+        title: 'DIRT previews',
+        body: 'Revenue intelligence screens use fictional practice data and are labeled synthetic. They are not live claims processing.',
+      },
+      {
+        title: 'Systems stay in place',
+        body: 'Technology compatibility must be verified per engagement. Status is pending until documented.',
+      },
+      {
+        title: 'Traceable next actions',
+        body: 'Each insight is meant to name an owner and a next step. No model is presented as autonomously collecting cash.',
+      },
+    ],
   },
   plans: {
     title: 'Transparent scope. A clear place to start.',
@@ -126,10 +184,66 @@ const en = {
   resources: {
     title: 'Methods you can put to work.',
     body: 'Templates, official CMS form links and education. Current forms should come from their issuer. No fabricated case-study results.',
+    sections: [
+      {
+        title: 'Official forms',
+        body: 'Current CMS and payer forms must come from their issuer. ROOT does not host substitute government PDFs here.',
+      },
+      {
+        title: 'Templates',
+        body: 'Put structure around every exception. Template packs are listed when reviewed; none are implied as certified.',
+      },
+      {
+        title: 'Education',
+        body: 'Methods you can apply. Case-study frameworks stay empty until independently verified.',
+      },
+    ],
+    faqs: [
+      {
+        title: 'Where are the CMS forms?',
+        body: 'Use the issuer’s current publication. Links will be added only after they are reviewed.',
+      },
+      {
+        title: 'Are these results from other practices?',
+        body: 'No. Editorial proof slots remain pending verification. We would rather verify than embellish.',
+      },
+    ],
   },
   company: {
     title: 'Infrastructure for independent practices to thrive.',
     body: 'Leadership, careers and partnership pages remain placeholders until biographies, logos and certifications are evidenced.',
+    sections: [
+      {
+        title: 'Public website',
+        body: 'Discover the operating partner model without a software switch.',
+      },
+      {
+        title: 'Conversion and CRM',
+        body: 'Consultation and diagnostic paths collect business contacts only. Live HubSpot is disabled.',
+      },
+      {
+        title: 'Client portal',
+        body: 'Labeled synthetic workspace until Appwrite Auth is approved for an isolated V2 project.',
+      },
+      {
+        title: 'Employee workspace',
+        body: 'ROOT staff queues are previews. They cannot impersonate a tenant.',
+      },
+      {
+        title: 'DIRT intelligence',
+        body: 'Embedded capability, not a standalone product. Synthetic until import is authorized.',
+      },
+    ],
+    faqs: [
+      {
+        title: 'Are certifications displayed?',
+        body: 'No HIPAA, SOC 2, ISO or payer-partnership marks are shown until evidenced.',
+      },
+      {
+        title: 'Is this the live V1 site?',
+        body: 'No. V1 on rootrcm.com is untouched. This is the V2 application shell.',
+      },
+    ],
   },
   consultation: {
     title: 'Talk with a revenue expert',
@@ -289,6 +403,28 @@ const es: Messages = {
       { title: 'Credencialización: preparación', href: '/services' },
       { title: 'Personal: cambio manejable', href: '/resources' },
     ],
+    sections: [
+      {
+        title: 'Dueños: control',
+        body: 'Externalizar no debe volverse una caja negra. Los dueños conservan auditoría y visibilidad de A/R. Sin cifras no verificadas.',
+      },
+      {
+        title: 'Directores de RCM: trazabilidad',
+        body: 'El seguimiento perdido es un problema de proceso. ROOT muestra la siguiente acción y el responsable, sin porcentajes inventados.',
+      },
+      {
+        title: 'CFO: confianza en el flujo de caja',
+        body: 'Finanzas ve contexto de caja a partir del trabajo con alcance, no capturas presentadas como resultados.',
+      },
+      {
+        title: 'Credencialización: preparación',
+        body: 'Los retrasos de inscripción se siguen en una lista de preparación. No se afirman alianzas con pagadores.',
+      },
+      {
+        title: 'Personal: cambio manejable',
+        body: 'Trabajo modular, menor superficie de cambio, y sistemas que permanecen salvo un cambio justificado y aprobado.',
+      },
+    ],
   },
   services: {
     title: 'Todo lo que su práctica necesita, trabajando en conjunto.',
@@ -314,10 +450,46 @@ const es: Messages = {
   solutions: {
     title: 'Sus sistemas se quedan. El proceso se afila.',
     body: 'Preocupaciones típicas: fuga de ingresos, A/R envejecida, denegaciones, cuellos de inscripción y fragmentación operativa. La evidencia permanece etiquetada hasta verificarse.',
+    sections: [
+      {
+        title: 'Fuga de ingresos',
+        body: 'Identifique dónde se detiene el trabajo entre cargo, reclamo, denegación y pago. Ningún reclamo de ejemplo se trata como resultado.',
+      },
+      {
+        title: 'A/R envejecida',
+        body: 'Haga visible el envejecimiento por responsable y siguiente acción. Las cifras de esta versión son sintéticas hasta autorizar una importación.',
+      },
+      {
+        title: 'Denegaciones y apelaciones',
+        body: 'Dirija las denegaciones a una cola con dueño. Los resultados no se anuncian sin evidencia verificada.',
+      },
+      {
+        title: 'Cuellos de inscripción',
+        body: 'La credencialización y la inscripción ante pagadores permanecen en una lista. ROOT no afirma integraciones EHR o de pagadores aprobadas.',
+      },
+      {
+        title: 'Fragmentación operativa',
+        body: 'Conserve los sistemas actuales salvo un cambio escrito y aprobado. ROOT es un socio operativo, no un reemplazo forzado.',
+      },
+    ],
   },
   technology: {
     title: 'Inteligencia con propósito. Acciones trazables.',
     body: 'DIRT es la capacidad de inteligencia embebida de ROOT, no un producto aparte. Los tableros de esta versión son vistas sintéticas.',
+    sections: [
+      {
+        title: 'Vistas DIRT',
+        body: 'Las pantallas de inteligencia de ingresos usan datos de práctica ficticios y se etiquetan como sintéticas. No procesan reclamos reales.',
+      },
+      {
+        title: 'Los sistemas se quedan',
+        body: 'La compatibilidad tecnológica debe verificarse por compromiso. El estado permanece pendiente hasta documentarse.',
+      },
+      {
+        title: 'Siguientes acciones trazables',
+        body: 'Cada hallazgo debe nombrar un responsable y un siguiente paso. Ningún modelo se presenta como cobrador autónomo.',
+      },
+    ],
   },
   plans: {
     title: 'Alcance transparente. Un punto de partida claro.',
@@ -332,10 +504,66 @@ const es: Messages = {
   resources: {
     title: 'Métodos que puede aplicar.',
     body: 'Plantillas, enlaces a formularios oficiales de CMS y educación. Los formularios vigentes deben venir de su emisor. Sin resultados de casos inventados.',
+    sections: [
+      {
+        title: 'Formularios oficiales',
+        body: 'Los formularios vigentes de CMS y pagadores deben venir de su emisor. ROOT no aloja PDF gubernamentales sustitutos aquí.',
+      },
+      {
+        title: 'Plantillas',
+        body: 'Ponga estructura en cada excepción. Los paquetes se listan cuando están revisados; ninguno se implica como certificado.',
+      },
+      {
+        title: 'Educación',
+        body: 'Métodos aplicables. Los marcos de casos permanecen vacíos hasta verificación independiente.',
+      },
+    ],
+    faqs: [
+      {
+        title: '¿Dónde están los formularios CMS?',
+        body: 'Use la publicación vigente del emisor. Los enlaces se añadirán solo después de revisarse.',
+      },
+      {
+        title: '¿Estos resultados son de otras prácticas?',
+        body: 'No. Los espacios de prueba editorial permanecen pendientes. Preferimos verificar antes que adornar.',
+      },
+    ],
   },
   company: {
     title: 'Infraestructura para que las prácticas independientes prosperen.',
     body: 'Liderazgo, empleo y alianzas permanecen como marcadores de posición hasta evidenciar biografías, logotipos y certificaciones.',
+    sections: [
+      {
+        title: 'Sitio público',
+        body: 'Descubra el modelo de socio operativo sin cambiar de software.',
+      },
+      {
+        title: 'Conversión y CRM',
+        body: 'Consulta y diagnóstico recogen solo contactos empresariales. HubSpot en vivo está desactivado.',
+      },
+      {
+        title: 'Portal del cliente',
+        body: 'Espacio sintético etiquetado hasta que Appwrite Auth se apruebe en un proyecto V2 aislado.',
+      },
+      {
+        title: 'Espacio del personal',
+        body: 'Las colas del personal ROOT son vistas previas. No pueden suplantar a un inquilino.',
+      },
+      {
+        title: 'Inteligencia DIRT',
+        body: 'Capacidad embebida, no un producto aparte. Sintética hasta autorizar importaciones.',
+      },
+    ],
+    faqs: [
+      {
+        title: '¿Se muestran certificaciones?',
+        body: 'No se muestran marcas HIPAA, SOC 2, ISO ni alianzas con pagadores hasta evidenciarse.',
+      },
+      {
+        title: '¿Este es el sitio V1 en vivo?',
+        body: 'No. V1 en rootrcm.com no se toca. Esta es la aplicación V2.',
+      },
+    ],
   },
   consultation: {
     title: 'Hable con un experto en ingresos',

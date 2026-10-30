@@ -13,6 +13,7 @@ export function MarketingPage({
   cta,
   ctaHref,
   tiles,
+  sections,
   bands,
   nodeId,
   children,
@@ -23,6 +24,7 @@ export function MarketingPage({
   cta?: string;
   ctaHref?: string;
   tiles?: readonly { title: string; href: string }[];
+  sections?: readonly { title: string; body: string }[];
   bands?: readonly string[];
   nodeId?: string;
   children?: React.ReactNode;
@@ -45,9 +47,23 @@ export function MarketingPage({
         nodeId={nodeId}
       />
       {tiles ? <TileGrid locale={locale} tiles={tiles} hint={t.home.tileHint} /> : null}
+      {sections ? <SectionGrid sections={sections} /> : null}
       {bands ? <BandList items={bands} /> : null}
       {children}
     </main>
+  );
+}
+
+export function SectionGrid({ sections }: { sections: readonly { title: string; body: string }[] }) {
+  return (
+    <ul className="mt-8 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+      {sections.map((section) => (
+        <li key={section.title} className="surface p-[18px]">
+          <h2 className="text-lg font-bold">{section.title}</h2>
+          <p className="muted mt-2 text-sm">{section.body}</p>
+        </li>
+      ))}
+    </ul>
   );
 }
 
@@ -64,13 +80,22 @@ export function StepList({ steps }: { steps: readonly string[] }) {
   );
 }
 
-export function PendingFaq({ locale }: { locale: Locale }) {
+export function PendingFaq({
+  locale,
+  faqs,
+}: {
+  locale: Locale;
+  faqs?: readonly { title: string; body: string }[];
+}) {
   const t = copy(locale);
+  const items = faqs ?? [{ title: t.pending, body: t.company.body }];
   return (
     <div className="mt-8 grid gap-3">
-      <Accordion title={t.pending}>
-        {t.company.body}
-      </Accordion>
+      {items.map((item) => (
+        <Accordion key={item.title} title={item.title}>
+          {item.body}
+        </Accordion>
+      ))}
     </div>
   );
 }
