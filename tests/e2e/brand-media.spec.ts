@@ -1,0 +1,31 @@
+import { expect, test } from '@playwright/test';
+
+test('ROOT visual hero displays branded artwork and the real brand asset', async ({ page }) => {
+  await page.goto('/en');
+  const logo = page.getByTestId('root-brand-lockup');
+  await expect(logo).toBeVisible();
+  await expect(logo.locator('img')).toHaveAttribute('src', /icon\.svg/);
+  const hero = page.getByTestId('root-visual-hero').first();
+  await expect(hero).toBeVisible();
+  const media = hero.locator('img');
+  await expect(media).toHaveAttribute('src', /root-revenue-hero\.svg/);
+  await expect(hero.getByRole('link')).toHaveCount(1);
+  await expect.poll(async () => media.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBeTruthy();
+});
+
+for (const width of [375, 768, 1366, 2560]) {
+  test(`visual hero preserves CTA and avoids horizontal overflow at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 920 });
+    await page.goto('/en');
+    await expect(page.getByTestId('root-visual-hero').first()).toBeVisible();
+    await expect(page.getByTestId('root-visual-hero').first().getByRole('link')).toBeVisible();
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    expect(overflow).toBeLessThanOrEqual(1);
+  });
+}
+
+test('DIRT imagery and bilingual hero are present in the commercial story', async ({ page }) => {
+  await page.goto('/es');
+  await expect(page.getByTestId('root-visual-hero').first()).toBeVisible();
+  await expect(page.locator('img[src*="root-workflow-network.svg"]')).toBeVisible();
+});
