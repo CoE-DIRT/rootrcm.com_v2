@@ -31,6 +31,7 @@ jobs:
           if [ -n "$files" ]; then
             echo "::error::Go files require gofmt:"
             echo "$files"
+            gofmt -d ./cmd ./internal
             exit 1
           fi
           go test -count=1 ./...
