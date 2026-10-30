@@ -14,7 +14,7 @@ import {
   createAppwriteTeamsClient,
 } from '../src/integrations/appwrite/client.ts';
 import { createAppwriteAdminClient } from '../src/integrations/appwrite/admin.ts';
-import { createHubSpotClient, createHubSpotIdempotencyKey, upsertHubSpotContact } from '../src/integrations/hubspot/client.ts';
+import { createHubSpotClient, createHubSpotIdempotencyKey, upsertHubSpotContact, upsertHubSpotDeal } from '../src/integrations/hubspot/client.ts';
 import { createCheckoutSession, createSubscriptionCheckout } from '../src/integrations/stripe/client.ts';
 import { createApolloClient, enrichApolloPerson } from '../src/integrations/apollo/client.ts';
 import { listOrgRows } from '../src/server/auth/membership.ts';
@@ -89,6 +89,15 @@ test('HubSpot contact upsert is disabled and still mints a local idempotency key
   });
   assert.equal(result.status, 'disabled');
   assert.equal(createHubSpotClient().upsertContact, upsertHubSpotContact);
+  const deal = await upsertHubSpotDeal({
+    companyName: 'Cedar Grove Family Practice',
+    offerId: 'revenue-diagnostic',
+    stage: 'proposal',
+    idempotencyKey: key,
+    correlationId: 'corr-synthetic-deal',
+  });
+  assert.equal(deal.status, 'disabled');
+  assert.equal(createHubSpotClient().upsertDeal, upsertHubSpotDeal);
   delete process.env.ROOT_ENABLE_CRM;
 });
 

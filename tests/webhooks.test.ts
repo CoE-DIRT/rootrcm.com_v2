@@ -85,7 +85,9 @@ test('webhook verifier accepts a well-formed local HMAC and rejects stale timest
 test('Stripe webhook and checkout routes fail closed without body parse', () => {
   const webhook = readFileSync('src/app/api/v1/webhooks/stripe/route.ts', 'utf8');
   const checkout = readFileSync('src/app/api/v1/billing/checkout/route.ts', 'utf8');
-  const inquiry = readFileSync('src/app/api/v1/public/inquiries/route.ts', 'utf8');
+  const inquiry =
+    readFileSync('src/app/api/v1/public/inquiries/route.ts', 'utf8') +
+    readFileSync('src/server/leads/inquiry.ts', 'utf8');
   assert.match(webhook, /stripe_webhook_unavailable/);
   assert.match(webhook, /503/);
   assert.doesNotMatch(webhook, /request\.json\(/);

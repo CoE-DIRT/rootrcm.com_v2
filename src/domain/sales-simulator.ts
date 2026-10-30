@@ -2,6 +2,8 @@
  * ROOT commercial-to-onboarding reference state machine.
  * Sample events never write to a live CRM, payment service, signing service, or tenant.
  */
+import type { OfferId } from '../content/catalog.ts';
+import { catalogEntitlementsForOffer, isCatalogOfferId } from './catalog-entitlement.ts';
 import type { LeadScoreInput } from './lead-score.ts';
 import { scoreLead } from './lead-score.ts';
 
@@ -11,7 +13,7 @@ export const salesMilestones = [
 ] as const;
 export type SalesMilestone = (typeof salesMilestones)[number];
 export type SalesAction = 'advance' | 'back' | 'reset' | 'toggle_blocker' | 'select_offer';
-export type SalesOffer = 'free-account-consultation' | 'revenue-diagnostic' | 'managed-rcm' | 'custom-mso';
+export type SalesOffer = OfferId;
 
 export type SalesEvent = {
   id: string;
@@ -99,7 +101,7 @@ export function transitionSales(state: SalesState, action: SalesAction, value?: 
   if (action === 'reset') return { ok: true, state: createSalesState(state.scenarioId) };
   if (action === 'toggle_blocker') return { ok: true, state: { ...state, blocked: !state.blocked } };
   if (action === 'select_offer') {
-    if (!value || !['free-account-consultation', 'revenue-diagnostic', 'managed-rcm', 'custom-mso'].includes(value)) return { ok: false, reason: 'invalid_offer', state };
+    if (!value || !isCatalogOfferId(value)) return { ok: false, reason: 'invalid_offer', state };
     return { ok: true, state: { ...state, offer: value } };
   }
   if (state.blocked) return { ok: false, reason: 'blocked', state };
@@ -115,10 +117,5 @@ export function transitionSales(state: SalesState, action: SalesAction, value?: 
 }
 
 export function salesEntitlements(offer: SalesOffer): readonly string[] {
-  switch (offer) {
-    case 'free-account-consultation': return ['basic_workspace', 'consultation'];
-    case 'revenue-diagnostic': return ['basic_workspace', 'consultation', 'diagnostic_report'];
-    case 'managed-rcm': return ['basic_workspace', 'consultation', 'rcm_dashboard', 'credentialing_tracker', 'managed_requests'];
-    case 'custom-mso': return ['basic_workspace', 'consultation', 'rcm_dashboard', 'credentialing_tracker', 'managed_requests', 'enterprise_reporting', 'multi_location'];
-  }
+  return catalogEntitlementsForOffer(offer);
 }

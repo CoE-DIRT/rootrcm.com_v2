@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { CommercialNextActions } from '@/components/commercial/next-actions';
 import { BusinessInquiryForm } from '@/components/forms/business-inquiry-form';
 import { MarketingPage } from '@/components/site/marketing-page';
 import { copy } from '@/content/messages';
@@ -21,6 +22,7 @@ export default async function ConsultationPage({ params }: { params: Promise<{ l
   return (
     <MarketingPage locale={locale} title={t.consultation.title} body={t.consultation.body} nodeId="5:69">
       <BusinessInquiryForm locale={locale} />
+      <CommercialNextActions locale={locale} offerId="free-account-consultation" />
     </MarketingPage>
   );
 }

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { CommercialNextActions } from '@/components/commercial/next-actions';
 import { MarketingPage } from '@/components/site/marketing-page';
 import { Card } from '@/components/ui/card';
 import { priceCatalog } from '@/content/catalog';
@@ -42,6 +43,7 @@ export default async function PlansPage({ params }: { params: Promise<{ locale: 
           />
         ))}
       </div>
+      <CommercialNextActions locale={locale} />
     </MarketingPage>
   );
 }

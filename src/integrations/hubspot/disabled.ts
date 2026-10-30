@@ -1,2 +1,7 @@
 export { hubspotAdapter } from '../disabled.ts';
-export { createHubSpotClient, upsertHubSpotCompany, upsertHubSpotContact } from './client.ts';
+export {
+  createHubSpotClient,
+  upsertHubSpotCompany,
+  upsertHubSpotContact,
+  upsertHubSpotDeal,
+} from './client.ts';

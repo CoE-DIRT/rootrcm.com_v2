@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { publicInquiryUnavailableResponse } from '@/server/leads/inquiry';
 
 /**
  * ROOT V2 has no durable inquiry storage or approved CRM integration yet.
@@ -11,18 +11,5 @@ import { NextResponse } from 'next/server';
  * (default deny) even after an outbox exists.
  */
 export async function POST() {
-  return NextResponse.json(
-    {
-      data: null,
-      meta: { correlationId: crypto.randomUUID() },
-      error: {
-        code: 'inquiry_submission_unavailable',
-        message: 'Online inquiries are not active yet. No inquiry was sent or stored.',
-      },
-    },
-    {
-      status: 503,
-      headers: { 'Cache-Control': 'no-store' },
-    },
-  );
+  return publicInquiryUnavailableResponse();
 }

@@ -60,5 +60,8 @@ test('free and managed entitlements are distinct and invalid offers fail safely'
   assert.equal(salesEntitlements('free-account-consultation').includes('rcm_dashboard'), false);
   assert.equal(salesEntitlements('managed-rcm').includes('credentialing_tracker'), true);
   assert.equal(salesEntitlements('custom-mso').includes('multi_location'), true);
+  assert.equal(salesEntitlements('dirt-intelligence').includes('dirt_workspace'), true);
+  assert.equal(salesEntitlements('custom-mso').includes('enterprise_reporting'), false);
   assert.equal(transitionSales(createSalesState(), 'select_offer', 'fake' as SalesOffer).ok, false);
+  assert.equal(transitionSales(createSalesState(), 'select_offer', 'enterprise' as SalesOffer).ok, false);
 });

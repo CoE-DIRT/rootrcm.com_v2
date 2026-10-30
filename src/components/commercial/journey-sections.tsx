@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { CommercialNextActions } from '@/components/commercial/next-actions';
 import { EcosystemMarquees } from '@/components/commercial/ecosystem-marquees';
 import { PayerStrip } from '@/components/commercial/payer-strip';
 import { ProofUnpublished } from '@/components/commercial/proof-unpublished';
@@ -104,6 +105,7 @@ export function HomeJourney({ locale }: { locale: Locale }) {
             {t.commercial.conversionCta} →
           </Link>
         </p>
+        <CommercialNextActions locale={locale} offerId="free-account-consultation" />
       </section>
     </div>
   );

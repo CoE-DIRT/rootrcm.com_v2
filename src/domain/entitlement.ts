@@ -23,3 +23,5 @@ export type EntitlementRecord = {
 export function mayActivateFromBrowserRedirect() {
   return false;
 }
+
+/** Feature grants for paid/preview workspaces come from `catalog-entitlement`, never an Enterprise SKU. */
