@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createSalesState, qualificationScore, salesMilestones, salesEntitlements, salesScenarios, transitionSales } from '../src/domain/sales-simulator.ts';
+import { createSalesState, qualificationScore, salesMilestones, salesEntitlements, salesScenarios, transitionSales, type SalesOffer } from '../src/domain/sales-simulator.ts';
 
 test('journey covers every commercial and onboarding stage in the correct order', () => {
   assert.deepEqual(salesMilestones, [
@@ -60,5 +60,5 @@ test('free and managed entitlements are distinct and invalid offers fail safely'
   assert.equal(salesEntitlements('free-account-consultation').includes('rcm_dashboard'), false);
   assert.equal(salesEntitlements('managed-rcm').includes('credentialing_tracker'), true);
   assert.equal(salesEntitlements('custom-mso').includes('multi_location'), true);
-  assert.equal(transitionSales(createSalesState(), 'select_offer', 'fake' ).ok, false);
+  assert.equal(transitionSales(createSalesState(), 'select_offer', 'fake' as SalesOffer).ok, false);
 });
