@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import type { Locale } from '@/i18n/locales';
 
 /**
  * Shared cinematic commercial hero.
@@ -13,6 +14,7 @@ export function PageHero({
   cta,
   ctaHref,
   nodeId,
+  locale = 'en',
 }: {
   eyebrow: string;
   title: string;
@@ -20,6 +22,7 @@ export function PageHero({
   cta?: string;
   ctaHref?: string;
   nodeId?: string;
+  locale?: Locale;
 }) {
   return (
     <section
@@ -54,7 +57,7 @@ export function PageHero({
       </div>
       <div className="pointer-events-none absolute bottom-5 right-5 hidden items-center gap-2 rounded-xl border border-white/20 bg-white/[0.07] px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#e3f9ff] shadow-[0_10px_36px_rgba(0,0,0,.2)] backdrop-blur-xl lg:inline-flex" aria-hidden="true">
         <span className="inline-block size-1.5 rounded-full bg-[#11e1ee] shadow-[0_0_12px_#11e1ee]" />
-        Revenue operations · connected intelligence
+        {locale === 'es' ? 'Operaciones de ingresos · inteligencia conectada' : 'Revenue operations · connected intelligence'}
       </div>
     </section>
   );
