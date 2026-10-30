@@ -6,9 +6,19 @@ import { workspaceDemoText } from '@/content/operations-demo';
 import { formatMetric, formatRatio, type OpsMetrics } from '@/lib/ops-client';
 import { opsCard, opsSubtle } from './ui';
 
-function MetricCell({ title, value, note }: { title: string; value: string; note: string }) {
+function MetricCell({
+  title,
+  value,
+  note,
+  testId,
+}: {
+  title: string;
+  value: string;
+  note: string;
+  testId?: string;
+}) {
   return (
-    <div className="min-w-0 rounded-2xl border border-[var(--border)] bg-[var(--surface-2)] p-4">
+    <div className="min-w-0 rounded-2xl border border-[var(--border)] bg-[var(--surface-2)] p-4" data-testid={testId}>
       <p className={`text-xs font-bold uppercase tracking-wide ${opsSubtle}`}>{title}</p>
       <p className="mt-2 wrap-break-word text-2xl font-extrabold tabular-nums">{value}</p>
       <p className={`mt-2 text-xs ${opsSubtle}`}>{note}</p>
@@ -34,8 +44,9 @@ export function DirtMetricsPanel({ locale, metrics }: { locale: Locale; metrics:
         />
         <MetricCell
           title={t.daysInAr}
-          value={formatRatio(metrics.daysInArRatio, metrics.daysInAr)}
+          value={formatMetric(metrics.daysInAr)}
           note={metrics.daysInAr === null ? unavailable : t.synthetic}
+          testId="days-in-ar"
         />
         <MetricCell
           title={t.openEnrollmentsMetric}

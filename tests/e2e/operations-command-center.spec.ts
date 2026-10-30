@@ -40,6 +40,19 @@ test('Spanish credentialing is localized and stays explicitly synthetic', async 
   await expect(dashboard.getByText('Sin verificación — solo demostración').first()).toBeVisible();
 });
 
+test('DIRT days in A/R shows the computed value and Spanish records are translated', async ({ page }) => {
+  await page.goto('/es/preview/client');
+  const dashboard = await readyDashboard(page);
+  const days = dashboard.getByTestId('days-in-ar');
+  await expect(days).toBeVisible();
+  await expect(days.locator('.tabular-nums')).not.toHaveText(/\d+\/\d+/);
+  await dashboard.getByRole('tab', { name: 'Ciclo de ingresos' }).click();
+  const row = dashboard.getByTestId('claim-row').first();
+  await expect(row).toBeVisible();
+  await expect(row).not.toContainText('payer_processing');
+  await expect(row).not.toContainText('837_submitted');
+});
+
 test('command center remains usable without horizontal page overflow on touch-sized screens', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 812 });
   await page.goto('/en/preview/client');

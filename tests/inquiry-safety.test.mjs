@@ -23,7 +23,9 @@ test('client cannot submit or claim success without durable acceptance', () => {
   assert.match(form, /const inquirySubmissionEnabled = false/);
   assert.match(form, /disabled=\{!inquirySubmissionEnabled\}/);
   assert.match(form, /accepted_persisted/);
+  assert.match(form, /const formElement = event\.currentTarget/);
   assert.match(form, /catch\s*\{/);
+  assert.match(form, /setStatus\('error'\)/);
 });
 
 test('English and Spanish clearly disclose that inquiries are not being sent', () => {

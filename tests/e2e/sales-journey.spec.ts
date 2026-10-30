@@ -21,6 +21,7 @@ test('sales tier selection updates feature scope and Spanish presentation', asyn
   await page.goto('/es/preview/sales');
   const simulator = page.getByTestId('sales-journey-simulator');
   await expect(simulator.getByText('Recorrido comercial', { exact: true }).first()).toBeVisible();
+  await expect(simulator.getByText('Cardiología y medicina interna')).toBeVisible();
   await simulator.getByLabel('Servicio').selectOption('managed-rcm');
   await expect(simulator.getByText('Seguimiento de credencialización')).toBeVisible();
   await expect(simulator.getByText('Incluido').first()).toBeVisible();
