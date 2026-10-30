@@ -596,7 +596,8 @@ export async function postOpsAction(action: OpsActionRequest): Promise<OpsState 
   const envelope = await readEnvelope(res);
   throwIfFailed(res, envelope, `Operations action '${action.type}' failed (HTTP ${res.status}).`);
   if (looksLikeState(envelope.data)) {
-    return normalizeOpsState(envelope.data, action.orgId, action.persona);
+    const persona: OpsPersona = action.persona === 'staff' ? 'staff' : 'client';
+    return normalizeOpsState(envelope.data, action.orgId, persona);
   }
   return null;
 }

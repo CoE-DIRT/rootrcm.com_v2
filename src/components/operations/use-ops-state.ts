@@ -71,7 +71,8 @@ export function useOpsState(orgId: string, persona: OpsPersona) {
         if (action.applicationId) payload.applicationId = action.applicationId;
         if (action.claimId) payload.claimId = action.claimId;
         const next = await postOpsAction(payload);
-        setState(next ?? (await fetchOpsState(payload.orgId, payload.persona)));
+        const nextPersona: OpsPersona = payload.persona === 'staff' ? 'staff' : 'client';
+        setState(next ?? (await fetchOpsState(payload.orgId, nextPersona)));
       } catch (err) {
         setError(
           err instanceof OpsClientError ? err.message : 'The operations action could not be completed.',
