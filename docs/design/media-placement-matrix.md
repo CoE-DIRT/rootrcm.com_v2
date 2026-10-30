@@ -11,7 +11,6 @@ Stock photography is **not published**. Slots below wait for a human-approved Pe
 | Footer wave | Site footer | `/brand/waveLower.webp` | — | DONE_VERIFIED Demo 6 original |
 | Workflow network | Technology / DIRT preview | `/media/root-workflow-network.svg` | — | DONE_VERIFIED original |
 | Fallback illustration | Optional `visual="illustration"` | `/media/root-revenue-hero.svg` | — | DONE_VERIFIED original |
-| Workflow network | Technology / DIRT preview | `/media/root-workflow-network.svg` | — | DONE_VERIFIED original |
 | home-clinical | Homepage secondary glass panel | unpublished | https://www.pexels.com/photo/medical-professionals-using-a-laptop-7800551/ | CANDIDATE_ONLY |
 | home-analytics | Homepage DIRT band | unpublished | https://www.pexels.com/photo/people-looking-at-graphs-on-a-laptop-and-a-digital-tablet-6930432/ | CANDIDATE_ONLY |
 | service-practice-ops | Practice operations | unpublished | https://www.pexels.com/photo/a-doctor-working-on-his-laptop-4989174/ | CANDIDATE_ONLY |
