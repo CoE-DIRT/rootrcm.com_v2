@@ -21,6 +21,14 @@ export type HubSpotCompanyUpsert = {
   correlationId: string;
 };
 
+export type HubSpotDealUpsert = {
+  companyName: string;
+  offerId: string;
+  stage: 'proposal' | 'contract';
+  idempotencyKey: HubSpotIdempotencyKey;
+  correlationId: string;
+};
+
 export type HubSpotIdempotencyInput = {
   email: string;
   event: string;

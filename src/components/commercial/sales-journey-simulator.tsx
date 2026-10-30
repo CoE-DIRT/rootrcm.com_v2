@@ -3,8 +3,10 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight, Check, ChevronRight, RotateCcw, ShieldCheck } from 'lucide-react';
+import { priceCatalog } from '@/content/catalog';
 import type { Locale } from '@/i18n/locales';
 import { localizedPath } from '@/lib/paths';
+import { commercialNextPath, salesAdapterIntents } from '@/domain/sales-pipeline';
 import {
   createSalesState, qualificationScore, milestoneDescriptions, milestoneNames,
   salesEntitlements, salesMilestones, salesScenarios, scenarioFor, transitionSales,
@@ -26,6 +28,11 @@ const labels = {
     locked: 'Not included in selected offer', enabled: 'Included', noClaims: 'No live tenant or external system action',
     workspace: 'Explore the operational dashboard', complete: 'All demonstration stages completed',
     provider: 'Clinicians', route: 'NEXT ACTION', scope: 'Configured feature scope',
+    adapters: 'Integration handoff',
+    adaptersNote: 'Typed HubSpot, Apollo, Stripe and Appwrite adapters stay disabled. This preview does not write CRM records, spend enrichment credits or collect payment.',
+    adaptersNone: 'No external adapter at this stage.',
+    adaptersStatus: 'disabled',
+    nextPage: 'Open the matching next page',
   },
   es: {
     title: 'De adquisición de clientes a activación del servicio',
@@ -41,15 +48,13 @@ const labels = {
     locked: 'No incluido en esta oferta', enabled: 'Incluido', noClaims: 'Sin acciones en sistemas externos',
     workspace: 'Explorar panel operativo', complete: 'Recorrido de demostración completado',
     provider: 'Profesionales', route: 'SIGUIENTE ACCIÓN', scope: 'Capacidades configuradas',
+    adapters: 'Traspaso de integraciones',
+    adaptersNote: 'Los adaptadores tipados de HubSpot, Apollo, Stripe y Appwrite permanecen desactivados. Esta vista previa no escribe CRM, no gasta créditos de enriquecimiento ni cobra.',
+    adaptersNone: 'Sin adaptador externo en esta etapa.',
+    adaptersStatus: 'desactivado',
+    nextPage: 'Abrir la página siguiente correspondiente',
   },
 } as const;
-
-const offerLabels: Record<SalesOffer, { en: string; es: string }> = {
-  'free-account-consultation': { en: 'Free account and consultation', es: 'Cuenta y consulta gratuitas' },
-  'revenue-diagnostic': { en: 'Revenue Diagnostic ($2,500)', es: 'Diagnóstico de ingresos ($2,500)' },
-  'managed-rcm': { en: 'Managed RCM (scoped)', es: 'RCM administrado (según alcance)' },
-  'custom-mso': { en: 'Custom MSO partnership', es: 'Alianza MSO personalizada' },
-};
 
 const featureLabels: Record<string, { en: string; es: string }> = {
   basic_workspace: { en: 'Basic workspace', es: 'Espacio básico' },
@@ -58,7 +63,8 @@ const featureLabels: Record<string, { en: string; es: string }> = {
   rcm_dashboard: { en: 'RCM operations dashboard', es: 'Panel de ingresos' },
   credentialing_tracker: { en: 'Credentialing tracker', es: 'Seguimiento de credencialización' },
   managed_requests: { en: 'Managed service requests', es: 'Solicitudes de servicios administrados' },
-  enterprise_reporting: { en: 'Enterprise reporting', es: 'Informes empresariales' },
+  dirt_workspace: { en: 'DIRT intelligence workspace', es: 'Espacio de inteligencia DIRT' },
+  mso_reporting: { en: 'MSO partnership reporting', es: 'Informes de alianza MSO' },
   multi_location: { en: 'Multi-location controls', es: 'Controles de múltiples ubicaciones' },
 };
 
@@ -74,6 +80,8 @@ export function SalesJourneySimulator({ locale }: { locale: Locale }) {
   const stageIndex = salesMilestones.indexOf(state.milestone);
   const currentFeatures = salesEntitlements(state.offer);
   const score = qualificationScore(state);
+  const intents = salesAdapterIntents(state.milestone, state.offer);
+  const nextPath = commercialNextPath(state.milestone, state.offer);
 
   function act(action: SalesAction, value?: SalesOffer) {
     const result = transitionSales(state, action, value);
@@ -112,8 +120,8 @@ export function SalesJourneySimulator({ locale }: { locale: Locale }) {
             {l.offer}
             <select className={`mt-2 block w-full ${control}`} value={state.offer}
               onChange={(e) => act('select_offer', e.target.value as SalesOffer)}>
-              {(Object.keys(offerLabels) as SalesOffer[]).map((item) =>
-                <option key={item} value={item}>{offerLabels[item][locale]}</option>)}
+              {priceCatalog.map((item) =>
+                <option key={item.id} value={item.id}>{item.name[locale]}</option>)}
             </select>
           </label>
         </div>
@@ -145,6 +153,9 @@ export function SalesJourneySimulator({ locale }: { locale: Locale }) {
           <p className="eyebrow">{l.route}</p>
           <p className="mt-2 font-bold">{milestoneDescriptions[state.milestone][locale]}</p>
           <p className="muted mt-2 text-xs">{l.noClaims}</p>
+          <Link className="btn-secondary mt-4 inline-flex" href={localizedPath(locale, nextPath)}>
+            {l.nextPage}<ArrowRight className="ml-1 size-4" aria-hidden="true" />
+          </Link>
         </div>
 
         {notice ? <p role="alert" className="mt-3 text-sm font-bold text-[var(--warning)]">{notice}</p> : null}
@@ -165,10 +176,25 @@ export function SalesJourneySimulator({ locale }: { locale: Locale }) {
         </div>
       </div>
 
+      <section className={card} data-testid="sales-adapter-handoff">
+        <h3 className="text-lg font-black">{l.adapters}</h3>
+        <p className="muted mt-1 text-sm">{l.adaptersNote}</p>
+        {intents.length ? (
+          <ul className="mt-4 space-y-2">
+            {intents.map((item) => (
+              <li key={`${item.integration}-${item.operation}`} className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-[var(--surface-2)] p-3">
+                <span className="text-sm font-semibold">{item.integration} · {item.operation}</span>
+                <span className="text-xs font-bold text-[var(--cyan)]">{l.adaptersStatus}</span>
+              </li>
+            ))}
+          </ul>
+        ) : <p className="muted mt-4 text-sm">{l.adaptersNone}</p>}
+      </section>
+
       <div className="grid gap-5 lg:grid-cols-[1fr_1fr]">
         <section className={card}>
           <h3 className="text-lg font-black">{l.scope}</h3>
-          <p className="muted mt-1 text-sm">{offerLabels[state.offer][locale]}</p>
+          <p className="muted mt-1 text-sm">{priceCatalog.find((item) => item.id === state.offer)?.name[locale]}</p>
           <ul className="mt-4 space-y-2">
             {allFeatures.map((feature) => {
               const allowed = currentFeatures.includes(feature);

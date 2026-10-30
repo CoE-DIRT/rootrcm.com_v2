@@ -13,7 +13,8 @@ test('memory outbox stores a suppressed record and is unused by the public inqui
   assert.equal(outbox.records.length, 1);
 
   const route = readFileSync('src/app/api/v1/public/inquiries/route.ts', 'utf8');
-  assert.match(route, /status:\s*503/);
+  const gate = readFileSync('src/server/leads/inquiry.ts', 'utf8');
+  assert.match(route + gate, /status:\s*503/);
   assert.doesNotMatch(route, /from ['"][^'"]*outbox/);
   assert.doesNotMatch(route, /MemoryInquiryOutbox/);
   assert.doesNotMatch(route, /request\.json\(/);

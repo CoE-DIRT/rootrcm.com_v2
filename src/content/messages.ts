@@ -338,6 +338,9 @@ const en = {
     primaryNav: 'Primary navigation',
     billingPreviewTitle: 'Subscription management preview',
     billingNoEntitlement: 'No entitlement granted from this preview',
+    tierMapTitle: 'Preview workspace tiers',
+    tierMapBody:
+      'Free, Growth and Managed are operations preview labels. They map to catalog offers — Free account & consultation, DIRT Intelligence, and Managed RCM. There is no Enterprise plan.',
     queue: 'Queue',
     clientTitle: 'Your practice, in control.',
     staffTitle: 'Your assigned work, in context.',
@@ -453,6 +456,10 @@ const en = {
     conversionBody:
       'Describe operational concerns without patient information. Consultation is free. HubSpot sync remains disabled in this environment.',
     conversionCta: 'Book a free consultation',
+    journeyCta: 'See the client journey preview',
+    journeyCtaBody:
+      'Nine stages from visitor to active service. HubSpot, Apollo and Stripe stay typed and disabled — no CRM write, enrichment spend or payment.',
+    comparePlans: 'Compare plans',
     codeDisclaimer:
       'No CPT, HCPCS or ICD examples are listed. Code sets change and must be founder-validated before publication.',
     marqueePause: 'Pause scrolling platforms',
@@ -802,6 +809,9 @@ const es: Messages = {
     primaryNav: 'Navegación principal',
     billingPreviewTitle: 'Vista previa de gestión de suscripciones',
     billingNoEntitlement: 'Esta vista previa no otorga acceso a servicios',
+    tierMapTitle: 'Niveles del espacio de vista previa',
+    tierMapBody:
+      'Free, Growth y Managed son etiquetas de vista previa operativa. Se asignan a ofertas del catálogo: cuenta gratuita y consulta, Inteligencia DIRT y RCM administrado. No hay un plan Enterprise.',
     queue: 'Cola',
     clientTitle: 'Su práctica, bajo control.',
     staffTitle: 'Su trabajo asignado, en contexto.',
@@ -918,6 +928,10 @@ const es: Messages = {
     conversionBody:
       'Describa preocupaciones operativas sin información de pacientes. La consulta es gratuita. La sincronización con HubSpot sigue desactivada en este entorno.',
     conversionCta: 'Reserve una consulta gratuita',
+    journeyCta: 'Ver la vista previa del recorrido del cliente',
+    journeyCtaBody:
+      'Nueve etapas desde visitante hasta servicio activo. HubSpot, Apollo y Stripe permanecen tipados y desactivados: sin escritura CRM, gasto de enriquecimiento ni cobro.',
+    comparePlans: 'Comparar planes',
     codeDisclaimer:
       'No se listan ejemplos CPT, HCPCS ni CIE. Los conjuntos de códigos cambian y deben ser validados por el fundador antes de publicarse.',
     marqueePause: 'Pausar plataformas en desplazamiento',

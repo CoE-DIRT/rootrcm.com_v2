@@ -3,6 +3,7 @@ import { disabledAdapter, type DisabledAdapterResult } from '../disabled.ts';
 import type {
   HubSpotCompanyUpsert,
   HubSpotContactUpsert,
+  HubSpotDealUpsert,
   HubSpotIdempotencyInput,
   HubSpotIdempotencyKey,
 } from './types.ts';
@@ -28,9 +29,15 @@ export async function upsertHubSpotCompany(input: HubSpotCompanyUpsert): Promise
   return disabledAdapter('hubspot');
 }
 
+export async function upsertHubSpotDeal(input: HubSpotDealUpsert): Promise<DisabledAdapterResult> {
+  void input;
+  return disabledAdapter('hubspot');
+}
+
 export function createHubSpotClient() {
   return {
     upsertContact: upsertHubSpotContact,
     upsertCompany: upsertHubSpotCompany,
+    upsertDeal: upsertHubSpotDeal,
   };
 }
