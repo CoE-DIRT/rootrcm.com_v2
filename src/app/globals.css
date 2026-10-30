@@ -90,6 +90,7 @@ a {
   border-radius: var(--radius-cta);
 }
 
+@layer components {
 .btn-primary,
 .btn-secondary,
 .btn-ghost {
@@ -145,6 +146,8 @@ a {
   border-radius: var(--radius-cta);
   padding: 16px 22px;
   font-size: 1.05rem;
+}
+
 }
 
 .eyebrow {
