@@ -78,6 +78,25 @@ test.describe('public IA', () => {
     await page.keyboard.press('Enter');
     await expect(page.locator('#main')).toBeVisible();
   });
+
+  test('primary CTA keeps on-cyan contrast in dark theme', async ({ page }) => {
+    await page.goto('/en');
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+    const cta = page.locator('a.btn-primary').first();
+    await expect(cta).toBeVisible();
+    const color = await cta.evaluate((el) => getComputedStyle(el).color);
+    expect(color).toBe('rgb(6, 18, 37)');
+  });
+
+  test('Spanish preview workspaces use Spanish page-owned copy', async ({ page }) => {
+    await page.goto('/es/preview/client');
+    await expect(page.getByRole('heading', { level: 1 })).toContainText('Su práctica, bajo control');
+    await page.goto('/es/preview/credentialing');
+    await expect(page.getByRole('heading', { level: 1 })).toContainText('Preparación de credencialización');
+    await expect(page.getByText('Fuente primaria')).toBeVisible();
+    await page.goto('/es/preview/staff');
+    await expect(page.getByRole('heading', { level: 1 })).toContainText('Su trabajo asignado, en contexto');
+  });
 });
 
 test.describe('responsive overflow', () => {

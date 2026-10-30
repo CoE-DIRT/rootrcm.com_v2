@@ -30,5 +30,16 @@ test('rejects missing consent and PHI-like free text', () => {
     consent: true,
   });
   assert.equal(phi.ok, false);
-  if (!phi.ok) assert.ok(phi.fieldErrors.message);
+  if (!phi.ok) assert.equal(phi.fieldErrors.message, 'phiRejected');
+});
+
+test('validation errors are stable keys, not English sentences', () => {
+  const result = validateBusinessContact({});
+  assert.equal(result.ok, false);
+  if (!result.ok) {
+    assert.equal(result.fieldErrors.name, 'nameShort');
+    assert.equal(result.fieldErrors.email, 'emailInvalid');
+    assert.equal(result.fieldErrors.organization, 'orgShort');
+    assert.equal(result.fieldErrors.consent, 'consentRequired');
+  }
 });

@@ -25,7 +25,7 @@ export default async function TechnologyPage({ params }: { params: Promise<{ loc
       locale={locale}
       title={t.technology.title}
       body={t.technology.body}
-      cta="DIRT preview"
+      cta={t.technology.cta}
       ctaHref={localizedPath(locale, '/preview/dirt')}
       sections={t.technology.sections}
       nodeId="6:22"

@@ -64,14 +64,21 @@ export function BusinessInquiryForm({ locale }: { locale: Locale }) {
 
   return (
     <form className="surface mt-8 grid max-w-xl gap-4 p-6" onSubmit={onSubmit} noValidate>
-      <TextInput id="name" name="name" label={t.form.name} required error={errors.name} autoComplete="name" />
+      <TextInput
+        id="name"
+        name="name"
+        label={t.form.name}
+        required
+        error={errors.name ? t.form.errors[errors.name] : undefined}
+        autoComplete="name"
+      />
       <TextInput
         id="email"
         name="email"
         type="email"
         label={t.form.email}
         required
-        error={errors.email}
+        error={errors.email ? t.form.errors[errors.email] : undefined}
         autoComplete="email"
       />
       <TextInput
@@ -79,23 +86,33 @@ export function BusinessInquiryForm({ locale }: { locale: Locale }) {
         name="organization"
         label={t.form.organization}
         required
-        error={errors.organization}
+        error={errors.organization ? t.form.errors[errors.organization] : undefined}
         autoComplete="organization"
       />
-      <SelectField id="concern" name="concern" label={t.form.concern} error={errors.concern}>
+      <SelectField
+        id="concern"
+        name="concern"
+        label={t.form.concern}
+        error={errors.concern ? t.form.errors[errors.concern] : undefined}
+      >
         <option value="consultation">{t.form.concernOptions.consultation}</option>
         <option value="diagnostic">{t.form.concernOptions.diagnostic}</option>
         <option value="managed">{t.form.concernOptions.managed}</option>
         <option value="custom">{t.form.concernOptions.custom}</option>
       </SelectField>
-      <TextArea id="message" name="message" label={t.form.message} error={errors.message} />
+      <TextArea
+        id="message"
+        name="message"
+        label={t.form.message}
+        error={errors.message ? t.form.errors[errors.message] : undefined}
+      />
       <label className="flex items-start gap-3 text-sm">
         <input type="checkbox" name="consent" required className="mt-1" />
         <span>
           {t.form.consent} {t.footer.noPhi}
         </span>
       </label>
-      {errors.consent ? <p className="field-error">{errors.consent}</p> : null}
+      {errors.consent ? <p className="field-error">{t.form.errors[errors.consent]}</p> : null}
       {!inquirySubmissionEnabled ? <StatusBanner tone="warning">{t.consultation.unavailable}</StatusBanner> : null}
       <Button type="submit" loading={status === 'loading'} disabled={!inquirySubmissionEnabled}>
         {t.consultation.submit}

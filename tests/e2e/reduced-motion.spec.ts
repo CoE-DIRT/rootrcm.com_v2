@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { MARQUEE_LOCATOR, noHorizontalOverflow } from './helpers';
+import { MARQUEE_LOCATOR, MARQUEE_TRACK_LOCATOR, noHorizontalOverflow } from './helpers';
 
 test.describe('reduced motion', () => {
   test.use({ reducedMotion: 'reduce' });
@@ -34,53 +34,35 @@ test.describe('reduced motion', () => {
     await expect(page.locator('#main')).toBeVisible();
   });
 
-  test('marquee, if present, is paused rather than auto-scrolling', async ({ page }) => {
+  test('shipped marquees stop auto-scrolling under reduced motion', async ({ page }) => {
     await page.goto('/en');
     const marquee = page.locator(MARQUEE_LOCATOR);
-    if ((await marquee.count()) === 0) {
-      test.info().annotations.push({
-        type: 'note',
-        description: 'No marquee on this build; paused-motion assertion waits for frontend merge.',
-      });
-      return;
-    }
+    await expect(marquee.first(), 'home must render EcosystemMarquees').toHaveCount(1);
 
-    const looping = await marquee.first().evaluate((el) => {
+    const staticList = page.locator('.marquee-static-list').first();
+    await expect(staticList).toBeVisible();
+
+    const looping = await page.locator(MARQUEE_TRACK_LOCATOR).first().evaluate((el) => {
       const styles = getComputedStyle(el);
       const duration = Number.parseFloat(styles.animationDuration) || 0;
-      return duration > 0.05 && styles.animationIterationCount === 'infinite';
+      const hiddenParent = getComputedStyle(el.closest('[data-marquee]') ?? el).display === 'none';
+      return !hiddenParent && duration > 0.05 && styles.animationIterationCount === 'infinite';
     });
     expect(looping, 'marquee must not keep infinite motion under prefers-reduced-motion').toBeFalsy();
   });
 });
 
 test.describe('keyboard marquee alternative', () => {
-  test('when a marquee exists, a pause control or static list is keyboard reachable', async ({ page }) => {
+  test('marquees exist and expose a keyboard-reachable pause control', async ({ page }) => {
     await page.goto('/en');
     const marquee = page.locator(MARQUEE_LOCATOR);
-    if ((await marquee.count()) === 0) {
-      test.info().annotations.push({
-        type: 'note',
-        description: 'No marquee on this build; keyboard alternative waits for frontend merge.',
-      });
-      return;
-    }
+    await expect(marquee.first(), 'home must render EcosystemMarquees').toBeVisible();
 
-    const pause = page.getByRole('button', { name: /pause|stop|play/i });
-    if ((await pause.count()) > 0) {
-      await pause.first().focus();
-      await expect(pause.first()).toBeFocused();
-      return;
-    }
-
-    const looping = await marquee.first().evaluate((el) => {
-      const styles = getComputedStyle(el);
-      const duration = Number.parseFloat(styles.animationDuration) || 0;
-      return duration > 0.05 && styles.animationIterationCount === 'infinite';
-    });
-    expect(
-      looping,
-      'auto-scrolling marquee needs a keyboard-reachable pause/stop control (WCAG 2.2.2)',
-    ).toBeFalsy();
+    const pause = page.getByRole('button', { name: /pause scrolling platforms/i }).first();
+    await expect(pause).toBeVisible();
+    await pause.focus();
+    await expect(pause).toBeFocused();
+    await pause.click();
+    await expect(page.getByRole('button', { name: /resume scrolling platforms/i }).first()).toBeVisible();
   });
 });

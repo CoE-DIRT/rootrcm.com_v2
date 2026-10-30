@@ -2,7 +2,7 @@
 
 **File:** https://www.figma.com/design/x5HJC3HjJNCCTUOwEdUc52  
 **MCP session:** `edf34552-4c55-475a-ae2a-5103cc9734d4` (2026-10-30, page inventory + Public Website metadata)  
-**Frontend merge:** commercial routes are **not** in this branch. Rows stay `pending-until-frontend-merge` until Agent A lands them and visual evidence exists.
+**Frontend merge:** commercial routes, marquees, pause controls and Playwright assertions without skip-on-404 are in this branch. Official vendor logo files are still founder-supplied and unpublished.
 
 Do not read this as Figma parity. Page `03 — Public Website` (`1:4`) still only contains Home `4:2` / `4:126` / `4:153`, Services `4:40`, Pricing `4:88`. There are **no painted frames** named Specialties, Locations, or Marquee. Pages `06–08` remain interaction/QA sources, not implemented motion.
 

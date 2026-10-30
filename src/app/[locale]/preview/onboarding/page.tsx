@@ -9,8 +9,8 @@ export default async function OnboardingPreviewPage({ params }: { params: Promis
   const t = copy(locale);
   return (
     <main id="main">
-      <AppShell locale={locale} role="client" orgName={previewOrgs[0].name} title="Onboarding preview">
-        <p className="muted">{t.preview}. Auth is disabled; these steps are not a live account.</p>
+      <AppShell locale={locale} role="client" orgName={previewOrgs[0].name} title={t.workspace.onboardingTitle}>
+        <p className="muted">{t.workspace.onboardingNote}</p>
         <StepList steps={t.account.steps} />
       </AppShell>
     </main>

@@ -8,7 +8,21 @@ export type BusinessContact = {
   concern?: string;
 };
 
-export type FieldErrors = Partial<Record<keyof BusinessContact, string>>;
+export const fieldErrorKeys = [
+  'required',
+  'nameShort',
+  'nameLong',
+  'emailInvalid',
+  'emailLong',
+  'orgShort',
+  'orgLong',
+  'messageLong',
+  'consentRequired',
+  'phiRejected',
+] as const;
+
+export type FieldErrorKey = (typeof fieldErrorKeys)[number];
+export type FieldErrors = Partial<Record<keyof BusinessContact, FieldErrorKey>>;
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phiHint =
@@ -22,7 +36,7 @@ export function validateBusinessContact(
   value: unknown,
 ): { ok: true; data: BusinessContact } | { ok: false; fieldErrors: FieldErrors } {
   if (!value || typeof value !== 'object') {
-    return { ok: false, fieldErrors: { name: 'Required' } };
+    return { ok: false, fieldErrors: { name: 'required' } };
   }
   const record = value as Record<string, unknown>;
   const fieldErrors: FieldErrors = {};
@@ -33,17 +47,17 @@ export function validateBusinessContact(
   const concern = typeof record.concern === 'string' ? record.concern.trim() : undefined;
   const consent = record.consent === true || record.consent === 'true' || record.consent === 'on';
 
-  if (name.length < 2) fieldErrors.name = 'Enter a business contact name.';
-  if (name.length > 120) fieldErrors.name = 'Name is too long.';
-  if (!emailPattern.test(email)) fieldErrors.email = 'Enter a valid business email.';
-  if (email.length > 254) fieldErrors.email = 'Email is too long.';
-  if (organization.length < 2) fieldErrors.organization = 'Enter an organization name.';
-  if (organization.length > 200) fieldErrors.organization = 'Organization is too long.';
-  if (message && message.length > 2000) fieldErrors.message = 'Message is too long.';
-  if (!consent) fieldErrors.consent = 'Consent is required to send a business inquiry.';
+  if (name.length < 2) fieldErrors.name = 'nameShort';
+  if (name.length > 120) fieldErrors.name = 'nameLong';
+  if (!emailPattern.test(email)) fieldErrors.email = 'emailInvalid';
+  if (email.length > 254) fieldErrors.email = 'emailLong';
+  if (organization.length < 2) fieldErrors.organization = 'orgShort';
+  if (organization.length > 200) fieldErrors.organization = 'orgLong';
+  if (message && message.length > 2000) fieldErrors.message = 'messageLong';
+  if (!consent) fieldErrors.consent = 'consentRequired';
   const combined = `${message ?? ''} ${concern ?? ''}`;
   if (phiHint.test(combined)) {
-    fieldErrors.message = 'Do not include patient, clinical or identifying health details.';
+    fieldErrors.message = 'phiRejected';
   }
 
   if (Object.keys(fieldErrors).length > 0) return { ok: false, fieldErrors };

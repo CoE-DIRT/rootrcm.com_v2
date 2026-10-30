@@ -16,6 +16,11 @@ test('EN and ES copy live in one messages module', () => {
   assert.match(src, /Dueños: control/);
   assert.match(src, /Revenue leakage/);
   assert.match(src, /Fuga de ingresos/);
+  assert.match(src, /nameShort/);
+  assert.match(src, /Introduzca un nombre de contacto empresarial/);
+  assert.match(src, /Su práctica, bajo control/);
+  assert.match(src, /Pause scrolling platforms/);
+  assert.match(src, /Pausar plataformas en desplazamiento/);
 });
 
 test('inner IA pages ship EN/ES sections instead of empty shells', async () => {

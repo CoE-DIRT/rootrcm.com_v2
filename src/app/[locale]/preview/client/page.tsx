@@ -10,11 +10,18 @@ export default async function ClientPreviewPage({ params }: { params: Promise<{ 
   const org = previewOrgs[1];
   return (
     <main id="main">
-      <AppShell locale={locale} role="client" orgName={org.name} title="Your practice, in control.">
-        <p className="muted">{org.name} · {org.plan} tier · {t.preview}</p>
+      <AppShell locale={locale} role="client" orgName={org.name} title={t.workspace.clientTitle}>
+        <p className="muted">
+          {org.name} · {org.plan} · {t.preview}
+        </p>
         <div className="mt-6 grid gap-3 md:grid-cols-2">
           {clientQueue.map((item) => (
-            <Card key={item.id} title={item.title} body={`${item.owner} · ${item.state}`} kicker={item.id} />
+            <Card
+              key={item.id}
+              title={item.title[locale]}
+              body={`${item.owner[locale]} · ${item.state[locale]}`}
+              kicker={item.id}
+            />
           ))}
         </div>
       </AppShell>

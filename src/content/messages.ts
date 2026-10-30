@@ -158,6 +158,7 @@ const en = {
   technology: {
     title: 'Purposeful intelligence. Traceable actions.',
     body: 'DIRT is ROOT’s embedded intelligence capability, not a standalone product. Dashboards in this build are synthetic previews.',
+    cta: 'Open DIRT preview',
     sections: [
       {
         title: 'DIRT previews',
@@ -308,6 +309,18 @@ const en = {
       managed: 'Managed RCM',
       custom: 'Custom MSO',
     },
+    errors: {
+      required: 'Required',
+      nameShort: 'Enter a business contact name.',
+      nameLong: 'Name is too long.',
+      emailInvalid: 'Enter a valid business email.',
+      emailLong: 'Email is too long.',
+      orgShort: 'Enter an organization name.',
+      orgLong: 'Organization is too long.',
+      messageLong: 'Message is too long.',
+      consentRequired: 'Consent is required to send a business inquiry.',
+      phiRejected: 'Do not include patient, clinical or identifying health details.',
+    },
   },
   workspace: {
     client: 'Client workspace',
@@ -326,6 +339,16 @@ const en = {
     billingPreviewTitle: 'Subscription management preview',
     billingNoEntitlement: 'No entitlement granted from this preview',
     queue: 'Queue',
+    clientTitle: 'Your practice, in control.',
+    staffTitle: 'Your assigned work, in context.',
+    staffOrg: 'ROOT operations',
+    credentialingTitle: 'Credentialing readiness',
+    dirtPreviewTitle: 'DIRT revenue intelligence preview',
+    onboardingTitle: 'Onboarding preview',
+    onboardingNote: 'Auth is disabled; these steps are not a live account.',
+    requestsTitle: 'Service requests',
+    requestsEmptyTitle: 'No requests',
+    requestsEmptyBody: 'Synthetic queue is empty.',
   },
   status: {
     loading: 'Loading',
@@ -432,6 +455,8 @@ const en = {
     conversionCta: 'Book a free consultation',
     codeDisclaimer:
       'No CPT, HCPCS or ICD examples are listed. Code sets change and must be founder-validated before publication.',
+    marqueePause: 'Pause scrolling platforms',
+    marqueePlay: 'Resume scrolling platforms',
   },
 };
 
@@ -596,6 +621,7 @@ const es: Messages = {
   technology: {
     title: 'Inteligencia con propósito. Acciones trazables.',
     body: 'DIRT es la capacidad de inteligencia embebida de ROOT, no un producto aparte. Los tableros de esta versión son vistas sintéticas.',
+    cta: 'Abrir vista DIRT',
     sections: [
       {
         title: 'Vistas DIRT',
@@ -747,6 +773,18 @@ const es: Messages = {
       managed: 'RCM administrado',
       custom: 'MSO a medida',
     },
+    errors: {
+      required: 'Obligatorio',
+      nameShort: 'Introduzca un nombre de contacto empresarial.',
+      nameLong: 'El nombre es demasiado largo.',
+      emailInvalid: 'Introduzca un correo empresarial válido.',
+      emailLong: 'El correo es demasiado largo.',
+      orgShort: 'Introduzca el nombre de la organización.',
+      orgLong: 'La organización es demasiado larga.',
+      messageLong: 'El mensaje es demasiado largo.',
+      consentRequired: 'Se requiere consentimiento para enviar una consulta empresarial.',
+      phiRejected: 'No incluya datos de pacientes, clínicos ni identificadores de salud.',
+    },
   },
   workspace: {
     client: 'Espacio del cliente',
@@ -765,6 +803,16 @@ const es: Messages = {
     billingPreviewTitle: 'Vista previa de gestión de suscripciones',
     billingNoEntitlement: 'Esta vista previa no otorga acceso a servicios',
     queue: 'Cola',
+    clientTitle: 'Su práctica, bajo control.',
+    staffTitle: 'Su trabajo asignado, en contexto.',
+    staffOrg: 'Operaciones ROOT',
+    credentialingTitle: 'Preparación de credencialización',
+    dirtPreviewTitle: 'Vista previa de inteligencia DIRT',
+    onboardingTitle: 'Vista previa de incorporación',
+    onboardingNote: 'La autenticación está desactivada; estos pasos no son una cuenta real.',
+    requestsTitle: 'Solicitudes de servicio',
+    requestsEmptyTitle: 'Sin solicitudes',
+    requestsEmptyBody: 'La cola sintética está vacía.',
   },
   status: {
     loading: 'Cargando',
@@ -872,6 +920,8 @@ const es: Messages = {
     conversionCta: 'Reserve una consulta gratuita',
     codeDisclaimer:
       'No se listan ejemplos CPT, HCPCS ni CIE. Los conjuntos de códigos cambian y deben ser validados por el fundador antes de publicarse.',
+    marqueePause: 'Pausar plataformas en desplazamiento',
+    marqueePlay: 'Reanudar plataformas en desplazamiento',
   },
 };
 
