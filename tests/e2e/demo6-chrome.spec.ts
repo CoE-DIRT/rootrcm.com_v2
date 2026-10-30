@@ -58,3 +58,18 @@ test('Spanish navigation/footer/guide texts are localized', async ({ page }) => 
   await expect(guide.getByText(/Partimos de su EHR/)).toBeVisible();
   await expect(guide.getByRole('link', { name: 'Abrir página relacionada' })).toHaveAttribute('href', '/es/technology');
 });
+
+
+test('mobile drawer exposes grouped destinations with usable touch targets', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 760 });
+  await page.goto('/en');
+  await page.getByRole('button', { name: 'Open menu' }).click();
+  const drawer = page.getByTestId('root-mobile-mega-menu');
+  await expect(drawer).toBeVisible();
+  await drawer.getByRole('button', { name: 'Show Technology options' }).click();
+  await expect(drawer.getByRole('link', { name: /Client workspace/ })).toBeVisible();
+  await expect(drawer.getByRole('link', { name: /Revenue analytics/ })).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(drawer).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Open menu' })).toBeFocused();
+});
