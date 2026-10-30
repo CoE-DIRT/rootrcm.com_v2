@@ -1,9 +1,5 @@
-import { expect, test, type Page } from '@playwright/test';
-
-async function noHorizontalOverflow(page: Page) {
-  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
-  expect(overflow).toBeLessThanOrEqual(1);
-}
+import { expect, test } from '@playwright/test';
+import { noHorizontalOverflow } from './helpers';
 
 test.describe('public IA', () => {
   test('navigates primary routes and exposes a skip link', async ({ page }) => {
@@ -85,9 +81,9 @@ test.describe('public IA', () => {
 });
 
 test.describe('responsive overflow', () => {
-  for (const width of [375, 768, 1366]) {
+  for (const width of [375, 768, 1366, 2560]) {
     test(`${width}px home does not overflow horizontally`, async ({ page }) => {
-      await page.setViewportSize({ width, height: 844 });
+      await page.setViewportSize({ width, height: width >= 2560 ? 1440 : 844 });
       await page.goto('/en');
       await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
       await noHorizontalOverflow(page);
