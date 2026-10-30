@@ -302,6 +302,9 @@ const en = {
     billing: 'Billing',
     onboarding: 'Onboarding',
     subscriptions: 'Subscriptions',
+    primaryNav: 'Primary navigation',
+    billingPreviewTitle: 'Subscription management preview',
+    billingNoEntitlement: 'No entitlement granted from this preview',
     queue: 'Queue',
   },
   status: {
@@ -640,6 +643,9 @@ const es: Messages = {
     billing: 'Facturación',
     onboarding: 'Incorporación',
     subscriptions: 'Suscripciones',
+    primaryNav: 'Navegación principal',
+    billingPreviewTitle: 'Vista previa de gestión de suscripciones',
+    billingNoEntitlement: 'Esta vista previa no otorga acceso a servicios',
     queue: 'Cola',
   },
   status: {

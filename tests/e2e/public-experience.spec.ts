@@ -32,6 +32,32 @@ test.describe('public IA', () => {
     await expect(page.getByText('$2,500').first()).toBeVisible();
   });
 
+  test('locale change updates the html language without a full reload', async ({ page }) => {
+    await page.goto('/en/plans');
+    await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+    await page.getByRole('link', { name: 'Switch language' }).click();
+    await expect(page).toHaveURL(/\/es\/plans$/);
+    await expect(page.locator('html')).toHaveAttribute('lang', 'es');
+  });
+
+  test('Spanish billing preview uses Spanish heading and entitlement disclaimer', async ({ page }) => {
+    await page.goto('/es/preview/billing');
+    await expect(page.getByRole('heading', { level: 1 })).toContainText('Vista previa de gestión de suscripciones');
+    await expect(page.getByText('Esta vista previa no otorga acceso a servicios').first()).toBeVisible();
+  });
+
+  test('mobile navigation is expanded navigation, not a broken modal', async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 844 });
+    await page.goto('/en');
+    await page.getByRole('button', { name: 'Open menu' }).click();
+    const menu = page.getByRole('navigation', { name: 'Primary navigation' });
+    await expect(menu).toBeVisible();
+    await expect(menu).not.toHaveAttribute('aria-modal', 'true');
+    await page.keyboard.press('Escape');
+    await expect(menu).toHaveCount(0);
+    await noHorizontalOverflow(page);
+  });
+
   test('theme toggle switches light and dark', async ({ page }) => {
     await page.goto('/en');
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
