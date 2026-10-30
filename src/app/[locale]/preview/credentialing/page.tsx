@@ -18,7 +18,7 @@ export default async function CredentialingPreviewPage({ params }: { params: Pro
             </li>
           ))}
         </ol>
-        <div className="mt-6"><OperationsCommandCenter locale={locale} initialTab="credentialing" /></div>
+        <div className="mt-6"><OperationsCommandCenter locale={locale} role="client" initialTab="credentialing" /></div>
       </AppShell>
     </main>
   );
