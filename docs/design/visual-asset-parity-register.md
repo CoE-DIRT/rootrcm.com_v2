@@ -4,8 +4,8 @@
 
 | Surface | Media / component | Source and ownership | Current status | Acceptance before external marketing |
 | --- | --- | --- | --- | --- |
-| Global navigation | ROOT logo lockup | Existing repository `src/app/icon.svg` brand mark, reused in `site-brand.tsx` | Implemented in visual PR | Confirm founder-approved logo is identical or replace with canonical brand source; desktop/mobile header, footer and favicon match |
-| Home hero `4:2`, tablet `4:153`, mobile `4:126` | Cinematic glass-masked illustration | Original local `public/media/root-revenue-hero.svg` (ROOT source-created illustration) | Implemented in visual PR | Inspect screenshots at 375, 768, 1366, 2560; readable overlay and CTA; replace/add licensed photography when approved |
+| Global navigation | ROOT logo lockup | Founder-recovered Demo 6 `/brand/logo.webp` and `/brand/mark.webp` (SHA-256 verified) | Restored | Header, footer, favicon and OG use originals; temporary favicon lockup retired |
+| Home hero `4:2`, tablet `4:153`, mobile `4:126` | Cinematic glass-masked story still | Founder-recovered Demo 6 `/brand/story.webp` | Restored | Inspect screenshots at 375, 768, 1366, 2560; readable overlay and CTA |
 | Services `4:40` | Hero media and specialty-specific editorial photography | Original current shared illustration; clinical photography approval pending | Shared illustration now | Distinct services media, professionally sourced and rights-vetted; no implied physician/client endorsement |
 | Technology/DIRT `6:22` | Product renders, dashboard, transaction network imagery | Synthetic dashboards + shared hero illustration | Partial | Unique original product UI captures or generated art, synchronized with actual modules |
 | Featured specialties | Clinically relevant cards and photos | Production specialty catalog; visual asset sources not fully supplied | Partial | Source/license/alt text per specialty, no invented client images |

@@ -1,4 +1,4 @@
-import { PageHero } from '@/components/site/page-hero';
+import { PageHero, type HeroVisual } from '@/components/site/page-hero';
 import { BandList, TileGrid } from '@/components/site/tile-grid';
 import { Accordion } from '@/components/ui/accordion';
 import { Breadcrumb } from '@/components/ui/breadcrumb';
@@ -16,6 +16,7 @@ export function MarketingPage({
   sections,
   bands,
   nodeId,
+  visual = 'banner',
   children,
 }: {
   locale: Locale;
@@ -27,6 +28,7 @@ export function MarketingPage({
   sections?: readonly { title: string; body: string }[];
   bands?: readonly string[];
   nodeId?: string;
+  visual?: HeroVisual;
   children?: React.ReactNode;
 }) {
   const t = copy(locale);
@@ -46,6 +48,7 @@ export function MarketingPage({
         cta={cta}
         ctaHref={ctaHref}
         nodeId={nodeId}
+        visual={visual}
       />
       {tiles ? <TileGrid locale={locale} tiles={tiles} hint={t.home.tileHint} /> : null}
       {sections ? <SectionGrid sections={sections} /> : null}

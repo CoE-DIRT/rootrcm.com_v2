@@ -24,6 +24,7 @@ export default async function CompanyPage({ params }: { params: Promise<{ locale
       body={t.company.body}
       sections={t.company.sections}
       nodeId="6:34"
+      visual="poster"
     >
       <PendingFaq locale={locale} faqs={t.company.faqs} />
     </MarketingPage>
