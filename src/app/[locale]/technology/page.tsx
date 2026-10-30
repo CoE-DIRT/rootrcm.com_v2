@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { EcosystemMarquees } from '@/components/commercial/ecosystem-marquees';
+import { GoHealthcarePreview } from '@/components/commercial/go-healthcare-preview';
 import { MarketingPage } from '@/components/site/marketing-page';
 import { StatusBanner } from '@/components/ui/status';
 import { copy } from '@/content/messages';
@@ -34,6 +35,7 @@ export default async function TechnologyPage({ params }: { params: Promise<{ loc
         <StatusBanner tone="warning">{t.preview}</StatusBanner>
       </div>
       <EcosystemMarquees locale={locale} />
+      <GoHealthcarePreview locale={locale} />
     </MarketingPage>
   );
 }
