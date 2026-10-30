@@ -49,7 +49,7 @@ function CredentialTimeline({ item, locale, compact = false }: { item: Credentia
   const current = item.stages.findIndex((stage) => stage.state === 'current');
   const progress = Math.round(((current + 1) / item.stages.length) * 100);
   return (
-    <article className={card} aria-label={`${item.providerAlias[locale]} — ${item.payer}`}>
+    <article data-testid="credentialing-card" className={card} aria-label={`${item.providerAlias[locale]} — ${item.payer}`}>
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className="text-xs font-bold tracking-wider text-[var(--cyan)]">{item.id}</p>
