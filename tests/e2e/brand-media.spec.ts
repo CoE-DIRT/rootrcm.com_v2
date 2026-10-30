@@ -25,7 +25,10 @@ for (const width of [375, 768, 1366, 2560]) {
 }
 
 test('DIRT imagery and bilingual hero are present in the commercial story', async ({ page }) => {
+  await page.setViewportSize({ width: 1366, height: 920 });
   await page.goto('/es');
   await expect(page.locator('[data-testid="root-visual-hero"]:visible').first()).toBeVisible();
   await expect(page.locator('img[src*="root-workflow-network.svg"]')).toBeVisible();
+  await expect(page.locator('[data-testid="root-visual-hero"]:visible').first()).toContainText('Operaciones de ingresos · inteligencia conectada');
+  await expect(page.getByTestId('root-brand-lockup')).toContainText('Operaciones y resultados de ingresos');
 });
