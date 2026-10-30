@@ -11,7 +11,7 @@ import { copy } from '@/content/messages';
 type SubItem = { path: string; en: string; es: string; hintEn: string; hintEs: string };
 type MenuItem = { path: string; key: (typeof publicNav)[number]['key']; en: string; es: string; links: readonly SubItem[] };
 
-const menus: readonly MenuItem[] = [
+export const rootMegaMenus: readonly MenuItem[] = [
   { path: '/why-root', key: 'whyRoot', en: 'Control without the black box', es: 'Control sin opacidad', links: [
     { path: '/why-root', en: 'Why ROOT', es: 'Por qué ROOT', hintEn: 'A practice-first approach', hintEs: 'Un enfoque centrado en la práctica' },
     { path: '/solutions', en: 'Solutions and outcomes', es: 'Soluciones y resultados', hintEn: 'Find where revenue stalls', hintEs: 'Detecte dónde se detienen los ingresos' },
@@ -75,7 +75,7 @@ export function PrimaryNav({ locale }: { locale: Locale }) {
   return (
     <nav ref={rootRef} aria-label="Primary" className="relative hidden items-center gap-0.5 text-sm lg:flex" data-testid="root-mega-nav">
       {publicNav.map((entry, index) => {
-        const menu = menus.find((m) => m.key === entry.key);
+        const menu = rootMegaMenus.find((m) => m.key === entry.key);
         if (!menu) return null;
         const active = pathname === localizedPath(locale, entry.href) || pathname.startsWith(`${localizedPath(locale, entry.href)}/`);
         const shown = open === index;
