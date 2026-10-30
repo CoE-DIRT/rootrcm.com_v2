@@ -406,3 +406,27 @@ a.btn-primary {
     gap: 10px;
   }
 }
+
+
+/* ROOT Demo 6 interaction layer — purposeful motion, generous hit areas,
+   glass surfaces and performance-safe animated transforms. */
+@keyframes root-menu-in {
+  from { opacity: 0; transform: translate(-50%, -7px) scale(.985); }
+  to { opacity: 1; transform: translate(-50%, 0) scale(1); }
+}
+@keyframes root-guide-in {
+  from { opacity: 0; transform: translateY(13px) scale(.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes root-reveal-up {
+  from { opacity: .1; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .root-visual-hero { animation: root-reveal-up 550ms cubic-bezier(.18,.82,.24,1) both; }
+  .commercial-section { animation: root-reveal-up 560ms cubic-bezier(.18,.82,.24,1) both; }
+  .commercial-section:nth-of-type(2n) { animation-delay: 75ms; }
+}
+@media (pointer: coarse) {
+  .root-visual-hero a, .site-header button, .site-header a { touch-action: manipulation; }
+}

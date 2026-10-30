@@ -71,7 +71,7 @@ test.describe('public IA', () => {
     await expect(page.getByRole('heading', { level: 1, name: 'Talk with a revenue expert' })).toBeVisible();
     await expect(page.getByText('Online inquiries are not active yet')).toBeVisible();
     await expect(page.getByRole('button', { name: 'Send business inquiry' })).toBeDisabled();
-    await expect(page.locator('form')).toBeVisible();
+    await expect(page.locator('main form')).toBeVisible();
   });
 
   test('keyboard can reach skip link and primary CTA', async ({ page }) => {
