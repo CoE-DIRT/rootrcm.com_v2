@@ -1,15 +1,18 @@
 # Isolated HTTPS preview — status
 
-**Recorded:** 2026-10-30 against `feat/ops-preview` @ `1f4f3b2`.
-**Durable Appwrite Sites / GitHub preview / Netlify draft: blocked.** No production DNS was changed. V1 was not touched.
+**Recorded:** 2026-10-31 00:16 PKT against `feat/p0-p1-public-shell` @ `5c025cd`.
+**Durable Appwrite Sites / GitHub preview / Netlify draft: still blocked.** No production DNS was changed. V1 was not touched.
 
 ## Live destination
 
-Ephemeral Cloudflare quick tunnel against a local `next start` of this worktree (`127.0.0.1:3020`). **Not staging.** Dies when this machine or the tunnel process stops. Do not bookmark.
+Isolated founder snapshot `C:\Dev\ROOT\_ROOT_V2_PREVIEW_20261031-000225` (detached `5c025cd`, matches `origin/feat/p0-p1-public-shell`) is serving `http://127.0.0.1:3021`. A second `next start` from `rootrcm-ops-a` is on `127.0.0.1:3020` at the same SHA. **Neither is staging.**
 
-- Session URL (ephemeral): `https://mixer-ongoing-enjoy-intend.trycloudflare.com/en`
-- Verified 2026-10-30: HTTPS 200 on `/en`, `/en/plans` (canonical **$2,500** diagnostic), `/es/specialties/infectious-disease`, and `GET /api/v1/ops/state`. `X-Robots-Tag: none`.
-- Indexing remains off (`robots: noindex` in the app shell)
+Ephemeral Cloudflare quick tunnel (this workstation → `127.0.0.1:3021`). Dies when this machine or the tunnel process stops. Do not bookmark.
+
+- Session URL (ephemeral): `https://exhibit-debate-dont-and.trycloudflare.com/en`
+- Verified 2026-10-31: HTTP 200 on `127.0.0.1:3021` for `/en`, `/en/plans`, `/es/specialties/infectious-disease`, `/en/preview/sales`, `/en/preview/client`, `/en/preview/staff`, `/en/preview/credentialing`, and `GET /api/v1/ops/state?orgId=bayview&persona=client`.
+- Same paths returned HTTPS 200 through the tunnel with a browser user-agent. A non-browser fetch received Cloudflare 403; that is bot filtering, not an app outage.
+- Previous hostname `https://mixer-ongoing-enjoy-intend.trycloudflare.com/en` returned 504 (expired).
 
 Do not treat this hostname as a client demo once the process exits.
 
@@ -25,7 +28,7 @@ Do not treat this hostname as a client demo once the process exits.
 
 ## Issue #29
 
-Engine isolation landed on `feat/ops-session` ([PR #30](https://github.com/CoE-DIRT/rootrcm.com_v2/pull/30)): signed httpOnly presentation cookies, per-session snapshots, operator capability from `/preview/staff` (not JSON `persona`). Skip-free Playwright coverage is `tests/e2e/ops-session-isolation.spec.ts`. Omitted capability now fails closed to `client`. A documented persistence adapter exists (`memory` + fail-closed durable stub via `ROOT_DEMO_SESSION_BACKEND`). The memory Map is still **per-process**; keep #29 open until a reviewed Appwrite V2/KV driver is provisioned. Do not invent those credentials.
+Engine isolation is on the consolidated candidate via [PR #30](https://github.com/CoE-DIRT/rootrcm.com_v2/pull/30) (`5c025cd`): signed httpOnly presentation cookies, per-session snapshots, operator capability from `/preview/staff` (not JSON `persona`). Skip-free Playwright coverage is `tests/e2e/ops-session-isolation.spec.ts`. Omitted capability now fails closed to `client`. A documented persistence adapter exists (`memory` + fail-closed durable stub via `ROOT_DEMO_SESSION_BACKEND`). The memory Map is still **per-process**; keep #29 open until a reviewed Appwrite V2/KV driver is provisioned. Do not invent those credentials.
 
 ## Remaining founder actions (exact)
 
