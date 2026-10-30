@@ -1,4 +1,5 @@
 import { AppShell } from '@/components/app-shell/app-shell';
+import { EntitlementWall } from '@/components/commercial/entitlement-wall';
 import { StatusBanner } from '@/components/ui/status';
 import { priceCatalog } from '@/content/catalog';
 import { previewTierRows } from '@/domain/catalog-entitlement';
@@ -13,6 +14,7 @@ export default async function BillingPreviewPage({ params }: { params: Promise<{
     <main id="main">
       <AppShell locale={locale} role="client" orgName={previewOrgs[1].name} title={t.workspace.billingPreviewTitle}>
         <StatusBanner tone="warning">{t.adaptersOff}</StatusBanner>
+        <EntitlementWall locale={locale} />
         <section className="mt-6 surface p-4" data-testid="preview-tier-map">
           <h2 className="font-bold">{t.workspace.tierMapTitle}</h2>
           <p className="muted mt-2 text-sm">{t.workspace.tierMapBody}</p>

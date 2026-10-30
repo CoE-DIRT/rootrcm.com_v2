@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { ProofUnpublished } from '@/components/commercial/proof-unpublished';
 import { MarketingPage, PendingFaq } from '@/components/site/marketing-page';
 import { copy } from '@/content/messages';
 import { requireLocale } from '@/lib/locale';
@@ -25,6 +26,7 @@ export default async function CompanyPage({ params }: { params: Promise<{ locale
       sections={t.company.sections}
       nodeId="6:34"
     >
+      <ProofUnpublished locale={locale} />
       <PendingFaq locale={locale} faqs={t.company.faqs} />
     </MarketingPage>
   );

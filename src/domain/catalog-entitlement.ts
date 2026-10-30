@@ -65,6 +65,11 @@ export function catalogEntitlementsForOffer(offer: OfferId): readonly string[] {
   return offerFeatureCodes[offer];
 }
 
+/** Free account is the only no-charge catalog offer. There is no Enterprise SKU. */
+export function offerRequiresPayment(offer: OfferId): boolean {
+  return offer !== 'free-account-consultation';
+}
+
 export function catalogEntitlementsForPreviewTier(
   tier: PreviewWorkspaceTier,
 ): readonly string[] {

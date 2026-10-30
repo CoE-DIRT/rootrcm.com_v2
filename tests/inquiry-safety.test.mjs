@@ -19,10 +19,13 @@ test('disabled public inquiry endpoint fails closed without consuming contact da
   assert.doesNotMatch(api, /from ['"][^'"]*outbox/);
 });
 
-test('client cannot submit or claim success without durable acceptance', () => {
-  assert.match(form, /const inquirySubmissionEnabled = false/);
-  assert.match(form, /disabled=\{!inquirySubmissionEnabled\}/);
-  assert.match(form, /accepted_persisted/);
+test('client submits to fail-closed 503 and cannot claim success', () => {
+  assert.match(form, /fetch\('\/api\/v1\/public\/inquiries'/);
+  assert.match(form, /setStatus\('unavailable'\)/);
+  assert.doesNotMatch(form, /setStatus\('success'\)/);
+  assert.doesNotMatch(form, /disabled=\{!inquirySubmissionEnabled\}/);
+  assert.match(form, /intent: 'business-inquiry'/);
+  assert.doesNotMatch(form, /body: JSON.stringify\(payload\)/);
   assert.match(form, /const formElement = event\.currentTarget/);
   assert.match(form, /catch\s*\{/);
   assert.match(form, /setStatus\('error'\)/);

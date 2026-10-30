@@ -1,31 +1,29 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, type FormEvent } from 'react';
 import { copy } from '@/content/messages';
 import type { Locale } from '@/i18n/locales';
 import { Button } from '@/components/ui/button';
 import { SelectField, TextArea, TextInput } from '@/components/ui/form-field';
 import { StatusBanner } from '@/components/ui/status';
-import type { FieldErrors } from '@/lib/validation/business-contact';
+import { validateBusinessContact, type FieldErrors } from '@/lib/validation/business-contact';
 
-// Set true only after a reviewed server-side durable inquiry contract is deployed.
-const inquirySubmissionEnabled = false;
+export type InquiryConcern = 'consultation' | 'diagnostic' | 'managed' | 'custom';
 
-export function BusinessInquiryForm({ locale }: { locale: Locale }) {
+export function BusinessInquiryForm({
+  locale,
+  defaultConcern = 'consultation',
+}: {
+  locale: Locale;
+  defaultConcern?: InquiryConcern;
+}) {
   const t = copy(locale);
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'unavailable' | 'error'>('idle');
   const [errors, setErrors] = useState<FieldErrors>({});
   const [message, setMessage] = useState('');
 
-  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!inquirySubmissionEnabled) {
-      setStatus('error');
-      setMessage(t.consultation.unavailable);
-      return;
-    }
-    setStatus('loading');
-    setErrors({});
     const formElement = event.currentTarget;
     const form = new FormData(formElement);
     const payload = {
@@ -36,26 +34,32 @@ export function BusinessInquiryForm({ locale }: { locale: Locale }) {
       message: form.get('message'),
       consent: form.get('consent') === 'on',
     };
+    const validated = validateBusinessContact(payload);
+    if (!validated.ok) {
+      setStatus('idle');
+      setErrors(validated.fieldErrors);
+      setMessage('');
+      return;
+    }
+    setStatus('loading');
+    setErrors({});
+    setMessage('');
     try {
       const response = await fetch('/api/v1/public/inquiries', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({ intent: 'business-inquiry', concern: validated.data.concern }),
       });
       const json = (await response.json()) as {
         error?: { message?: string; fieldErrors?: FieldErrors };
         data?: { status?: string };
       };
-      // HTTP 200 is not sufficient: only verified durable acceptance is success.
-      if (!response.ok || json.data?.status !== 'accepted_persisted') {
+      setStatus('unavailable');
+      setMessage(json.error?.message ?? t.consultation.unavailable);
+      if (!response.ok && response.status !== 503) {
         setStatus('error');
         setErrors(json.error?.fieldErrors ?? {});
-        setMessage(json.error?.message ?? t.consultation.unavailable);
-        return;
       }
-      setStatus('success');
-      setMessage(t.consultation.received);
-      formElement.reset();
     } catch {
       setStatus('error');
       setMessage(t.status.error);
@@ -63,7 +67,12 @@ export function BusinessInquiryForm({ locale }: { locale: Locale }) {
   }
 
   return (
-    <form className="surface mt-8 grid max-w-xl gap-4 p-6" onSubmit={onSubmit} noValidate>
+    <form
+      className="surface mt-8 grid max-w-xl gap-4 p-6"
+      onSubmit={onSubmit}
+      noValidate
+      data-testid="business-inquiry-form"
+    >
       <TextInput
         id="name"
         name="name"
@@ -93,6 +102,7 @@ export function BusinessInquiryForm({ locale }: { locale: Locale }) {
         id="concern"
         name="concern"
         label={t.form.concern}
+        defaultValue={defaultConcern}
         error={errors.concern ? t.form.errors[errors.concern] : undefined}
       >
         <option value="consultation">{t.form.concernOptions.consultation}</option>
@@ -113,11 +123,11 @@ export function BusinessInquiryForm({ locale }: { locale: Locale }) {
         </span>
       </label>
       {errors.consent ? <p className="field-error">{t.form.errors[errors.consent]}</p> : null}
-      {!inquirySubmissionEnabled ? <StatusBanner tone="warning">{t.consultation.unavailable}</StatusBanner> : null}
-      <Button type="submit" loading={status === 'loading'} disabled={!inquirySubmissionEnabled}>
+      <StatusBanner tone="warning">{t.consultation.unavailable}</StatusBanner>
+      <Button type="submit" loading={status === 'loading'}>
         {t.consultation.submit}
       </Button>
-      {status === 'success' ? <StatusBanner tone="warning">{message}</StatusBanner> : null}
+      {status === 'unavailable' ? <StatusBanner tone="warning">{message}</StatusBanner> : null}
       {status === 'error' ? <StatusBanner tone="danger">{message}</StatusBanner> : null}
     </form>
   );

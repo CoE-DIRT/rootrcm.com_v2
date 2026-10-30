@@ -364,6 +364,26 @@ const en = {
     termsTitle: 'Terms of Use',
     cookiesTitle: 'Cookie Preferences',
     body: 'Legal text is a placeholder pending counsel review. Public forms accept business contacts only. Indexing is off in this environment.',
+    cookiesBannerTitle: 'Cookie preferences',
+    cookiesBannerBody:
+      'Necessary cookies keep language, theme and labeled preview sessions working. Analytics and marketing pixels are not loaded in this environment. Your choice stays in this browser.',
+    cookiesNecessaryOnly: 'Necessary only',
+    cookiesAcceptAll: 'Allow optional cookies',
+    cookiesCustomize: 'Manage cookies',
+    cookiesSaved:
+      'Preferences saved in this browser. No analytics or marketing pixels are loaded in this build.',
+    cookiesNecessary: 'Necessary',
+    cookiesNecessaryBody:
+      'Locale, color theme and signed preview-session cookies. These are not advertising cookies.',
+    cookiesAnalytics: 'Analytics',
+    cookiesAnalyticsBody:
+      'Preference only. ROOT does not load an analytics vendor in this environment, even if allowed.',
+    cookiesMarketing: 'Marketing',
+    cookiesMarketingBody:
+      'Preference only. ROOT does not load marketing pixels or CRM trackers in this environment.',
+    cookiesSave: 'Save preferences',
+    cookiesAlwaysOn: 'Always on',
+    cookiesRuntimeOff: 'No third-party tracking scripts are present in this build.',
   },
   commercial: {
     servicesEyebrow: 'Services',
@@ -460,6 +480,16 @@ const en = {
     journeyCtaBody:
       'Nine stages from visitor to active service. HubSpot, Apollo and Stripe stay typed and disabled — no CRM write, enrichment spend or payment.',
     comparePlans: 'Compare plans',
+    requestCheckout: 'Request checkout',
+    checkoutUnavailable:
+      'Checkout is not active. No payment was collected and no Stripe session was created.',
+    entitlementTitle: 'Free vs paid capabilities',
+    entitlementBody:
+      'Capabilities come from the canonical catalog. Free includes a basic workspace and consultation. Paid offers add diagnostic, operations, DIRT or MSO features. There is no Enterprise SKU. This preview does not grant access.',
+    entitlementIncluded: 'Included',
+    entitlementLocked: 'Not included in this offer',
+    freeOffer: 'Free',
+    paidOffer: 'Paid catalog offer',
     codeDisclaimer:
       'No CPT, HCPCS or ICD examples are listed. Code sets change and must be founder-validated before publication.',
     marqueePause: 'Pause scrolling platforms',
@@ -835,6 +865,26 @@ const es: Messages = {
     termsTitle: 'Términos de uso',
     cookiesTitle: 'Preferencias de cookies',
     body: 'El texto legal es un marcador de posición pendiente de revisión jurídica. Los formularios públicos solo aceptan contactos empresariales. La indexación está desactivada.',
+    cookiesBannerTitle: 'Preferencias de cookies',
+    cookiesBannerBody:
+      'Las cookies necesarias mantienen el idioma, el tema y las sesiones de vista previa. En este entorno no se cargan píxeles de analítica ni de marketing. La elección queda en este navegador.',
+    cookiesNecessaryOnly: 'Solo necesarias',
+    cookiesAcceptAll: 'Permitir cookies opcionales',
+    cookiesCustomize: 'Gestionar cookies',
+    cookiesSaved:
+      'Preferencias guardadas en este navegador. En esta versión no se cargan píxeles de analítica ni de marketing.',
+    cookiesNecessary: 'Necesarias',
+    cookiesNecessaryBody:
+      'Idioma, tema de color y cookies firmadas de vista previa. No son cookies publicitarias.',
+    cookiesAnalytics: 'Analítica',
+    cookiesAnalyticsBody:
+      'Solo preferencia. ROOT no carga un proveedor de analítica en este entorno, aunque se permita.',
+    cookiesMarketing: 'Marketing',
+    cookiesMarketingBody:
+      'Solo preferencia. ROOT no carga píxeles de marketing ni rastreadores CRM en este entorno.',
+    cookiesSave: 'Guardar preferencias',
+    cookiesAlwaysOn: 'Siempre activas',
+    cookiesRuntimeOff: 'Esta versión no incluye scripts de seguimiento de terceros.',
   },
   commercial: {
     servicesEyebrow: 'Servicios',
@@ -932,6 +982,16 @@ const es: Messages = {
     journeyCtaBody:
       'Nueve etapas desde visitante hasta servicio activo. HubSpot, Apollo y Stripe permanecen tipados y desactivados: sin escritura CRM, gasto de enriquecimiento ni cobro.',
     comparePlans: 'Comparar planes',
+    requestCheckout: 'Solicitar pago',
+    checkoutUnavailable:
+      'El pago no está activo. No se cobró y no se creó una sesión de Stripe.',
+    entitlementTitle: 'Capacidades gratuitas y de pago',
+    entitlementBody:
+      'Las capacidades provienen del catálogo canónico. Lo gratuito incluye un espacio básico y consulta. Las ofertas de pago añaden diagnóstico, operaciones, DIRT o MSO. No hay un SKU Enterprise. Esta vista previa no otorga acceso.',
+    entitlementIncluded: 'Incluido',
+    entitlementLocked: 'No incluido en esta oferta',
+    freeOffer: 'Gratis',
+    paidOffer: 'Oferta de pago del catálogo',
     codeDisclaimer:
       'No se listan ejemplos CPT, HCPCS ni CIE. Los conjuntos de códigos cambian y deben ser validados por el fundador antes de publicarse.',
     marqueePause: 'Pausar plataformas en desplazamiento',

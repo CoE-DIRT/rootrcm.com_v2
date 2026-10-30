@@ -7,6 +7,7 @@ import {
   catalogHasEnterpriseSku,
   catalogOfferIds,
   isCatalogOfferId,
+  offerRequiresPayment,
   previewTierCatalogOffers,
 } from '../src/domain/catalog-entitlement.ts';
 
@@ -48,4 +49,7 @@ test('free vs premium catalog entitlements stay distinct', () => {
   assert.equal(catalogEntitlementsForOffer('revenue-diagnostic').includes('diagnostic_report'), true);
   assert.equal(catalogEntitlementsForOffer('custom-mso').includes('mso_reporting'), true);
   assert.equal(catalogEntitlementsForOffer('custom-mso').includes('enterprise_reporting'), false);
+  assert.equal(offerRequiresPayment('free-account-consultation'), false);
+  assert.equal(offerRequiresPayment('revenue-diagnostic'), true);
+  assert.equal(offerRequiresPayment('managed-rcm'), true);
 });

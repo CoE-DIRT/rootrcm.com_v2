@@ -26,7 +26,7 @@ export default async function AccountPage({ params }: { params: Promise<{ locale
         <StatusBanner tone="warning">{t.adaptersOff}</StatusBanner>
       </div>
       <StepList steps={t.account.steps} />
-      <BusinessInquiryForm locale={locale} />
+      <BusinessInquiryForm locale={locale} defaultConcern="consultation" />
       <CommercialNextActions locale={locale} offerId="free-account-consultation" />
     </MarketingPage>
   );

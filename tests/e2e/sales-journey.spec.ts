@@ -1,4 +1,9 @@
 import { expect, test } from '@playwright/test';
+import { dismissCookieBanner } from './helpers';
+
+test.beforeEach(async ({ page }) => {
+  await dismissCookieBanner(page);
+});
 
 test('sales journey progresses coherently and resets', async ({ page }) => {
   await page.goto('/en/preview/sales');

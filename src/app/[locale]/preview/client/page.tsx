@@ -1,8 +1,10 @@
 import { AppShell } from '@/components/app-shell/app-shell';
 import { OperationsCommandCenter } from '@/components/app-shell/operations-command-center';
+import { EntitlementWall } from '@/components/commercial/entitlement-wall';
 import { Card } from '@/components/ui/card';
 import { copy } from '@/content/messages';
 import { clientQueue, previewOrgs } from '@/content/preview-fixtures';
+import { isPreviewWorkspaceTier, previewTierCatalogOffers } from '@/domain/catalog-entitlement';
 import { requireLocale } from '@/lib/locale';
 
 export default async function ClientPreviewPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -15,6 +17,10 @@ export default async function ClientPreviewPage({ params }: { params: Promise<{ 
         <p className="muted">
           {org.name} · {org.plan} · {t.preview}
         </p>
+        <EntitlementWall
+          locale={locale}
+          offerId={isPreviewWorkspaceTier(org.plan) ? previewTierCatalogOffers[org.plan] : undefined}
+        />
         <div className="mt-6"><OperationsCommandCenter locale={locale} role="client" /></div>
         <h2 className="mt-8 text-xl font-extrabold">{t.workspace.requests}</h2>
         <div className="mt-4 grid gap-3 md:grid-cols-2">

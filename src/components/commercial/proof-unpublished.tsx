@@ -16,7 +16,7 @@ export function ProofUnpublished({ locale }: { locale: Locale }) {
       />
       <ul className="mt-8 grid gap-3 md:grid-cols-3">
         {proofSlots.map((slot) => (
-          <li key={slot.id}>
+          <li key={slot.id} data-testid={`proof-slot-${slot.id}`}>
             {slot.editorialStatus === 'published' && slot.quote ? (
               <blockquote className="surface p-6">
                 <p className="eyebrow">{slot.role[locale]}</p>
