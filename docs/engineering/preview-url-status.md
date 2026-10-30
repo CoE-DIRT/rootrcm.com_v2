@@ -1,50 +1,56 @@
 # Isolated HTTPS preview — status
 
-**Recorded:** 2026-10-31 00:16 PKT against `feat/p0-p1-public-shell` @ `5c025cd`.
-**Durable Appwrite Sites / GitHub preview / Netlify draft: still blocked.** No production DNS was changed. V1 was not touched.
+**Recorded:** 2026-10-31 ~04:00 PKT by Agent D against `feat/release-qa` documenting `origin/feat/p0-p1-public-shell` @ `470b76c`.  
+**Durable Appwrite Sites / GitHub preview / Netlify draft: still BLOCKED.** No production DNS was changed. V1 was not touched. Founder snapshot was not killed or rebuilt.
 
-## Live destination
+## Ports actually listening (this workstation)
 
-Isolated founder snapshot `C:\Dev\ROOT\_ROOT_V2_PREVIEW_20261031-000225` (detached `5c025cd`, matches `origin/feat/p0-p1-public-shell`) is serving `http://127.0.0.1:3021`. A second `next start` from `rootrcm-ops-a` is on `127.0.0.1:3020` at the same SHA. **Neither is staging.**
+| Port | Process | Origin | SHA / note | Agent D action |
+| --- | --- | --- | --- | --- |
+| `127.0.0.1:3032` | Next (`next start`, pid 2228) | Live V2 UI | HTTP 200 `/en`, `/en/plans`, `/en/specialties/infectious-disease`, `/es/specialties/infectious-disease`, `/en/preview/{sales,client,staff}`, `/en/cookies`. `/en/careers` and `/en/sitemap` 404. | Documented. Did not bind a second Next. |
+| `127.0.0.1:8787` | Go healthcare simulator | `GET /healthz` 200; `GET /v1/capabilities` 200, `live: false`, `source` synthetic | Matches `services/healthcare-go` loopback default. `/health` 404 (not an outage). | Documented. Did not restart. |
+| `127.0.0.1:3021` | Founder snapshot Next | Isolated `C:\Dev\ROOT\_ROOT_V2_PREVIEW_20261031-000225` detached `5c025cd` | HTTP 200 `/en`. **Left running.** | Do not kill, rebuild, or retarget. |
+| `127.0.0.1:3020` | `rootrcm-ops-a` `next start` | HTTP 200 `/en` | Older/parallel preview. | Untouched. |
+| `127.0.0.1:3010` | Playwright default | Nothing listening | `playwright.config.ts` default | Not started (would collide if CI-local). |
 
-Ephemeral Cloudflare quick tunnel (this workstation → `127.0.0.1:3021`). Dies when this machine or the tunnel process stops. Do not bookmark.
+Playwright in CI uses an ephemeral `next start` on 3010. Local humans should not assume 3032 is the Playwright port.
 
-- Session URL (ephemeral): `https://exhibit-debate-dont-and.trycloudflare.com/en`
-- Verified 2026-10-31: HTTP 200 on `127.0.0.1:3021` for `/en`, `/en/plans`, `/es/specialties/infectious-disease`, `/en/preview/sales`, `/en/preview/client`, `/en/preview/staff`, `/en/preview/credentialing`, and `GET /api/v1/ops/state?orgId=bayview&persona=client`.
-- Same paths returned HTTPS 200 through the tunnel with a browser user-agent. A non-browser fetch received Cloudflare 403; that is bot filtering, not an app outage.
-- Previous hostname `https://mixer-ongoing-enjoy-intend.trycloudflare.com/en` returned 504 (expired).
+## Ephemeral tunnels
 
-Do not treat this hostname as a client demo once the process exits.
+Cloudflared processes are already running against **3020** (several) and **3021** (one). Agent D did **not** open another tunnel and did **not** kill existing ones.
+
+| Hostname | Check 2026-10-31 ~04:00 PKT | Verdict |
+| --- | --- | --- |
+| `https://exhibit-debate-dont-and.trycloudflare.com/en` (previously documented) | DNS NXDOMAIN | **Expired. Do not bookmark.** |
+| `https://mixer-ongoing-enjoy-intend.trycloudflare.com/en` | previously 504 | Expired |
+| `https://closure-pets-byte-odds.trycloudflare.com/en` (PR #19 comment) | not re-verified this pass | Treat as dead unless a browser tab still loads |
+
+**No durable client HTTPS URL exists.** Workstation tunnels die with the process. Optional new tunnel was skipped because (1) founder 3021 must stay up, (2) four cloudflared processes already exist, (3) previous hostnames are unverifiable.
 
 ## Why durable hosts are blocked
 
-| Option | Observed 2026-10-30 | Decision |
+| Option | Observed 2026-10-31 | Decision |
 | --- | --- | --- |
-| GitHub Actions preview | Workflows are CI only (`quality`, `e2e`, CodeQL, labels). Environment `preview` exists (`id` 25808364325) with **0 secrets** and 0 protection reviewers. No deploy job. | Cannot publish an HTTPS preview from Actions without founder-supplied host secrets. |
-| Netlify draft of this V2 repo | No `.netlify` link, no `netlify.toml`, no `NETLIFY_AUTH_TOKEN`, no Netlify CLI config on this workstation. ADR-0001 keeps Appwrite Sites as the approved host. | Do not create a Netlify site or production deploy from this agent. |
-| Appwrite Sites (intended) | Appwrite MCP API namespace is **error** (discovery failed; `mcp_auth` timed out earlier). No isolated V2 project ID exists. V1 Cloud project must not be reused. | Blocked on founder create of a **new** ROOT V2 project. |
-| `v2.dirtrcm.app` CNAME | Zone `dirtrcm.app` (account `f5741cef2e8e466e32f431d33943c9f7`) has **no** `v2` record. Apex CNAME, wildcard A, www, api, MX, SPF, DKIM are in place for the existing site + email. | Not written. Founder-approval / possible-charge action. Do not point apex at V2. |
-| `rootrcm.com` | Not on this Cloudflare account. | Untouched. |
-
-## Issue #29
-
-Engine isolation is on the consolidated candidate via [PR #30](https://github.com/CoE-DIRT/rootrcm.com_v2/pull/30) (`5c025cd`): signed httpOnly presentation cookies, per-session snapshots, operator capability from `/preview/staff` (not JSON `persona`). Skip-free Playwright coverage is `tests/e2e/ops-session-isolation.spec.ts`. Omitted capability now fails closed to `client`. A documented persistence adapter exists (`memory` + fail-closed durable stub via `ROOT_DEMO_SESSION_BACKEND`). The memory Map is still **per-process**; keep #29 open until a reviewed Appwrite V2/KV driver is provisioned. Do not invent those credentials.
+| GitHub Actions preview | Workflows are CI only (`quality`, `e2e`, CodeQL, labels, go-healthcare). Environment `preview` (`id` 25808364325) has **0 secrets**. | Cannot publish HTTPS from Actions without founder host secrets. |
+| Netlify draft | No `.netlify` link, no `netlify.toml`, no `NETLIFY_AUTH_TOKEN`. ADR-0001 keeps Appwrite Sites. | Do not create a Netlify site. |
+| Appwrite Sites | Connected workspace still lists only the live V1 ROOT project. No isolated V2 project ID. | **BLOCKED** on founder create of **new** `root-v2-preview`. Do not reuse V1. Do not create paid resources from this agent. |
+| `v2.dirtrcm.app` CNAME | Not written. | Founder-approval / possible-charge. Do not point apex at V2. |
+| `rootrcm.com` | Not on the connected Cloudflare account. | **Untouched.** |
 
 ## Remaining founder actions (exact)
 
 1. Create a **new** Appwrite Cloud project for ROOT V2 (suggested name `root-v2-preview`). Do not copy V1 `NEXT_PUBLIC_APPWRITE_PROJECT_ID`.
 2. Bind Appwrite Sites on that project to this GitHub repo; hostname **not** `rootrcm.com`.
-3. Add GitHub Environment `preview` secrets for the new project only (no V1 keys). Optional: protection reviewers.
-4. Approve (or reject) a **new** `v2.dirtrcm.app` CNAME to the chosen isolated host. Do not edit existing apex/MX/SPF/DKIM records.
-5. Optional Netlify: authenticate CLI and link a **draft-only** site for this V2 repo if Appwrite Sites is delayed. Not production.
-6. Independent human approval of [PR #19](https://github.com/CoE-DIRT/rootrcm.com_v2/pull/19) before `main`. Author cannot self-approve. This agent will not merge it.
-7. Reconnect HubSpot MCP from **Settings → Cursor Settings → Tools & MCP → Connect** (sandbox only). Do not loop agent `mcp_auth`. Keep CRM writes off.
-8. Leave Apollo as Info Desk prospecting-only. No credit spend, no sequences, `ROOT_ENABLE_PROSPECTING` stays false.
+3. Add GitHub Environment `preview` secrets for the new project only.
+4. Approve or reject a **new** `v2.dirtrcm.app` CNAME. Do not edit apex/MX/SPF/DKIM.
+5. Independent human approval of [PR #19](https://github.com/CoE-DIRT/rootrcm.com_v2/pull/19) before `main`. This agent will not merge it.
+6. Optional: authenticate Netlify CLI for a **draft-only** site if Appwrite Sites is delayed. Not production.
 
 ## Explicit non-actions
 
+- Founder snapshot `C:\Dev\ROOT\_ROOT_V2_PREVIEW_20261031-000225` was not modified, reset, or stopped.
 - `rootrcm.com` DNS, MX, SPF, DKIM, DMARC, and email routing were not changed.
-- Existing `dirtrcm.app` apex/wildcard/www/api/MX/SPF/DKIM records were not edited.
+- Existing `dirtrcm.app` records were not edited.
 - No Appwrite V1 site, function, or table was modified.
-- No Netlify/Vercel production host was added.
+- No paid cloud resource was created.
 - Integrations remain typed disabled.

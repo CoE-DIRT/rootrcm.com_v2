@@ -6,13 +6,14 @@ Canonical live status: [../preview-url-status.md](../preview-url-status.md).
 
 ## What is live in this workstation session
 
-An ephemeral Cloudflare quick tunnel was opened against a local `next start` of this branch. It is **not** a durable client demo and dies when this machine or the tunnel process stops.
+Canonical ports and blockers: [../preview-url-status.md](../preview-url-status.md) (Agent D, 2026-10-31 ~04:00 PKT).
 
-- Session URL (ephemeral): see [../preview-url-status.md](../preview-url-status.md) (`https://exhibit-debate-dont-and.trycloudflare.com/en` as of 2026-10-31 00:16 PKT, SHA `5c025cd`, origin `127.0.0.1:3021`)
-- Verified 2026-10-31: HTTP/HTTPS 200 on `/en`, `/en/plans` (canonical **$2,500** diagnostic), Spanish Infectious Disease, sales/client/staff/credentialing previews, and ops state API. Previous trycloudflare hostname expired (504).
-- Indexing remains off (`X-Robots-Tag: none`)
+- Loopback Next: `http://127.0.0.1:3032` (HTTP 200 on `/en`, `/en/plans`, Infectious Disease EN/ES, preview sales/client/staff). Playwright default 3010 is **not** listening.
+- Go simulator: `http://127.0.0.1:8787/healthz` 200, synthetic capabilities only.
+- Founder snapshot `C:\Dev\ROOT\_ROOT_V2_PREVIEW_20261031-000225` remains on `127.0.0.1:3021` at `5c025cd`. **Do not kill it.**
+- Previously documented trycloudflare host `exhibit-debate-dont-and.trycloudflare.com` is **NXDOMAIN**. No replacement durable URL. Agent D did not open a new tunnel.
 
-Do not bookmark this hostname. Do not treat it as staging.
+Do not bookmark workstation hostnames. Do not treat loopback as staging.
 
 ## Remaining founder approvals (exact)
 
