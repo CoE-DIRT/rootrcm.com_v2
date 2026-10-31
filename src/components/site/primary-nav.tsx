@@ -73,7 +73,7 @@ export function PrimaryNav({ locale }: { locale: Locale }) {
   }, [open]);
 
   return (
-    <nav ref={rootRef} aria-label="Primary" className="relative hidden items-center gap-0.5 text-sm lg:flex" data-testid="root-mega-nav">
+    <nav ref={rootRef} aria-label="Primary" className="relative hidden shrink-0 items-center gap-0.5 text-[13px] xl:flex min-[1440px]:text-sm" data-testid="root-mega-nav">
       {publicNav.map((entry, index) => {
         const menu = rootMegaMenus.find((m) => m.key === entry.key);
         if (!menu) return null;
@@ -84,7 +84,7 @@ export function PrimaryNav({ locale }: { locale: Locale }) {
             <div className={`flex items-center rounded-xl transition-colors hover:bg-[var(--surface-2)] ${active ? 'bg-[var(--surface-2)] text-[var(--text)]' : 'text-[var(--muted)]'}`}>
               <Link
                 href={localizedPath(locale, entry.href)}
-                className="px-2.5 py-3 font-semibold hover:text-[var(--text)]"
+                className="whitespace-nowrap px-1.5 py-3 font-semibold hover:text-[var(--text)] min-[1440px]:px-2.5"
                 aria-current={active ? 'page' : undefined}
                 onFocus={() => setOpen(null)}
               >{t.nav[entry.key]}</Link>
@@ -95,7 +95,12 @@ export function PrimaryNav({ locale }: { locale: Locale }) {
                 aria-label={locale === 'es' ? `Opciones de ${t.nav[entry.key]}` : `Show ${t.nav[entry.key]} options`}
                 aria-expanded={shown}
                 aria-controls={`root-menu-${index}`}
-                onClick={() => setOpen(index)}
+                onClick={(event) => {
+                  const native = event.nativeEvent;
+                  const pointerType = 'pointerType' in native ? String(native.pointerType) : '';
+                  const nonHover = event.detail === 0 || pointerType === 'touch' || pointerType === 'pen';
+                  setOpen(nonHover && shown ? null : index);
+                }}
                 onKeyDown={(event) => {
                   if (event.key === 'ArrowDown') {
                     event.preventDefault();

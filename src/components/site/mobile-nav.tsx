@@ -22,9 +22,24 @@ export function MobileNav({ locale }: { locale: Locale }) {
       setExpanded(null);
       toggleRef.current?.focus();
     }
+    function onPointer(event: PointerEvent) {
+      if (!open) return;
+      const target = event.target;
+      if (!(target instanceof Node)) return;
+      if (toggleRef.current?.contains(target)) return;
+      const panel = document.getElementById(panelId);
+      if (panel?.contains(target)) return;
+      setOpen(false);
+      setExpanded(null);
+      toggleRef.current?.focus();
+    }
     document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
-  }, [open]);
+    document.addEventListener('pointerdown', onPointer);
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('pointerdown', onPointer);
+    };
+  }, [open, panelId]);
 
   const es = locale === 'es';
   function close() {
@@ -33,7 +48,7 @@ export function MobileNav({ locale }: { locale: Locale }) {
   }
 
   return (
-    <div className="lg:hidden">
+    <div className="xl:hidden">
       <button
         ref={toggleRef}
         type="button"

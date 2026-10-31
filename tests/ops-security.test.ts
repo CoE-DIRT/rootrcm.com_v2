@@ -10,6 +10,7 @@ import {
 import { authorizeOpsPreview } from '../src/server/operations/policy.ts';
 import {
   OPS_ACTION_LIMIT,
+  isPreviewPrefetch,
   signOpsCapability,
   verifyOpsCapability,
   type OpsSessionContext,
@@ -17,6 +18,22 @@ import {
 import { applyOpsAction, readOpsState, resetOpsStore } from '../src/server/operations/store.ts';
 
 const operator = (id: string): OpsSessionContext => ({ id, capability: 'operator' });
+
+test('router prefetch does not rebind the operator preview cookie', () => {
+  assert.equal(isPreviewPrefetch(new Headers()), false);
+  assert.equal(isPreviewPrefetch(new Headers({ 'next-router-prefetch': '1' })), true);
+  assert.equal(
+    isPreviewPrefetch(new Headers({ 'next-router-segment-prefetch': '/en/preview/credentialing' })),
+    true,
+  );
+  assert.equal(isPreviewPrefetch(new Headers({ purpose: 'prefetch' })), true);
+  assert.equal(isPreviewPrefetch(new Headers({ 'sec-purpose': 'prefetch' })), true);
+  const source = readFileSync('src/middleware.ts', 'utf8');
+  const guard = source.indexOf('if (isPreviewPrefetch(request.headers)) return response;');
+  const bind = source.indexOf('return bindPreviewCookies(request, response);');
+  assert.ok(guard > 0);
+  assert.ok(bind > guard);
+});
 
 test('missing or tampered capability cookie fails closed to client', async () => {
   assert.equal(await verifyOpsCapability('sid-a', undefined), 'client');

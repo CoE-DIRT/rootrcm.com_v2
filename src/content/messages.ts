@@ -411,24 +411,19 @@ const en = {
       'An evaluation directory of EHR/PM platforms, clearinghouses and payer enrollment workflows observed in the Demo 6 prototype. Status must be verified per engagement.',
     ecosystemDisclaimer:
       'Mention of a vendor does not imply endorsement, certification, a commercial relationship or a working API connection.',
-    nyEyebrow: 'New York market',
-    nyTitle: 'A New York payer landscape — not a contract list',
-    nyBody:
-      'Plans that operate in New York, with program type and a public source. ROOT is not claiming a network contract, delegated credentialing or a physical NYC office.',
-    nyCta: 'Open the New York market pages',
-    nyNoContract:
-      'Listing a plan is market orientation. It is not evidence that ROOT is contracted, in-network or delegated with that payer.',
-    nyNoOffice: 'ROOT does not claim a physical New York City office on these pages.',
-    nyNoOfficeConfirm:
-      'All work is scoped remotely or at a practice site the client names in writing.',
-    nyPageTitle: 'New York revenue operations landscape',
-    nyPageBody:
-      'Statewide orientation for practices that bill New York payers. Boroughs are listed because NYC mix differs from the rest of the state. Sources: NYS DOH, NYC DOHMH and NYHPA, last reviewed 2026-10-30.',
-    nycTitle: 'New York City — five boroughs',
-    nycBody:
-      'Manhattan, Brooklyn, Queens, Bronx and Staten Island. This page is a market map for NYC payer mix. It is not a storefront, clinic or ROOT office listing.',
-    nyDirectoryTitle: 'Payer directory (public sources)',
-    boroughsLabel: 'NYC boroughs',
+    nyEyebrow: 'New York',
+    nyTitle: 'New York payers',
+    nyBody: 'Public listings of New York health plans, by program type.',
+    nyCta: 'View New York payer pages',
+    nyNoContract: 'A listing is not a ROOT contract, network status, or payer partnership.',
+    nyNoOffice: 'ROOT has no published New York City office.',
+    nyNoOfficeConfirm: 'Service location is agreed with each practice.',
+    nyPageTitle: 'New York payer directory',
+    nyPageBody: 'Public sources for New York payer programs and administrative requirements.',
+    nycTitle: 'New York City boroughs',
+    nycBody: 'The same public payer sources, for practices in the five boroughs.',
+    nyDirectoryTitle: 'Public payer sources',
+    boroughsLabel: 'Five boroughs',
     lastReviewed: 'Last reviewed',
     source: 'Source',
     programType: {
@@ -883,24 +878,21 @@ const es: Messages = {
       'Directorio de evaluación de plataformas EHR/PM, intermediarios y flujos de inscripción observados en el prototipo Demo 6. El estado debe verificarse por compromiso.',
     ecosystemDisclaimer:
       'Mencionar una marca no implica respaldo, certificación, relación comercial ni una conexión API funcional.',
-    nyEyebrow: 'Mercado de Nueva York',
-    nyTitle: 'Un panorama de pagadores de Nueva York — no una lista de contratos',
-    nyBody:
-      'Planes que operan en Nueva York, con tipo de programa y una fuente pública. ROOT no afirma un contrato de red, credencialización delegada ni una oficina física en NYC.',
-    nyCta: 'Abrir las páginas del mercado de Nueva York',
+    nyEyebrow: 'Nueva York',
+    nyTitle: 'Pagadores de Nueva York',
+    nyBody: 'Listados públicos de planes de salud de Nueva York, por tipo de programa.',
+    nyCta: 'Ver las páginas de pagadores de Nueva York',
     nyNoContract:
-      'Listar un plan es orientación de mercado. No es evidencia de que ROOT esté contratado, dentro de la red o delegado con ese pagador.',
-    nyNoOffice: 'ROOT no afirma una oficina física en la ciudad de Nueva York en estas páginas.',
-    nyNoOfficeConfirm:
-      'Todo el trabajo se delimita en remoto o en un sitio de práctica que el cliente nombre por escrito.',
-    nyPageTitle: 'Panorama de operaciones de ingresos en Nueva York',
+      'Un listado no es un contrato, un estado de red ni una alianza de ROOT con el pagador.',
+    nyNoOffice: 'ROOT no tiene una oficina publicada en la ciudad de Nueva York.',
+    nyNoOfficeConfirm: 'La ubicación del servicio se acuerda con cada práctica.',
+    nyPageTitle: 'Directorio de pagadores de Nueva York',
     nyPageBody:
-      'Orientación estatal para prácticas que facturan a pagadores de Nueva York. Se listan los condados urbanos porque la mezcla de NYC difiere del resto del estado. Fuentes: NYS DOH, NYC DOHMH y NYHPA, última revisión 2026-10-30.',
-    nycTitle: 'Ciudad de Nueva York — cinco boroughs',
-    nycBody:
-      'Manhattan, Brooklyn, Queens, Bronx y Staten Island. Esta página es un mapa de mercado para la mezcla de pagadores de NYC. No es un local, clínica ni listado de oficina de ROOT.',
-    nyDirectoryTitle: 'Directorio de pagadores (fuentes públicas)',
-    boroughsLabel: 'Boroughs de NYC',
+      'Fuentes públicas sobre programas de pagadores y requisitos administrativos de Nueva York.',
+    nycTitle: 'Boroughs de la ciudad de Nueva York',
+    nycBody: 'Las mismas fuentes públicas, para prácticas en los cinco boroughs.',
+    nyDirectoryTitle: 'Fuentes públicas de pagadores',
+    boroughsLabel: 'Cinco boroughs',
     lastReviewed: 'Última revisión',
     source: 'Fuente',
     programType: {

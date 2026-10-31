@@ -81,6 +81,13 @@ test('advance credentialing changes timeline, history and notifications', async 
   await updated.getByRole('button').first().click();
   const drawer = page.getByTestId('record-drawer');
   await expect(drawer).toBeVisible();
+  const box = await drawer.boundingBox();
+  const viewport = page.viewportSize();
+  expect(box, 'record drawer has a layout box').not.toBeNull();
+  expect(viewport, 'viewport is set').not.toBeNull();
+  expect(box!.width).toBeLessThanOrEqual(424);
+  expect(box!.x).toBeGreaterThan(viewport!.width / 2);
+  expect(Math.abs(box!.x + box!.width - viewport!.width)).toBeLessThanOrEqual(2);
   const history = drawer.getByTestId('record-history');
   if (await history.count()) {
     await expect(history.locator('li').first()).toBeVisible();
