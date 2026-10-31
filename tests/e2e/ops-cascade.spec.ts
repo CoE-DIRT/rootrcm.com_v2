@@ -249,6 +249,28 @@ test.describe('ops cascade API', () => {
 
     expect(view.metrics.openEnrollments).toBe(openBefore);
     expectMetricsReconcile(view);
+
+    const healthcare = await session.request.get('/api/v1/ops/healthcare', {
+      params: { kind: 'credentialing', orgId: ORG, persona: PERSONA },
+    });
+    const healthcareBody = (await healthcare.json()) as {
+      data: {
+        mode?: string;
+        ledger?: string;
+        data?: Array<{ applicationId?: string; phase?: string }>;
+      } | null;
+      error: { code: string } | null;
+    };
+    if (healthcare.status() === 200) {
+      expect(healthcareBody.data?.mode).toBe('synthetic');
+      expect(healthcareBody.data?.ledger).toBe('operations');
+      expect(
+        healthcareBody.data?.data?.find((row) => row.applicationId === CRED_BOTTLENECK)?.phase,
+      ).toBe('payer_review');
+    } else {
+      expect(healthcare.status()).toBe(503);
+      expect(healthcareBody.data?.mode ?? 'unavailable').toBe('unavailable');
+    }
     } finally {
       await session.context.close();
     }

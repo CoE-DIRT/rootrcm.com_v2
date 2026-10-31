@@ -20,7 +20,7 @@ Loopback address: `http://127.0.0.1:8787`.
 - `GET /v1/claims/status?orgId=bayview`
 - `GET /v1/credentialing?orgId=bayview`
 
-Other supported fictional organizations: `cedar-grove`, `metro-asc`.
+Other supported fictional organizations: `cedar-grove`, `metro-asc`. Record IDs match the Next.js operations seed (`elg-bv-01`, `clm-bv-1001`, `cred-bv-001`, and the same pattern for Cedar Grove and Metro ASC). This service is a static identity-aligned preview; the Next operations snapshot remains the mutable demonstrator ledger.
 
 The response envelope includes `mode: demonstration`, `source: synthetic`, `verifiedAt: null`, and `X-Demo-Data: synthetic`. This service accepts no PHI, live requests, credentials or mutations and serves no CORS headers. It binds to loopback only; a future public deployment needs a reviewed authenticated gateway, durable tenant scoping and separate secrets. No real transaction access is implied.
 
@@ -30,7 +30,7 @@ The response envelope includes `mode: demonstration`, `source: synthetic`, `veri
 2. **Stedi 276/277** payer claim-status inquiry and responses; do not confuse with 277CA.
 3. **Credentialing** payer/CAQH/PECOS authorized status evidence; do not infer payer-network approval from NPPES or eligibility.
 4. **Go regulated data backend** with tenant/role policy, webhook/event audit, encrypted protected storage under applicable contracts and PHI agreement boundaries.
-5. Keep the current Next.js synthetic UI compatible with this envelope via a typed adapter. Do not introduce a second claim ledger in Appwrite.
+5. Keep the current Next.js synthetic UI compatible with this envelope via `src/server/healthcare`. Do not introduce a second claim ledger in Appwrite or Go. Stedi remains the typed disabled planned primary clearinghouse.
 6. Production credentials arrive as the founder-controlled final step; do not enable live calls without approved test evidence.
 
 The H0-H8 implementation staging plan in PR #36 should be reviewed and reconciled before production vendor activation.

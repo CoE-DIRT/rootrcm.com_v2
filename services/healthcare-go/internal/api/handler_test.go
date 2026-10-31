@@ -6,6 +6,8 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"github.com/CoE-DIRT/rootrcm.com_v2/services/healthcare-go/internal/seed"
 )
 
 func TestEndpointsSyntheticAndNoPHI(t *testing.T) {
@@ -41,6 +43,9 @@ func TestEndpointsSyntheticAndNoPHI(t *testing.T) {
 			if path != "/healthz" && !strings.Contains(output, "\"synthetic\"") {
 				t.Fatal("synthetic provenance missing")
 			}
+			if strings.Contains(output, "demo-clm") || strings.Contains(output, "demo-cred") || strings.Contains(output, "demo-elg") {
+				t.Fatal("legacy DEMO-* identities must not appear")
+			}
 		})
 	}
 }
@@ -64,5 +69,66 @@ func TestFailClosedRequests(t *testing.T) {
 		if w.Code != tc.expected {
 			t.Errorf("%s %s: got %d want %d", tc.method, tc.path, w.Code, tc.expected)
 		}
+	}
+}
+
+func TestOrgScopedSeedIdentities(t *testing.T) {
+	cases := []struct {
+		path string
+		id   string
+	}{
+		{"/v1/eligibility?orgId=bayview", "elg-bv-01"},
+		{"/v1/eligibility?orgId=cedar-grove", "elg-cg-01"},
+		{"/v1/eligibility?orgId=metro-asc", "elg-asc-01"},
+		{"/v1/claims/status?orgId=bayview", "clm-bv-1001"},
+		{"/v1/claims/status?orgId=cedar-grove", "clm-cg-2001"},
+		{"/v1/claims/status?orgId=metro-asc", "clm-asc-3001"},
+		{"/v1/credentialing?orgId=bayview", "cred-bv-001"},
+		{"/v1/credentialing?orgId=cedar-grove", "cred-cg-001"},
+		{"/v1/credentialing?orgId=metro-asc", "cred-asc-001"},
+	}
+	for _, tc := range cases {
+		w := httptest.NewRecorder()
+		NewHandler().ServeHTTP(w, httptest.NewRequest(http.MethodGet, tc.path, nil))
+		if w.Code != http.StatusOK {
+			t.Fatalf("%s: status %d", tc.path, w.Code)
+		}
+		if !strings.Contains(w.Body.String(), tc.id) {
+			t.Fatalf("%s: missing identity %s", tc.path, tc.id)
+		}
+		if strings.Contains(w.Body.String(), "clm-bv-") && strings.Contains(tc.path, "cedar-grove") {
+			t.Fatalf("%s leaked bayview claim identities", tc.path)
+		}
+	}
+}
+
+func TestCapabilitiesDeclareSharedCatalog(t *testing.T) {
+	w := httptest.NewRecorder()
+	NewHandler().ServeHTTP(w, httptest.NewRequest(http.MethodGet, "/v1/capabilities", nil))
+	body := w.Body.String()
+	if !strings.Contains(body, seed.IdentityCatalog) {
+		t.Fatal("identity catalog missing")
+	}
+	for _, org := range seed.OrganizationIDs {
+		if !strings.Contains(body, org) {
+			t.Fatalf("missing org %s", org)
+		}
+	}
+	if !strings.Contains(body, `"status":"disabled"`) {
+		t.Fatal("Stedi must remain disabled")
+	}
+}
+
+func TestBayviewClaimCountMatchesSeed(t *testing.T) {
+	w := httptest.NewRecorder()
+	NewHandler().ServeHTTP(w, httptest.NewRequest(http.MethodGet, "/v1/claims/status?orgId=bayview", nil))
+	var payload struct {
+		Data []seed.ClaimRecord `json:"data"`
+	}
+	if err := json.Unmarshal(w.Body.Bytes(), &payload); err != nil {
+		t.Fatal(err)
+	}
+	if len(payload.Data) != len(seed.ClaimsByOrg["bayview"]) {
+		t.Fatalf("got %d claims", len(payload.Data))
 	}
 }
