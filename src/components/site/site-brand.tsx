@@ -20,7 +20,7 @@ export function SiteBrand({
         height={243}
         alt=""
         aria-hidden="true"
-        className="h-auto w-10 shrink-0 object-contain"
+        className="aspect-[250/243] h-auto w-10 shrink-0 object-contain"
       />
       <span className="flex flex-col justify-center">
         <span className="text-[25px] font-black leading-[0.98] tracking-[-0.06em] sm:text-[29px]">

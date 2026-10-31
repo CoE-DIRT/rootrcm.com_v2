@@ -35,4 +35,14 @@ test('inner IA pages ship EN/ES sections instead of empty shells', async () => {
     assert.equal(pack.why.sections.length, messages.en.why.sections.length);
     assert.equal(pack.resources.faqs.length, messages.en.resources.faqs.length);
   }
+  assert.match(messages.en.commercial.nyNoOffice, /no published New York City office/);
+  assert.match(messages.es.commercial.nyNoOffice, /no tiene una oficina publicada/);
+  assert.match(messages.en.commercial.nyNoContract, /not a ROOT contract/);
+  assert.match(messages.es.commercial.nyNoContract, /no es un contrato/);
+  assert.doesNotMatch(messages.en.commercial.nyPageBody, /HIPAA|SOC 2|ISO|guarantee/i);
+  assert.doesNotMatch(messages.es.commercial.nyPageBody, /HIPAA|SOC 2|ISO|garantiz/i);
+  assert.doesNotMatch(
+    `${messages.en.commercial.nyPageBody} ${messages.en.commercial.nycBody}`,
+    /\d{1,5}\s+\w+\s+(Street|Avenue|Blvd)/i,
+  );
 });
