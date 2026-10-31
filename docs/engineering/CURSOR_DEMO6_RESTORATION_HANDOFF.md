@@ -72,7 +72,7 @@ Return actual commit SHA, PR URL/status, local URL/PIDs, HTTPS URL/deployment ID
 
 ## Release status — 2026-11-01
 
-The earlier sentence that no restoration PR exists is stale. PR #48 (`fix/demo6-restoration-integrated`) is the integration PR into `feat/p0-p1-public-shell`. This status is for the follow-up on branch `fix/release-convergence`.
+The earlier sentence that no restoration PR exists is stale. PR #48 (`fix/demo6-restoration-integrated`) is the integration PR into `feat/p0-p1-public-shell`. This status is for `fix/release-convergence` at `7ce8a040d8f831c715b650fba0c9ce696d994872`.
 
 Verified in this pass:
 
