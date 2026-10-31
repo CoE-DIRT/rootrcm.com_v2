@@ -63,17 +63,20 @@ export function isPreviewPrefetch(headers: Pick<Headers, 'get'>): boolean {
   return false;
 }
 
+/**
+ * Only the explicit preview entries mint a capability.
+ * Shared routes such as credentialing must not rewrite an operator cookie.
+ */
 export function capabilityFromPath(pathname: string): OpsCapability | null {
   const path = pathname.replace(/^\/(en|es)(?=\/)/, '');
-  if (path.startsWith('/preview/staff')) return 'operator';
-  if (
-    path.startsWith('/preview/client') ||
-    path.startsWith('/preview/credentialing') ||
-    path.startsWith('/preview/sales')
-  ) {
-    return 'client';
-  }
+  if (path === '/preview/staff' || path.startsWith('/preview/staff/')) return 'operator';
+  if (path === '/preview/client' || path.startsWith('/preview/client/')) return 'client';
   return null;
+}
+
+/** A client entry must not replace a verified operator cookie. Reset does not lower it either. */
+export function shouldReplacePreviewCapability(current: OpsCapability, next: OpsCapability): boolean {
+  return !(current === 'operator' && next === 'client');
 }
 
 export async function readOpsSessionFromRequest(request: Request): Promise<OpsSessionContext> {

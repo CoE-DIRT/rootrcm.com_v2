@@ -64,6 +64,8 @@ export function DemoOperator({
   const selectedApp = applications.some((item) => item.id === applicationId)
     ? applicationId
     : (preferredApp?.id ?? '');
+  const selectedApplication = applications.find((item) => item.id === selectedApp);
+  const applicationTerminal = selectedApplication ? TERMINAL.has(selectedApplication.status) : true;
   const selectedClaim = claims.some((item) => item.id === claimId) ? claimId : (preferredClaim?.id ?? '');
   const nextPersona: OpsPersona = persona === 'staff' ? 'client' : 'staff';
   const practiceOptions = useMemo(() => {
@@ -131,8 +133,10 @@ export function DemoOperator({
         <button
           type="button"
           className={opsButton}
-          disabled={pending || !selectedApp}
-          onClick={() => selectedApp && onAdvance(selectedApp)}
+          disabled={pending || !selectedApp || applicationTerminal}
+          onClick={() => {
+            if (selectedApp && !applicationTerminal) onAdvance(selectedApp);
+          }}
         >
           {t.operatorAdvance}
         </button>

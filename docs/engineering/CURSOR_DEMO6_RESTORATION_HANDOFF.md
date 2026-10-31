@@ -69,3 +69,26 @@ Stop the affected operation on unexpected system errors. Preserve logs without s
 ## Final evidence
 
 Return actual commit SHA, PR URL/status, local URL/PIDs, HTTPS URL/deployment ID if actually verified, changed files, test totals, screenshots/viewport matrix, loaded-asset/provenance status, remaining mock/disabled integrations and specific blockers. State ready, conditionally ready or blocked. Do not claim flawless UI or production readiness solely from a build.
+
+## Release status — 2026-11-01
+
+The earlier sentence that no restoration PR exists is stale. PR #48 (`fix/demo6-restoration-integrated`) is the integration PR into `feat/p0-p1-public-shell`. This status is for the follow-up on branch `fix/release-convergence`.
+
+Verified in this pass:
+
+- Prefetch does not write the operator cookie. A real staff visit binds it. `/preview/credentialing` and `/preview/sales` do not rewrite that cookie to client. An operator cookie is not replaced by a later client entry. Production auth still ignores these cookies.
+- Ask ROOT is stacked above the header. At 812×375 the close control was inside the viewport and received the hit test.
+- Switching practice or persona clears a stuck pending flag. Late responses are ignored when the selection changes. Terminal credentialing statuses cannot be advanced. Unmatched pipeline stages render an em dash instead of a fake zero.
+- Demo memory sessions expire and are capped at 128. The durable adapter remains a fail-closed stub. It is not production persistence.
+- Media download and status use one strict approval predicate. The string `"false"` is not approval.
+- Cookie preference edits keep the other saved choice. If localStorage throws, the choice stays in memory for the tab. Analytics and marketing runtimes stay off.
+- Inquiry and checkout error codes map to localized copy. Both routes still return HTTP 503. No inquiry is stored and no Stripe session is created.
+
+Checks on this worktree, before the final caption padding was settled on the version that passed the full browser suite: lint clean, typecheck clean, 117 unit tests passed, production build 122 pages, `gofmt` clean, `go test` and `go vet` clean, Playwright 79 passed with 6 workers. The full 79 includes credentialing at 375px and the previously flaky operator actions.
+
+Not done:
+
+- No isolated V2 HTTPS deployment. GitHub `preview` has zero secrets. Appwrite, Netlify, and Vercel credentials and CLIs are absent. No `.env.local`. ADR-0001 still names Appwrite Sites. V1, DNS, and email were not changed.
+- Appwrite auth, HubSpot, Stripe, and healthcare adapters stay disabled. No sandbox or live transaction was run.
+- At 375px the Ask ROOT launcher still covers the right side of the editorial caption. The full caption string is in the page. This is not a claim of flawless rendering.
+- PR #48 is not merged. `main` still requires an approving review. This agent will not self-approve.

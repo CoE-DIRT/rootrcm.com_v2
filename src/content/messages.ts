@@ -254,6 +254,7 @@ const en = {
     submit: 'Send business inquiry',
     received: 'Your business inquiry has been received.',
     unavailable: 'Online inquiries are not active yet. No information will be sent or stored.',
+    checkoutUnavailable: 'Checkout is not active. No payment was created.',
   },
   account: {
     title: 'Start without financial commitment',
@@ -363,6 +364,11 @@ const en = {
     privacyTitle: 'Privacy Policy',
     termsTitle: 'Terms of Use',
     cookiesTitle: 'Cookie Preferences',
+    cookiesNecessary: 'Necessary cookies stay on.',
+    cookiesAnalytics: 'Analytics',
+    cookiesMarketing: 'Marketing',
+    cookiesSave: 'Save choices',
+    cookiesMemory: 'This browser is not storing preferences. Choices apply to this tab only.',
     body: 'Legal text is a placeholder pending counsel review. Public forms accept business contacts only. Indexing is off in this environment.',
   },
   commercial: {
@@ -720,6 +726,7 @@ const es: Messages = {
     received: 'Se ha recibido su consulta empresarial.',
     unavailable:
       'Las consultas en línea aún no están activas. No se enviará ni guardará información.',
+    checkoutUnavailable: 'El pago no está activo. No se creó ningún cobro.',
   },
   account: {
     title: 'Empiece sin compromiso financiero',
@@ -829,6 +836,11 @@ const es: Messages = {
     privacyTitle: 'Política de privacidad',
     termsTitle: 'Términos de uso',
     cookiesTitle: 'Preferencias de cookies',
+    cookiesNecessary: 'Las cookies necesarias permanecen activas.',
+    cookiesAnalytics: 'Analítica',
+    cookiesMarketing: 'Marketing',
+    cookiesSave: 'Guardar elecciones',
+    cookiesMemory: 'Este navegador no guarda las preferencias. Las elecciones aplican solo a esta pestaña.',
     body: 'El texto legal es un marcador de posición pendiente de revisión jurídica. Los formularios públicos solo aceptan contactos empresariales. La indexación está desactivada.',
   },
   commercial: {

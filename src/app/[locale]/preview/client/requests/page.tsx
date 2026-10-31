@@ -1,4 +1,5 @@
 import { AppShell } from '@/components/app-shell/app-shell';
+import { PreviewSessionBinder } from '@/components/operations/preview-session-binder';
 import { EmptyState } from '@/components/ui/status';
 import { copy } from '@/content/messages';
 import { clientQueue, previewOrgs } from '@/content/preview-fixtures';
@@ -10,6 +11,7 @@ export default async function RequestsPreviewPage({ params }: { params: Promise<
   const org = previewOrgs[1];
   return (
     <main id="main">
+      <PreviewSessionBinder path={`/${locale}/preview/client/requests`} />
       <AppShell locale={locale} role="client" orgName={org.name} title={t.workspace.requestsTitle}>
         {clientQueue.length ? (
           <ul className="grid gap-3">

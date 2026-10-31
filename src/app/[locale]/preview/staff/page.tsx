@@ -1,4 +1,5 @@
 import { AppShell } from '@/components/app-shell/app-shell';
+import { PreviewSessionBinder } from '@/components/operations/preview-session-binder';
 import { OperationsCommandCenter } from '@/components/app-shell/operations-command-center';
 import { Card } from '@/components/ui/card';
 import { copy } from '@/content/messages';
@@ -10,6 +11,7 @@ export default async function StaffPreviewPage({ params }: { params: Promise<{ l
   const t = copy(locale);
   return (
     <main id="main">
+      <PreviewSessionBinder path={`/${locale}/preview/staff`} />
       <AppShell locale={locale} role="staff" orgName={t.workspace.staffOrg} title={t.workspace.staffTitle}>
         <div className="grid gap-3 md:grid-cols-2">
           {staffQueue.map((item) => (

@@ -6,6 +6,7 @@ import type { Locale } from '@/i18n/locales';
 import { Button } from '@/components/ui/button';
 import { SelectField, TextArea, TextInput } from '@/components/ui/form-field';
 import { StatusBanner } from '@/components/ui/status';
+import { publicStatusMessage } from '@/lib/public-status';
 import type { FieldErrors } from '@/lib/validation/business-contact';
 
 // Set true only after a reviewed server-side durable inquiry contract is deployed.
@@ -43,14 +44,18 @@ export function BusinessInquiryForm({ locale }: { locale: Locale }) {
         body: JSON.stringify(payload),
       });
       const json = (await response.json()) as {
-        error?: { message?: string; fieldErrors?: FieldErrors };
+        error?: { code?: string; fieldErrors?: FieldErrors };
         data?: { status?: string };
       };
       // HTTP 200 is not sufficient: only verified durable acceptance is success.
       if (!response.ok || json.data?.status !== 'accepted_persisted') {
         setStatus('error');
         setErrors(json.error?.fieldErrors ?? {});
-        setMessage(json.error?.message ?? t.consultation.unavailable);
+        setMessage(publicStatusMessage(json.error?.code, {
+          inquiryUnavailable: t.consultation.unavailable,
+          checkoutUnavailable: t.consultation.checkoutUnavailable,
+          generic: t.status.error,
+        }));
         return;
       }
       setStatus('success');

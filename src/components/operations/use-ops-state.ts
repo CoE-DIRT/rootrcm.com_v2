@@ -16,6 +16,14 @@ export function useOpsState(orgId: string, persona: OpsPersona) {
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
   const generationRef = useRef(0);
+  const [trackedOrg, setTrackedOrg] = useState(orgId);
+  const [trackedPersona, setTrackedPersona] = useState(persona);
+  if (trackedOrg !== orgId || trackedPersona !== persona) {
+    setTrackedOrg(orgId);
+    setTrackedPersona(persona);
+    setPending(false);
+    setLoading(true);
+  }
 
   const refresh = useCallback(async () => {
     const generation = ++generationRef.current;

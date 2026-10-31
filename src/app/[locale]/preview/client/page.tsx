@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { AppShell } from '@/components/app-shell/app-shell';
+import { PreviewSessionBinder } from '@/components/operations/preview-session-binder';
 import { OperationsCommandCenter } from '@/components/app-shell/operations-command-center';
 import { Card } from '@/components/ui/card';
 import { copy } from '@/content/messages';
@@ -13,6 +14,7 @@ export default async function ClientPreviewPage({ params }: { params: Promise<{ 
   const org = previewOrgs[1];
   return (
     <main id="main">
+      <PreviewSessionBinder path={`/${locale}/preview/client`} />
       <AppShell locale={locale} role="client" orgName={org.name} title={t.workspace.clientTitle}>
         <p className="muted">
           {org.name} · {org.plan} · {t.preview}

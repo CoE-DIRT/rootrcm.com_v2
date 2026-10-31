@@ -48,3 +48,7 @@ Engine isolation is on the consolidated candidate via [PR #30](https://github.co
 - No Appwrite V1 site, function, or table was modified.
 - No Netlify/Vercel production host was added.
 - Integrations remain typed disabled.
+
+## Recheck — 2026-11-01
+
+No HTTPS release URL exists for the convergence commit. The GitHub `preview` environment still has zero secrets. This workstation has no `APPWRITE_API_KEY`, `NETLIFY_AUTH_TOKEN`, or `VERCEL_TOKEN`, and no Appwrite, Netlify, or Vercel CLI. There is no `.env.local` and no Netlify link. Local production checks used `http://127.0.0.1:3011` and were stopped afterward. That address is not a client deployment. Do not revive the 2026-10-31 Cloudflare tunnel as the release endpoint.

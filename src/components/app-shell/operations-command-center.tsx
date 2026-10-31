@@ -26,6 +26,7 @@ import {
   type OpsApplication, type OpsClaim, type OpsHistoryEntry, type OpsPersona, type OpsState,
 } from '@/lib/ops-client';
 import { compareValues, matchesQuery, uniqueSorted, type OpsSortDir, type OpsSortKey } from '@/lib/ops-query';
+import { canAdvanceCredentialingStatus } from '@/domain/operations/types';
 
 type Tab = 'overview' | 'revenue' | 'credentialing' | 'practice';
 
@@ -109,14 +110,17 @@ function historyFor(state: OpsState, resourceId: string, local: readonly OpsHist
   return [...local, ...extra.filter((entry) => !seen.has(entry.id))];
 }
 
-function pipelineCount(stageId: string, counts: Record<string, number>): number {
+function pipelineCount(stageId: string, counts: Record<string, number>): number | null {
   const aliases = PIPELINE_KEYS[stageId] ?? [stageId];
   let total = 0;
+  let matched = false;
   for (const [key, value] of Object.entries(counts)) {
-    if (aliases.some((alias) => alias.toLowerCase() === key.toLowerCase())) total += value;
+    if (aliases.some((alias) => alias.toLowerCase() === key.toLowerCase())) {
+      total += value;
+      matched = true;
+    }
   }
-  if (counts[stageId] != null) return counts[stageId];
-  return total;
+  return matched ? total : null;
 }
 
 function scheduleVolume(state: OpsState): string {
@@ -189,7 +193,13 @@ function CredentialTimeline({
         </p>
       )}
       {canOperate && onAdvance ? (
-        <button type="button" data-testid="advance-credentialing" className={`${button} mt-4`} disabled={pending} onClick={onAdvance}>
+        <button
+          type="button"
+          data-testid="advance-credentialing"
+          className={`${button} mt-4`}
+          disabled={pending}
+          onClick={onAdvance}
+        >
           {t.advanceCredentialing}
         </button>
       ) : null}
@@ -200,20 +210,24 @@ function CredentialTimeline({
 function RevenuePipeline({ locale, counts }: { locale: Locale; counts: Record<string, number> }) {
   const t = workspaceDemoText[locale];
   const values = revenueStages.map((stage) => pipelineCount(stage.id, counts));
-  const max = Math.max(1, ...values);
+  const numeric = values.filter((value): value is number => value !== null);
+  const max = Math.max(1, ...(numeric.length > 0 ? numeric : [0]));
   return (
     <section className={card} aria-label={t.claimPipeline}>
       <div className="flex items-center gap-2"><Activity className="size-5 text-[var(--cyan)]" /><h3 className="font-extrabold">{t.claimPipeline}</h3></div>
       <div className="mt-5 space-y-3">
-        {revenueStages.map((stage, index) => (
-          <div key={stage.id} className="grid grid-cols-[minmax(110px,1fr)_minmax(100px,1.5fr)_36px] items-center gap-3 text-xs">
+        {revenueStages.map((stage, index) => {
+          const value = values[index];
+          return (
+          <div key={stage.id} className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)_auto] items-center gap-2 text-xs sm:gap-3">
             <span className="font-semibold">{stage.label[locale]}</span>
             <div className="h-3 overflow-hidden rounded-full bg-[var(--surface-2)]" title={stage.action[locale]}>
-              <div className="h-full rounded-full bg-[var(--cyan)]/80" style={{ width: `${(values[index] / max) * 100}%` }} />
+              <div className="h-full rounded-full bg-[var(--cyan)]/80" style={{ width: value === null ? '0%' : `${(value / max) * 100}%` }} />
             </div>
-            <span className="text-right font-bold tabular-nums">{values[index]}</span>
+            <span className="text-right font-bold tabular-nums" title={value === null ? t.metricUnavailable : undefined}>{value === null ? '—' : value}</span>
           </div>
-        ))}
+          );
+        })}
       </div>
       <p className={`mt-5 text-xs ${subtle}`}>{t.disclaimer}</p>
     </section>
@@ -396,7 +410,11 @@ export function OperationsCommandCenter({
                         canOperate={canOperate && activeTab === 'credentialing'}
                         pending={pending}
                         onOpen={() => setSelected({ kind: 'application', id: item.id })}
-                        onAdvance={() => void advance(item.id)}
+                        onAdvance={
+                          canAdvanceCredentialingStatus(item.status)
+                            ? () => void advance(item.id)
+                            : undefined
+                        }
                       />
                     ))}
                   </div>

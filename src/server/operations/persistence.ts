@@ -33,6 +33,9 @@ export interface DemoSessionPersistence {
   prune(now?: number): void;
 }
 
+/** Process-local cap. Expired rows are removed before the soonest expiry is evicted. */
+export const MAX_DEMO_SESSIONS = 128;
+
 export class MemoryDemoSessionStore implements DemoSessionPersistence {
   readonly kind = 'memory' as const;
   readonly writable = true;
@@ -43,6 +46,18 @@ export class MemoryDemoSessionStore implements DemoSessionPersistence {
   }
 
   save(record: DemoSessionRecord): void {
+    this.prune();
+    if (!this.slots.has(record.sessionId) && this.slots.size >= MAX_DEMO_SESSIONS) {
+      let oldestId: string | null = null;
+      let oldest = Number.POSITIVE_INFINITY;
+      for (const [id, existing] of this.slots) {
+        if (existing.expiresAt < oldest) {
+          oldest = existing.expiresAt;
+          oldestId = id;
+        }
+      }
+      if (oldestId) this.slots.delete(oldestId);
+    }
     this.slots.set(record.sessionId, record);
   }
 

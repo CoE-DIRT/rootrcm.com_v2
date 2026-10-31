@@ -151,7 +151,7 @@ export function PageHero({
               </picture>
               <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(5,16,33,0.04)_0%,rgba(5,16,33,0.22)_100%)]" />
             </div>
-            <figcaption className="bg-[#071423] px-3 py-2.5 text-[12px] font-semibold leading-snug text-[#f5fbff]">
+            <figcaption className="bg-[#071423] px-3 py-2.5 pr-48 text-[12px] font-semibold leading-snug text-[#f5fbff] sm:pr-3">
               {editorial.caption[locale]}
             </figcaption>
           </figure>

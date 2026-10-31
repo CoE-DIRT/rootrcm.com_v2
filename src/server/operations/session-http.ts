@@ -4,7 +4,9 @@ import {
   OPS_CAP_COOKIE,
   OPS_SID_COOKIE,
   capabilityFromPath,
+  shouldReplacePreviewCapability,
   signOpsCapability,
+  verifyOpsCapability,
   type OpsCapability,
 } from './session.ts';
 
@@ -36,5 +38,7 @@ export async function bindPreviewCookies(
   const capability = capabilityFromPath(request.nextUrl.pathname);
   if (!capability) return response;
   const sid = request.cookies.get(OPS_SID_COOKIE)?.value || crypto.randomUUID();
+  const current = await verifyOpsCapability(sid, request.cookies.get(OPS_CAP_COOKIE)?.value);
+  if (!shouldReplacePreviewCapability(current, capability)) return response;
   return applyOpsCookies(response, sid, capability);
 }

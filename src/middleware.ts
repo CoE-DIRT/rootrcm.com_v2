@@ -29,8 +29,8 @@ export async function middleware(request: NextRequest) {
   const rest = pathname.slice(first.length + 1) || '/';
   requestHeaders.set('x-root-path', rest.startsWith('/') ? rest : `/${rest}`);
   const response = NextResponse.next({ request: { headers: requestHeaders } });
-  // Staff preview links to credentialing. Prefetching that route must not
-  // replace the operator cookie with the client capability.
+  // Prefetch must not mint or replace preview cookies. A cached staff click
+  // can skip middleware; PreviewSessionBinder repeats the bind on a real visit.
   if (isPreviewPrefetch(request.headers)) return response;
   return bindPreviewCookies(request, response);
 }
