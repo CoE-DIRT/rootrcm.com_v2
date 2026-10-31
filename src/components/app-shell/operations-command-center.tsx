@@ -20,6 +20,7 @@ import { ListControls } from '@/components/operations/list-controls';
 import { NotificationsPanel } from '@/components/operations/notifications-panel';
 import { PracticeSchedule } from '@/components/operations/practice-schedule';
 import { RecordDrawer } from '@/components/operations/record-drawer';
+import { usePreviewSession } from '@/components/operations/preview-session-binder';
 import { useOpsState } from '@/components/operations/use-ops-state';
 import {
   OPS_DEMO_ORG_ID, formatMetric, localize,
@@ -254,6 +255,7 @@ export function OperationsCommandCenter({
   const [activeOrgId, setActiveOrgId] = useState(orgId);
   const [activePersona, setActivePersona] = useState<OpsPersona>(role);
   const t = workspaceDemoText[locale];
+  const preview = usePreviewSession();
   const { state, loading, error, pending, refresh, runAction } = useOpsState(activeOrgId, activePersona);
   const canOperate = role === 'staff';
 
@@ -321,7 +323,7 @@ export function OperationsCommandCenter({
   const shownApps = activeTab === 'overview' ? visibleApps.slice(0, 2) : visibleApps;
 
   return (
-    <div className="min-w-0 space-y-5 overflow-x-clip" data-testid="rcm-command-center">
+    <div className="min-w-0 space-y-5 overflow-x-clip" data-org={activeOrgId} data-persona={activePersona} data-testid="rcm-command-center">
       <header className="relative overflow-hidden rounded-[22px] border border-[var(--border)] bg-[var(--surface)] p-5 md:p-7">
         <div className="pointer-events-none absolute -right-16 -top-16 size-56 rounded-full bg-[var(--cyan)] opacity-[0.08] blur-3xl" aria-hidden="true" />
         <div className="relative">
@@ -337,7 +339,7 @@ export function OperationsCommandCenter({
         </div>
       </header>
 
-      {loading || (!state && !error) ? (
+      {preview?.status === 'error' ? null : loading || (!state && !error) ? (
         <p data-testid="ops-loading" className="rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-4 text-sm font-semibold" role="status">{t.loadingOps}</p>
       ) : null}
       {error ? (

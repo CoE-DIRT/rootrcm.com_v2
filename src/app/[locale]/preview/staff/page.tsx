@@ -11,7 +11,7 @@ export default async function StaffPreviewPage({ params }: { params: Promise<{ l
   const t = copy(locale);
   return (
     <main id="main">
-      <PreviewSessionBinder path={`/${locale}/preview/staff`} />
+      <PreviewSessionBinder path={`/${locale}/preview/staff`}>
       <AppShell locale={locale} role="staff" orgName={t.workspace.staffOrg} title={t.workspace.staffTitle}>
         <div className="grid gap-3 md:grid-cols-2">
           {staffQueue.map((item) => (
@@ -25,6 +25,7 @@ export default async function StaffPreviewPage({ params }: { params: Promise<{ l
         </div>
         <div className="mt-6"><OperationsCommandCenter locale={locale} role="staff" initialTab="credentialing" /></div>
       </AppShell>
+      </PreviewSessionBinder>
     </main>
   );
 }

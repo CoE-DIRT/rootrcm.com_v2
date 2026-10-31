@@ -14,7 +14,7 @@ export default async function ClientPreviewPage({ params }: { params: Promise<{ 
   const org = previewOrgs[1];
   return (
     <main id="main">
-      <PreviewSessionBinder path={`/${locale}/preview/client`} />
+      <PreviewSessionBinder path={`/${locale}/preview/client`}>
       <AppShell locale={locale} role="client" orgName={org.name} title={t.workspace.clientTitle}>
         <p className="muted">
           {org.name} · {org.plan} · {t.preview}
@@ -37,6 +37,7 @@ export default async function ClientPreviewPage({ params }: { params: Promise<{ 
           ))}
         </div>
       </AppShell>
+      </PreviewSessionBinder>
     </main>
   );
 }

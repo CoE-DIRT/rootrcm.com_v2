@@ -133,9 +133,15 @@ export function PageHero({
         </div>
         {editorial ? (
           <figure
-            className="w-full max-w-[420px] overflow-hidden rounded-[18px] border border-white/25 bg-[#071423] shadow-[0_16px_40px_rgba(0,0,0,0.28)] lg:max-w-none lg:justify-self-end"
+            className="flex w-full max-w-[420px] flex-col overflow-hidden rounded-[18px] border border-white/25 bg-[#071423] shadow-[0_16px_40px_rgba(0,0,0,0.28)] lg:max-w-none lg:justify-self-end"
             data-testid="root-editorial-photo"
           >
+            <figcaption
+              className="bg-[#071423] px-3 py-2.5 text-[12px] font-semibold leading-snug text-[#f5fbff] max-lg:scroll-mb-28 lg:order-last"
+              data-testid="root-editorial-caption"
+            >
+              {editorial.caption[locale]}
+            </figcaption>
             <div className="relative">
               <picture>
                 <source srcSet={editorial.avif} type="image/avif" />
@@ -151,9 +157,6 @@ export function PageHero({
               </picture>
               <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(5,16,33,0.04)_0%,rgba(5,16,33,0.22)_100%)]" />
             </div>
-            <figcaption className="bg-[#071423] px-3 py-2.5 pr-48 text-[12px] font-semibold leading-snug text-[#f5fbff] sm:pr-3">
-              {editorial.caption[locale]}
-            </figcaption>
           </figure>
         ) : null}
       </div>

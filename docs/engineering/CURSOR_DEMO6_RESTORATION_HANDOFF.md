@@ -1,3 +1,40 @@
+# ROOT V2 — current release status
+
+Updated on the `fix/demo6-restoration-integrated` branch for PR #48. The sections below remain the original restoration brief.
+
+## Rubric (unchanged 100-point denominator)
+
+| Category | Previous | This pass | Why |
+| --- | --- | --- | --- |
+| Presentation and state | 22 | 24 | Caption clearance and delayed preview-bind / late-response coverage. Playwright 88 passed (6 workers, retries 0), including the caption and race specs. No Figma pixel sign-off. The Cursor IDE browser could not keep a tab open, so that pass is the Playwright run plus the screenshots in `docs/release/evidence`. |
+| Release convergence | 20 | 22 | #46 is merged and Go tests ran with the Next tree. #44 and #47 stay open. |
+| Isolated hosting | 4 | 8 | File session driver and Appwrite discovery script exist. No isolated HTTPS deployment. |
+| Integrations | 5 | 12 | Local contracts exist. Sandbox and live activation are still false. |
+| Total | 51 | 66 | Same four 25-point categories. |
+
+## Release path
+
+PR #48 targets `feat/p0-p1-public-shell`, not `main`. That development branch reaches `main` only through open PR #19. PR #18 is the same head as #19 with base `fix/config-stabilization`, so it is a duplicate stack, not a second merge. PR #17 is the CI lockfile base under #18. Do not merge #17 or #18 separately. #19 still needs an independent approving review. A Codex comment on #48 is not human approval. This pass does not merge to `main`.
+
+## Coverage
+
+| PR | Requirement | Now present | Missing | Evidence | Disposition |
+| --- | --- | --- | --- | --- | --- |
+| #46 | One Go ledger aligned with operations identities | Merged. Stedi stays disabled. | External clearinghouse sandbox | `go test ./...`, `tests/healthcare-adapter.test.ts` | Integrated. Leave open until #48 lands, then close as merged. |
+| #44 | Original brand bytes and fail-closed media CLI | Six WebPs, manifest, media scripts, hash test | Pexels review records and `media-manifest.ts` from that branch. Merging the branch would delete editorial photos. | `tests/brand-bytes.test.ts` | Open. Not superseded. |
+| #47 | Commercial journey controls and entitlement wall | Fail-closed inquiry and one price catalog | Checkout request UI, plans entitlement wall, commercial-journey spec | Existing inquiry tests | Open. Not superseded. |
+| #45 | Route parity notes | Still the docs PR | Visual completion | PR #45 | Open. Readiness in this branch is the operational status. |
+
+## Hosting
+
+No V2 HTTPS URL. Appwrite API discovery failed and `mcp_auth` timed out. The Appwrite CLI is not installed. Script: `scripts/appwrite/New-IsolatedV2Preview.ps1`. Protected project `6ac42012001069444210` and site `root-website` must not be modified. `ROOT_DEMO_SESSION_BACKEND=file` plus `ROOT_DEMO_SESSION_DIR` is restart-safe on one persistent disk. The default memory store is not. Do not describe a hosted demo as restart-safe until that directory is on the deployed host.
+
+## Integrations
+
+A = implementation present. B = local/contract tests. C = external sandbox. D = live activation. C and D are false for every integration. Public inquiry HTTP stays 503.
+
+Launcher: `scripts/windows/Start-ROOT-V2-Review.ps1`.
+
 # ROOT V2 — targeted restoration and release verification
 
 Act as a three-agent React/Next.js/Tailwind production cluster. Execute fixes, not another redesign. Read AGENTS.md and its required references. Repository: CoE-DIRT/rootrcm.com_v2. The supplied ROOT_V2_Restoration.bundle contains local branch `fix/demo6-restoration`, based on `feat/p0-p1-public-shell`. Its GitHub push was blocked by automatic approval review; there is no restoration PR yet. Inspect current remote heads before integration. Do not assume an old SHA is current.
@@ -79,16 +116,15 @@ Verified in this pass:
 - Prefetch does not write the operator cookie. A real staff visit binds it. `/preview/credentialing` and `/preview/sales` do not rewrite that cookie to client. An operator cookie is not replaced by a later client entry. Production auth still ignores these cookies.
 - Ask ROOT is stacked above the header. At 812×375 the close control was inside the viewport and received the hit test.
 - Switching practice or persona clears a stuck pending flag. Late responses are ignored when the selection changes. Terminal credentialing statuses cannot be advanced. Unmatched pipeline stages render an em dash instead of a fake zero.
-- Demo memory sessions expire and are capped at 128. The durable adapter remains a fail-closed stub. It is not production persistence.
+- Demo memory sessions expire and are capped at 128. `ROOT_DEMO_SESSION_BACKEND=file` with `ROOT_DEMO_SESSION_DIR` writes one JSON file per session on a single host. Unset stays in memory. `appwrite` and `kv` stay the fail-closed stub. No hosted demo uses the file directory.
 - Media download and status use one strict approval predicate. The string `"false"` is not approval.
 - Cookie preference edits keep the other saved choice. If localStorage throws, the choice stays in memory for the tab. Analytics and marketing runtimes stay off.
 - Inquiry and checkout error codes map to localized copy. Both routes still return HTTP 503. No inquiry is stored and no Stripe session is created.
 
-Checks on this worktree, before the final caption padding was settled on the version that passed the full browser suite: lint clean, typecheck clean, 117 unit tests passed, production build 122 pages, `gofmt` clean, `go test` and `go vet` clean, Playwright 79 passed with 6 workers. The full 79 includes credentialing at 375px and the previously flaky operator actions.
+Checks on this worktree after the caption and preview-bind fixes: `npx eslint . --max-warnings=0` reported 0 warnings, typecheck passed, `npm test` passed (136 tests, including brand hashes, ops commit, and durable contracts), production build passed, `gofmt` / `go test` / `go vet` passed, Playwright 88 passed with 6 workers and retries 0. That run includes `tests/e2e/editorial-caption.spec.ts` (Spanish and English, light and dark, 375×812 and 812×375, launcher open/close) and `tests/e2e/ops-state-races.spec.ts` (delayed bind, first authorized action, late responses, reset, two tabs, reload, back/forward).
 
 Not done:
 
-- No isolated V2 HTTPS deployment. GitHub `preview` has zero secrets. Appwrite, Netlify, and Vercel credentials and CLIs are absent. No `.env.local`. ADR-0001 still names Appwrite Sites. V1, DNS, and email were not changed.
-- Appwrite auth, HubSpot, Stripe, and healthcare adapters stay disabled. No sandbox or live transaction was run.
-- At 375px the Ask ROOT launcher still covers the right side of the editorial caption. The full caption string is in the page. This is not a claim of flawless rendering.
+- No isolated V2 HTTPS deployment. The Appwrite API connector in this session returned an error and `mcp_auth` timed out. The Appwrite CLI is not installed. No `.env.local`. ADR-0001 still names Appwrite Sites. V1 project `6ac42012001069444210`, site `root-website`, DNS, and email were not changed.
+- Appwrite auth, HubSpot, Stripe, and healthcare adapters stay disabled at runtime. Local contract tests passed. No sandbox or live transaction was run.
 - PR #48 is not merged. `main` still requires an approving review. This agent will not self-approve.

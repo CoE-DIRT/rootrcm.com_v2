@@ -11,7 +11,7 @@ export default async function RequestsPreviewPage({ params }: { params: Promise<
   const org = previewOrgs[1];
   return (
     <main id="main">
-      <PreviewSessionBinder path={`/${locale}/preview/client/requests`} />
+      <PreviewSessionBinder path={`/${locale}/preview/client/requests`}>
       <AppShell locale={locale} role="client" orgName={org.name} title={t.workspace.requestsTitle}>
         {clientQueue.length ? (
           <ul className="grid gap-3">
@@ -28,6 +28,7 @@ export default async function RequestsPreviewPage({ params }: { params: Promise<
           <EmptyState title={t.workspace.requestsEmptyTitle} body={t.workspace.requestsEmptyBody} />
         )}
       </AppShell>
+      </PreviewSessionBinder>
     </main>
   );
 }

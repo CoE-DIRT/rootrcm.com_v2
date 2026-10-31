@@ -37,6 +37,9 @@ Place values in the Appwrite Sites / GitHub Environment secret store for that en
 | `APOLLO_API_KEY` | Apollo | Enrichment | Prospecting only; not a CRM |
 | `APOLLO_BASE_URL` | Apollo | Client | |
 | `TURNSTILE_SECRET_KEY` | Cloudflare | Public forms | After inquiry outbox exists |
+| `ROOT_DEMO_SESSION_BACKEND` | ROOT | Preview sessions | `memory`, `file`, or fail-closed stub |
+| `ROOT_DEMO_SESSION_DIR` | ROOT | File session directory | Required when backend is `file` |
+| `ROOT_INQUIRY_DIR` | ROOT | Durable inquiry files | Not used by the public 503 route |
 | `ROOT_AUDIT_DRIVER` | ROOT | Audit sink | `memory` / future store; default no-op |
 | `ROOT_OUTBOX_DRIVER` | ROOT | Inquiry outbox | Unused by public route until founder activation |
 | `ROOT_DEMO_SESSION_BACKEND` | ROOT | Ops demo snapshots | Unset/`memory` = process Map. Any other value = fail-closed stub. Do not invent Appwrite/KV credentials. |

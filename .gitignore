@@ -12,6 +12,7 @@ test-results/
 *.pem
 *.key
 .cache/
+.data/
 .opencode/storage/
 .vercel/
 tsconfig.tsbuildinfo

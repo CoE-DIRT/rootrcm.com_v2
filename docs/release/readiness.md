@@ -18,6 +18,12 @@ Do not confuse an implemented repository file with an enabled GitHub/Appwrite co
 | Appwrite V2 dev/stage/prod | architecture | not verified | Separate project IDs and access proof |
 | HubSpot/Apollo/Stripe | disabled adapters | not activated | Sandbox tests and signoff |
 
+## Combined release path (2026-11-01)
+
+PR #48 (`fix/demo6-restoration-integrated`) is the development candidate and targets `feat/p0-p1-public-shell`. `main` is reached only by PR #19 after an independent approval. PR #18 duplicates that head onto the #17 base and must not be merged separately. PR #46's Go identity work is integrated on #48. PR #44 and #47 stay open because a full merge would drop restored editorial assets or duplicate commercial controls. No V2 hostname is deployed. Integration rows below stay externally unverified.
+
+Acceptance letters: A implementation, B local tests, C sandbox, D live. Appwrite, inquiries, HubSpot, Stripe, and synthetic healthcare are A+B only. C and D are false. Redox, DataSpring/CAQH, and licensed AMA CPT stay deferred.
+
 ## Approval gate
 - [ ] Approved design node per route, locale and visual state; synthetic UX test evidence.
 - [ ] CI, dependency, security and permission checks green.

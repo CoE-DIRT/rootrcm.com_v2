@@ -161,7 +161,6 @@ export function DemoOperator({
           type="button"
           data-testid="set-persona"
           className={opsButton}
-          disabled={pending}
           onClick={() => onSetPersona(nextPersona)}
         >
           {t.setPersona}: {nextPersona}
@@ -179,7 +178,6 @@ export function DemoOperator({
           type="button"
           data-testid="reset-demo"
           className={opsButton}
-          disabled={pending}
           onClick={onReset}
         >
           <RotateCcw className="size-4" aria-hidden="true" />
