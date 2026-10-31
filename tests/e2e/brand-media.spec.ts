@@ -12,12 +12,27 @@ test('ROOT visual hero displays branded artwork and the real brand asset', async
     .toBeTruthy();
   const hero = page.locator('[data-testid="root-visual-hero"]:visible').first();
   await expect(hero).toBeVisible();
-  const media = hero.locator('img');
+  const media = hero.locator('img[src*="root-revenue-hero"]');
   await expect(media).toHaveAttribute('src', /root-revenue-hero\.svg/);
+  const editorial = hero.getByTestId('root-editorial-photo');
+  await expect(editorial).toBeVisible();
+  await expect(editorial).toContainText('Not ROOT staff');
+  const photo = editorial.locator('img');
+  await expect(photo).toHaveAttribute('src', /practice-doctor-laptop\.webp/);
+  await expect(photo).toHaveAttribute('width', '1600');
+  await expect(photo).toHaveAttribute('height', '1067');
   await expect(hero.getByRole('link')).toHaveCount(1);
+  const mark = logo.locator('img');
+  const ratio = await mark.evaluate((img: HTMLImageElement) => img.clientWidth / img.clientHeight);
+  expect(Math.abs(ratio - 250 / 243)).toBeLessThan(0.06);
   await expect
     .poll(async () =>
       media.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0),
+    )
+    .toBeTruthy();
+  await expect
+    .poll(async () =>
+      photo.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0),
     )
     .toBeTruthy();
 });

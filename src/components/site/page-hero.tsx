@@ -2,10 +2,58 @@ import Link from 'next/link';
 import Image from 'next/image';
 import type { Locale } from '@/i18n/locales';
 
+type Editorial = {
+  src: string;
+  avif: string;
+  width: number;
+  height: number;
+  alt: Record<Locale, string>;
+  caption: Record<Locale, string>;
+};
+
+const notStaff: Record<Locale, string> = {
+  en: 'Editorial photograph. Not ROOT staff.',
+  es: 'Fotografía editorial. No es personal de ROOT.',
+};
+
+/** Clean office photograph. The homepage portrait candidate showed clinical paperwork and was not used. */
+const practiceLaptop: Editorial = {
+  src: '/media/stock/practice-doctor-laptop.webp',
+  avif: '/media/stock/practice-doctor-laptop.avif',
+  width: 1600,
+  height: 1067,
+  alt: {
+    en: 'A physician working on a laptop in an office. Editorial photograph; not a ROOT employee.',
+    es: 'Un médico trabajando en un portátil en un consultorio. Fotografía editorial; no es personal de ROOT.',
+  },
+  caption: notStaff,
+};
+
+const analyticsMeeting: Editorial = {
+  src: '/media/stock/analytics-team.webp',
+  avif: '/media/stock/analytics-team.avif',
+  width: 1600,
+  height: 1067,
+  alt: {
+    en: 'People reviewing charts beside a laptop during a meeting. Editorial photograph; not ROOT staff.',
+    es: 'Personas revisando gráficos junto a un portátil en una reunión. Fotografía editorial; no es personal de ROOT.',
+  },
+  caption: notStaff,
+};
+
+function editorialFor(nodeId?: string): Editorial | null {
+  if (nodeId === '4:2' || nodeId === '4:126' || nodeId === '4:153' || nodeId === '4:40') {
+    return practiceLaptop;
+  }
+  if (nodeId === '6:22') return analyticsMeeting;
+  return null;
+}
+
 /**
  * Shared cinematic commercial hero.
  * The illustration is original ROOT-owned SVG, with a CSS mask to preserve
- * headline contrast. Content and node IDs follow the approved Figma IA.
+ * headline contrast. Editorial photos sit in a separate frame and are labeled
+ * so stock subjects are not presented as ROOT staff.
  */
 export function PageHero({
   eyebrow,
@@ -24,6 +72,12 @@ export function PageHero({
   nodeId?: string;
   locale?: Locale;
 }) {
+  const editorial = editorialFor(nodeId);
+  const status =
+    locale === 'es'
+      ? 'Operaciones de ingresos · inteligencia conectada'
+      : 'Revenue operations · connected intelligence';
+
   return (
     <section
       className="root-visual-hero group relative isolate mt-5 min-h-[480px] overflow-hidden rounded-[26px] border border-[#2e5773] bg-[#071b32] px-6 py-9 text-white shadow-[0_28px_80px_rgba(3,14,29,0.25)] sm:px-9 sm:py-12 lg:min-h-[540px] lg:px-14 lg:py-16"
@@ -41,24 +95,77 @@ export function PageHero({
       />
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(5,16,33,0.97)_0%,rgba(5,18,35,0.94)_37%,rgba(5,18,35,0.76)_61%,rgba(5,18,35,0.22)_100%)] lg:bg-[linear-gradient(90deg,rgba(5,16,33,0.98)_0%,rgba(5,18,35,0.95)_38%,rgba(5,18,35,0.64)_62%,rgba(5,18,35,0.16)_100%)]" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_25%_85%,rgba(17,225,238,0.14),transparent_55%)]" />
-      <div className="relative z-[1] max-w-[890px]">
-        <p className="eyebrow !text-[#7ff7ff]">{eyebrow}</p>
-        <h1 className="mt-5 text-balance text-[clamp(2.15rem,4vw,3.45rem)] font-extrabold leading-[1.12] tracking-[-0.035em] text-[#f5fbff] drop-shadow-[0_2px_8px_rgba(2,9,21,0.45)]">
-          {title}
-        </h1>
-        <p className="mt-6 max-w-[660px] text-pretty text-base leading-7 text-[#d4e6f5] sm:text-lg">
-          {body}
-        </p>
-        {cta && ctaHref ? (
-          <Link className="btn-primary btn-lg mt-8 shadow-[0_10px_36px_rgba(17,225,238,0.20)] hover:-translate-y-0.5 focus-visible:outline-offset-4" href={ctaHref}>
-            {cta} <span aria-hidden="true">→</span>
-          </Link>
+      <div
+        className={
+          editorial
+            ? 'relative z-[1] grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_300px]'
+            : 'relative z-[1] max-w-[890px]'
+        }
+      >
+        <div className="max-w-[720px]">
+          <p className="eyebrow !text-[#7ff7ff]">{eyebrow}</p>
+          <h1 className="mt-5 text-balance text-[clamp(2.15rem,4vw,3.45rem)] font-extrabold leading-[1.12] tracking-[-0.035em] text-[#f5fbff] drop-shadow-[0_2px_8px_rgba(2,9,21,0.45)]">
+            {title}
+          </h1>
+          <p className="mt-6 max-w-[660px] text-pretty text-base leading-7 text-[#d4e6f5] sm:text-lg">
+            {body}
+          </p>
+          {cta && ctaHref ? (
+            <Link
+              className="btn-primary btn-lg mt-8 shadow-[0_10px_36px_rgba(17,225,238,0.20)] hover:-translate-y-0.5 focus-visible:outline-offset-4 motion-reduce:transform-none"
+              href={ctaHref}
+            >
+              {cta} <span aria-hidden="true">→</span>
+            </Link>
+          ) : null}
+          {editorial ? (
+            <p
+              className="mt-6 hidden items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#e3f9ff] lg:inline-flex"
+              aria-hidden="true"
+            >
+              <span
+                className="inline-block size-1.5 rounded-full bg-[#11e1ee]"
+                aria-hidden="true"
+              />
+              {status}
+            </p>
+          ) : null}
+        </div>
+        {editorial ? (
+          <figure
+            className="w-full max-w-[420px] overflow-hidden rounded-[18px] border border-white/25 bg-[#071423] shadow-[0_16px_40px_rgba(0,0,0,0.28)] lg:max-w-none lg:justify-self-end"
+            data-testid="root-editorial-photo"
+          >
+            <div className="relative">
+              <picture>
+                <source srcSet={editorial.avif} type="image/avif" />
+                <Image
+                  src={editorial.src}
+                  alt={editorial.alt[locale]}
+                  width={editorial.width}
+                  height={editorial.height}
+                  sizes="(max-width: 1023px) 86vw, 300px"
+                  priority={nodeId === '4:2' || nodeId === '4:126' || nodeId === '4:153'}
+                  className="h-auto w-full"
+                />
+              </picture>
+              <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(5,16,33,0.04)_0%,rgba(5,16,33,0.22)_100%)]" />
+            </div>
+            <figcaption className="bg-[#071423] px-3 py-2.5 text-[12px] font-semibold leading-snug text-[#f5fbff]">
+              {editorial.caption[locale]}
+            </figcaption>
+          </figure>
         ) : null}
       </div>
-      <div className="pointer-events-none absolute bottom-5 right-5 hidden items-center gap-2 rounded-xl border border-white/20 bg-white/[0.07] px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#e3f9ff] shadow-[0_10px_36px_rgba(0,0,0,.2)] backdrop-blur-xl lg:inline-flex" aria-hidden="true">
-        <span className="inline-block size-1.5 rounded-full bg-[#11e1ee] shadow-[0_0_12px_#11e1ee]" />
-        {locale === 'es' ? 'Operaciones de ingresos · inteligencia conectada' : 'Revenue operations · connected intelligence'}
-      </div>
+      {editorial ? null : (
+        <div
+          className="pointer-events-none absolute bottom-5 right-5 hidden items-center gap-2 rounded-xl border border-white/20 bg-white/[0.07] px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#e3f9ff] shadow-[0_10px_36px_rgba(0,0,0,.2)] backdrop-blur-xl lg:inline-flex"
+          aria-hidden="true"
+        >
+          <span className="inline-block size-1.5 rounded-full bg-[#11e1ee] shadow-[0_0_12px_#11e1ee]" />
+          {status}
+        </div>
+      )}
     </section>
   );
 }
