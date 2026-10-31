@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { platforms, platformsInRow, platformRows } from '../src/content/ecosystem.ts';
 import { featuredSpecialties, specialties, specialtyBySlug } from '../src/content/specialties.ts';
+import { teamMembers } from '../src/content/team.ts';
 import { nyBoroughs, nyMarketMeta, nyPayers } from '../src/content/markets/ny-payers.ts';
 import { proofSlots } from '../src/content/credibility.ts';
 import { messages } from '../src/content/messages.ts';
@@ -149,6 +150,37 @@ test('credibility slots default to unpublished empty states', () => {
     assert.equal(slot.editorialStatus, 'unpublished');
     assert.equal(slot.quote, undefined);
   }
+});
+
+test('leadership records keep Aliah and Demo 6 roles without biographies', () => {
+  assert.deepEqual(
+    teamMembers.map((member) => [member.id, member.name, member.initials, member.role.en, member.role.es]),
+    [
+      ['khurram', 'Khurram Zaffar Siddiqui', 'KS', 'Chief Commercial Officer (CCO)', 'Director comercial (CCO)'],
+      ['aliah', 'Aliah Siddiqui', 'AS', 'Director of Strategy & Planning', 'Directora de estrategia y planificación'],
+      ['kashif', 'Kashif Ali', 'KA', 'Co-founder', 'Cofundador'],
+      ['aftab', 'Aftab Shaukat', 'AS', 'Co-founder', 'Cofundador'],
+    ],
+  );
+  assert.equal(teamMembers.some((member) => member.name.includes('Aliya')), false);
+  for (const member of teamMembers) {
+    assert.equal(Object.hasOwn(member, 'biography'), false);
+    assert.equal(Object.hasOwn(member, 'quote'), false);
+  }
+});
+
+test('home mounts one SpecialtyGrid and company mounts the typed team', () => {
+  const journey = fs.readFileSync(path.join('src', 'components', 'commercial', 'journey-sections.tsx'), 'utf8');
+  const home = fs.readFileSync(path.join('src', 'app', '[locale]', 'page.tsx'), 'utf8');
+  const company = fs.readFileSync(path.join('src', 'app', '[locale]', 'company', 'page.tsx'), 'utf8');
+  const directory = fs.readFileSync(path.join('src', 'app', '[locale]', 'specialties', 'page.tsx'), 'utf8');
+  const dirt = fs.readFileSync(path.join('src', 'app', '[locale]', 'preview', 'dirt', 'page.tsx'), 'utf8');
+  assert.equal((journey.match(/<SpecialtyGrid\b/g) ?? []).length, 1);
+  assert.equal(home.includes('SpecialtyGrid'), false);
+  assert.match(company, /<TeamGrid\b/);
+  assert.match(directory, /variant="catalog"/);
+  assert.match(dirt, /DirtLedgerPreview/);
+  assert.equal(dirt.includes('dirtMetrics'), false);
 });
 
 test('commercial EN/ES keys stay in parity and new routes exist', () => {

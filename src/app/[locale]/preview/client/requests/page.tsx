@@ -14,7 +14,7 @@ export default async function RequestsPreviewPage({ params }: { params: Promise<
         {clientQueue.length ? (
           <ul className="grid gap-3">
             {clientQueue.map((item) => (
-              <li key={item.id} className="surface p-4">
+              <li id={item.id} key={item.id} className="surface scroll-mt-24 p-4">
                 <p className="font-bold">{item.title[locale]}</p>
                 <p className="muted text-sm">
                   {item.id} · {item.state[locale]}

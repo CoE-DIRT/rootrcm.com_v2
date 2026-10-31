@@ -44,6 +44,7 @@ export const teamCopy = {
     body: 'Meet the leadership roles guiding ROOT’s operating philosophy and client experience.',
     portraitPending: 'Approved portrait pending',
     note: 'Individual biographies and credentials are published only after review and approval.',
+    cardKicker: 'Leadership',
   },
   es: {
     eyebrow: 'Las personas responsables',
@@ -51,5 +52,6 @@ export const teamCopy = {
     body: 'Conozca las funciones directivas que guían la filosofía operativa y la experiencia del cliente de ROOT.',
     portraitPending: 'Retrato aprobado pendiente',
     note: 'Las biografías y credenciales individuales se publican tras su revisión y aprobación.',
+    cardKicker: 'Dirección',
   },
 } as const;
