@@ -3,8 +3,9 @@
 import { Gauge } from 'lucide-react';
 import type { Locale } from '@/i18n/locales';
 import { workspaceDemoText } from '@/content/operations-demo';
-import { formatMetric, formatRatio, type OpsMetrics } from '@/lib/ops-client';
-import { opsCard, opsSubtle } from './ui';
+import { OPS_DEMO_ORG_ID, formatMetric, formatRatio, type OpsMetrics } from '@/lib/ops-client';
+import { useOpsState } from './use-ops-state';
+import { opsButton, opsCard, opsSubtle } from './ui';
 
 function MetricCell({
   title,
@@ -24,6 +25,31 @@ function MetricCell({
       <p className={`mt-2 text-xs ${opsSubtle}`}>{note}</p>
     </div>
   );
+}
+
+/** DIRT route reads the same synthetic operations ledger as the command center. */
+export function DirtLedgerPreview({ locale }: { locale: Locale }) {
+  const t = workspaceDemoText[locale];
+  const { state, loading, error, refresh } = useOpsState(OPS_DEMO_ORG_ID, 'client');
+  if (loading || (!state && !error)) {
+    return (
+      <p role="status" className="rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-4 text-sm font-semibold">
+        {t.loadingOps}
+      </p>
+    );
+  }
+  if (!state) {
+    return (
+      <div role="alert" className="rounded-xl border border-[var(--danger)] bg-[var(--surface)] p-4">
+        <p className="font-bold text-[var(--danger)]">{t.loadError}</p>
+        <p className="mt-2 break-words text-sm">{error}</p>
+        <button type="button" className={`${opsButton} mt-3`} onClick={() => void refresh()}>
+          {t.retry}
+        </button>
+      </div>
+    );
+  }
+  return <DirtMetricsPanel locale={locale} metrics={state.metrics} />;
 }
 
 export function DirtMetricsPanel({ locale, metrics }: { locale: Locale; metrics: OpsMetrics }) {
