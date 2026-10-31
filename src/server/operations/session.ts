@@ -54,6 +54,15 @@ export async function verifyOpsCapability(
   return mismatch === 0 ? capability : 'client';
 }
 
+/** App Router link prefetch. Must not rebind preview cookies. */
+export function isPreviewPrefetch(headers: Pick<Headers, 'get'>): boolean {
+  const purpose = `${headers.get('purpose') ?? ''} ${headers.get('sec-purpose') ?? ''}`.toLowerCase();
+  if (purpose.includes('prefetch')) return true;
+  if (headers.get('next-router-prefetch')) return true;
+  if (headers.get('next-router-segment-prefetch')) return true;
+  return false;
+}
+
 export function capabilityFromPath(pathname: string): OpsCapability | null {
   const path = pathname.replace(/^\/(en|es)(?=\/)/, '');
   if (path.startsWith('/preview/staff')) return 'operator';
