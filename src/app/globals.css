@@ -230,7 +230,7 @@ a.btn-primary {
   color: var(--on-cyan);
   padding: 8px 12px;
   border-radius: 8px;
-  z-index: 20;
+  z-index: 90;
 }
 
 .skip-link:focus {
@@ -240,9 +240,25 @@ a.btn-primary {
 .site-header {
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 80;
   background: color-mix(in srgb, var(--bg) 88%, transparent);
   backdrop-filter: blur(16px);
+}
+
+/* The brand tagline is one line in English and wider in Spanish. Cap it so the
+   desktop row stays single-line instead of compressing "Por qué ROOT". */
+.site-header [data-testid='root-brand-lockup'] .uppercase {
+  max-width: 9.5rem;
+  white-space: normal;
+}
+
+/* Desktop nav begins at 1280px, where the shared page width is only ~1204px.
+   Give the header a little more room until the 1300px cap, without moving the
+   breakpoint or hiding a label. */
+@media (min-width: 1280px) and (max-width: 1439.98px) {
+  .site-header .page-width {
+    width: min(calc(100% - 24px), 1300px);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

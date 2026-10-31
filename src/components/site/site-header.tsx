@@ -27,7 +27,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
           <SiteBrand locale={locale} />
         </Link>
         <PrimaryNav locale={locale} />
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2 whitespace-nowrap">
           <ThemeToggle locale={locale} />
           <LocaleSwitcher locale={locale} />
           <span className="hidden sm:inline-flex">
