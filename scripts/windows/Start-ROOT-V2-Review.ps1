@@ -2,7 +2,8 @@
 [CmdletBinding()]
 param(
     [string]$Repository = '',
-    [string]$Ref = 'origin/fix/demo6-restoration',
+    [string]$Ref = 'HEAD',
+    [switch]$SkipFetch,
     [ValidateRange(1024,65535)][int]$Port = 3032
 )
 $ErrorActionPreference = 'Stop'
@@ -31,7 +32,7 @@ if ($Ref.StartsWith('-')) { throw 'Invalid Git ref.' }
 foreach ($listenPort in @($Port,8787)) {
     if (Get-NetTCPConnection -LocalPort $listenPort -State Listen -ErrorAction SilentlyContinue) { throw "Port $listenPort is already in use. No existing process will be stopped." }
 }
-Invoke-Checked git @('-C',$Repository,'fetch','origin','--prune')
+if (-not $SkipFetch) { Invoke-Checked git @('-C',$Repository,'fetch','origin','--prune') }
 $sha = & git -C $Repository rev-parse --verify "$Ref^{commit}"
 if ($LASTEXITCODE -ne 0) { throw "Review ref unavailable: $Ref" }
 Write-Host 'Existing Cursor work is preserved:' -ForegroundColor Cyan

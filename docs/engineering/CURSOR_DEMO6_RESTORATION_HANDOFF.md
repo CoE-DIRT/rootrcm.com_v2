@@ -1,12 +1,12 @@
 # ROOT V2 — targeted restoration and release verification
 
-Act as a three-agent React/Next.js/Tailwind production cluster. Execute fixes, not another redesign. Read AGENTS.md and its required references. Repository: CoE-DIRT/rootrcm.com_v2. Start by inspecting current remote heads; the restoration branch is `fix/demo6-restoration`, based on `feat/p0-p1-public-shell`. Do not assume an old SHA is current.
+Act as a three-agent React/Next.js/Tailwind production cluster. Execute fixes, not another redesign. Read AGENTS.md and its required references. Repository: CoE-DIRT/rootrcm.com_v2. The supplied ROOT_V2_Restoration.bundle contains local branch `fix/demo6-restoration`, based on `feat/p0-p1-public-shell`. Its GitHub push was blocked by automatic approval review; there is no restoration PR yet. Inspect current remote heads before integration. Do not assume an old SHA is current.
 
 ## Preserve and integrate
 
 - Inspect status, worktrees, remote refs and open PRs. Preserve all Cursor work.
 - Do not run `git stash clear`, `git clean -xdf`, `git reset --hard`, force-push, or terminate unrelated processes.
-- Review the restoration PR. Integrate its tested changes into V2 development through normal review; do not cherry-pick twice or bypass protected main.
+- Review the local restoration branch. Any GitHub publication requires founder authorization because the prior push was rejected. After authorization, create a reviewable PR and integrate through normal review; do not cherry-pick twice or bypass protected main.
 - Keep V1, production DNS, business email and unrelated Appwrite resources untouched.
 - Use three isolated worktrees. Assign exact files before editing. Shared files have one writer; coordinator integrates sequentially.
 
