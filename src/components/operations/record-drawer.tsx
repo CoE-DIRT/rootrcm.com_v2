@@ -54,7 +54,7 @@ export function RecordDrawer({
     <dialog
       ref={ref}
       data-testid="record-drawer"
-      className="fixed inset-y-0 right-0 m-0 h-[100dvh] w-full max-w-[min(100vw,420px)] overflow-y-auto border-l border-[var(--border)] bg-[var(--surface)] p-5 text-[var(--text)]"
+      className="fixed inset-y-0 right-0 left-auto m-0 h-[100dvh] max-h-none w-full max-w-[min(100vw,420px)] overflow-y-auto border-l border-[var(--border)] bg-[var(--surface)] p-5 text-[var(--text)]"
       onClose={onClose}
       aria-labelledby="ops-record-title"
     >

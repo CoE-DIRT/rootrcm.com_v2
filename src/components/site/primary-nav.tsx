@@ -73,7 +73,7 @@ export function PrimaryNav({ locale }: { locale: Locale }) {
   }, [open]);
 
   return (
-    <nav ref={rootRef} aria-label="Primary" className="relative hidden items-center gap-0.5 text-sm lg:flex" data-testid="root-mega-nav">
+    <nav ref={rootRef} aria-label="Primary" className="relative hidden items-center gap-0.5 text-sm xl:flex" data-testid="root-mega-nav">
       {publicNav.map((entry, index) => {
         const menu = rootMegaMenus.find((m) => m.key === entry.key);
         if (!menu) return null;

@@ -33,7 +33,7 @@ export function MobileNav({ locale }: { locale: Locale }) {
   }
 
   return (
-    <div className="lg:hidden">
+    <div className="xl:hidden">
       <button
         ref={toggleRef}
         type="button"

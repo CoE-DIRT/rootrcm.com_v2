@@ -35,7 +35,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
               {t.nav.signIn}
             </Link>
           </span>
-          <span className="hidden lg:inline-flex">
+          <span className="hidden lg:inline-flex max-xl:hidden">
             <Link className="btn-ghost font-bold text-[var(--cyan)]" href={localizedPath(locale, '/consultation')}>
               {t.nav.consultation} →
             </Link>
