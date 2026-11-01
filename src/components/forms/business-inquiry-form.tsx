@@ -11,7 +11,15 @@ import type { FieldErrors } from '@/lib/validation/business-contact';
 // Set true only after a reviewed server-side durable inquiry contract is deployed.
 const inquirySubmissionEnabled = false;
 
-export function BusinessInquiryForm({ locale }: { locale: Locale }) {
+export function BusinessInquiryForm({
+  locale,
+  defaultConcern = 'consultation',
+  defaultMessage = '',
+}: {
+  locale: Locale;
+  defaultConcern?: 'consultation' | 'diagnostic' | 'managed' | 'custom';
+  defaultMessage?: string;
+}) {
   const t = copy(locale);
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errors, setErrors] = useState<FieldErrors>({});
@@ -93,6 +101,7 @@ export function BusinessInquiryForm({ locale }: { locale: Locale }) {
         id="concern"
         name="concern"
         label={t.form.concern}
+        defaultValue={defaultConcern}
         error={errors.concern ? t.form.errors[errors.concern] : undefined}
       >
         <option value="consultation">{t.form.concernOptions.consultation}</option>
@@ -104,6 +113,7 @@ export function BusinessInquiryForm({ locale }: { locale: Locale }) {
         id="message"
         name="message"
         label={t.form.message}
+        defaultValue={defaultMessage}
         error={errors.message ? t.form.errors[errors.message] : undefined}
       />
       <label className="flex items-start gap-3 text-sm">

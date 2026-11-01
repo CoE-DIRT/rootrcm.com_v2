@@ -482,6 +482,446 @@ const en = {
     marqueePause: 'Pause scrolling platforms',
     marqueePlay: 'Resume scrolling platforms',
   },
+  calculator: {
+    eyebrow: 'Enterprise RCM planning',
+    title: 'Denial leakage calculator',
+    body: 'Estimate annual denial exposure from monthly collections and an assumed denial rate. Figures are illustrative planning aids for a diagnostic scope — not verified recovery outcomes.',
+    collectionsLabel: 'Monthly collections',
+    collectionsHint: 'Range $100k–$5M. Business figures only; do not enter patient or claim identifiers.',
+    denialLabel: 'Estimated denial rate',
+    denialHint: 'Range 2%–25%. Adjust to match your internal reporting, not a payer portal export.',
+    practiceLabel: 'Practice type',
+    practiceHint: 'Used to label the diagnostic scope. It does not change the recovery assumption.',
+    practiceTypes: {
+      independent: 'Independent clinic',
+      asc: 'ASC',
+      mso: 'MSO',
+    },
+    annualLostLabel: 'Estimated annual lost revenue',
+    recoverableLabel: 'Recoverable revenue via ROOT',
+    recoverableHint: 'Planning assumption: 85% of estimated annual loss. Not a collections guarantee.',
+    cleanClaimLabel: 'Clean claim target',
+    cleanClaimHint: 'Implied first-pass clean-claim share from the denial rate slider (100% − denial rate).',
+    disclaimer:
+      'Illustrative only. No PHI. No HIPAA certification claim. Adapters stay disabled until a written engagement authorizes imports.',
+    cta: 'Lock in diagnostic scope',
+  },
+  onboarding: {
+    title: 'Lock in your diagnostic scope',
+    body: 'Review the calculator assumptions, then continue with a business-only diagnostic inquiry. Payment and Auth remain disabled in this build.',
+    summaryTitle: 'Calculator prefill',
+    emptyNote: 'No calculator values were supplied. Defaults below are for planning only.',
+    continueDiagnostic: 'Continue to revenue diagnostic',
+    backHome: 'Back to homepage',
+  },
+  pricingPage: {
+    title: 'Pricing and leakage planning',
+    body: 'Use the denial leakage calculator, then compare the canonical plan catalog. Fees and exclusions are confirmed only in a written statement of work.',
+    catalogCta: 'Open the plans catalog',
+  },
+  /**
+   * Namespaced bilingual dictionary for services, specialties, pricing rules and portal terms.
+   * Alpha/Gamma may add sibling top-level keys (e.g. nav mega-menu) without colliding here.
+   */
+  dictionary: {
+    services: {
+      rcm: {
+        name: 'Managed revenue cycle',
+        summary: 'Charge capture, claim submission, posting, denials, A/R follow-up and financial controls.',
+        steps: [
+          'Baseline billing inventory',
+          'Prioritized claim work queues',
+          'Daily exception resolution',
+          'Transparent collections reporting',
+        ],
+      },
+      dirt: {
+        name: 'DIRT / data intelligence',
+        summary:
+          'Revenue leakage signals, payer behavior and prioritized financial action. Sample data until an import is authorized.',
+        steps: [
+          'Connect approved source data',
+          'Normalize and reconcile',
+          'Map state, specialty and payer',
+          'Distribute owned actions',
+        ],
+      },
+      credential: {
+        name: 'Provider credentialing and enrollment',
+        summary:
+          'CAQH, PECOS/NPPES readiness, payer applications, roster work and revalidation tracking. No live payer connection is claimed.',
+        steps: [
+          'Provider data collection',
+          'Licensure and taxonomy checks',
+          'Payer-specific submissions',
+          'Follow-up and maintenance',
+        ],
+      },
+      licensing: {
+        name: 'Practice and provider licensing',
+        summary: 'State professional, group and facility license tracking and renewals.',
+        steps: [
+          'Identify license class',
+          'Verify state board requirements',
+          'Assemble applications',
+          'Track renewals and evidence',
+        ],
+      },
+      practiceLaunch: {
+        name: 'Practice formation and launch',
+        summary: 'Launch planning, taxonomies, payer setup, workflows and vendor readiness.',
+        steps: [
+          'Launch readiness map',
+          'Entity and payer checklist',
+          'Staff and technology design',
+          'Go-live milestones',
+        ],
+      },
+      virtual: {
+        name: 'Virtual assistance',
+        summary: 'Administrative support for verified nonclinical workflows.',
+        steps: [
+          'Define shift and role',
+          'Train on approved tools',
+          'Assign an accountable manager',
+          'Review service measures',
+        ],
+      },
+      office: {
+        name: 'Front-office and back-office support',
+        summary: 'Eligibility, referrals, scheduling coordination, follow-up and documentation workflows.',
+        steps: [
+          'Map incoming tasks',
+          'Set escalation rules',
+          'Operate daily queues',
+          'Measure response time',
+        ],
+      },
+      scheduling: {
+        name: 'Scheduling and referral coordination',
+        summary: 'Appointment flows, confirmations, rescheduling and referral routing with defined boundaries.',
+        steps: [
+          'Map appointment types',
+          'Configure approved scripts',
+          'Track task outcomes',
+          'Review capacity trends',
+        ],
+      },
+      priorAuth: {
+        name: 'Prior authorization operations',
+        summary:
+          'Benefit and policy checks, request preparation, documentation and status escalation. Not a live payer submission.',
+        steps: [
+          'Identify payer rules',
+          'Assemble supporting documents',
+          'Track authorization status',
+          'Document the outcome',
+        ],
+      },
+      website: {
+        name: 'Practice websites and digital experience',
+        summary: 'Accessible practice sites, content, patient-facing pages and SEO foundations.',
+        steps: [
+          'Discovery and wireframes',
+          'Design system',
+          'Content, SEO and accessibility',
+          'Publish and maintain',
+        ],
+      },
+      automation: {
+        name: 'Workflow automation and integrations',
+        summary:
+          'Scoped EHR or clearinghouse work and measured automation, only where authorized. Adapters in this build stay disabled.',
+        steps: [
+          'Inventory systems',
+          'Verify permissions and APIs',
+          'Prototype in a safe environment',
+          'Monitor and adjust',
+        ],
+      },
+      coding: {
+        name: 'Coding quality and compliance review',
+        summary:
+          'Documentation-gap review for codes and modifiers. This site does not publish code sets or billing advice.',
+        steps: [
+          'Inventory review rules',
+          'Scan documentation gaps',
+          'Review sample encounters',
+          'Track corrected causes',
+        ],
+      },
+      mso: {
+        name: 'MSO and management services',
+        summary: 'Operations, staffing, vendor oversight, analytics and accountable delivery under a written scope.',
+        steps: [
+          'Operating-model assessment',
+          'Document responsibilities',
+          'Launch managed services',
+          'Executive review cadence',
+        ],
+      },
+      advisory: {
+        name: 'RCM advisory and revenue optimization',
+        summary: 'Audits, denial root-cause diagnostics and a 90-day plan. Not a promise of recovered dollars.',
+        steps: [
+          'Quantify a baseline',
+          'Identify preventable friction',
+          'Prioritize opportunities',
+          'Document a 90-day roadmap',
+        ],
+      },
+      analytics: {
+        name: 'Financial reporting and analytics',
+        summary:
+          'Executive scorecards and payer-mix views using synthetic figures until a source is authorized.',
+        steps: ['Define measures', 'Validate sources', 'Develop dashboards', 'Review deviations'],
+      },
+      patient: {
+        name: 'Patient financial experience',
+        summary:
+          'Statement and balance workflows. This demo does not store patient balances or clinical details.',
+        steps: [
+          'Review balance policy',
+          'Design approved communication',
+          'Track disputes and follow-up',
+          'Measure the experience',
+        ],
+      },
+    },
+    specialties: {
+      cardiology: {
+        name: 'Cardiology',
+        summary: 'Cardiovascular procedures, device claims, prior authorizations, payer policy and claim edits.',
+      },
+      asc: {
+        name: 'Ambulatory surgery / ASC',
+        summary: 'Facility and professional claims, global periods, implants, procedure modifiers and contracts.',
+      },
+      podiatry: {
+        name: 'Podiatry',
+        summary: 'Foot and ankle procedures, diabetic foot care, surgical services and medical necessity.',
+      },
+      woundCare: {
+        name: 'Wound care',
+        summary: 'Advanced wound modalities, supplies, documentation and authorization sequencing.',
+      },
+      painManagement: {
+        name: 'Pain management',
+        summary: 'Injection and procedural authorization, coverage policy, documentation and modifiers.',
+      },
+      behavioralHealth: {
+        name: 'Behavioral health / psychotherapy',
+        summary: 'Visit formats, clinician credentials, therapy code families and payer coverage.',
+      },
+      familyMedicine: {
+        name: 'Family medicine',
+        summary: 'Primary care E/M, wellness, preventive and chronic care workflows.',
+      },
+      internalMedicine: {
+        name: 'Internal medicine',
+        summary: 'Complex E/M, chronic-care plans, documentation and longitudinal reporting.',
+      },
+      ophthalmology: {
+        name: 'Ophthalmology',
+        summary: 'Global surgery, injections, drug units, diagnostic testing and modifiers.',
+      },
+      anesthesiology: {
+        name: 'Anesthesiology / CRNA',
+        summary: 'Time units, concurrency, anesthesia modifiers and payer-specific arrangements.',
+      },
+      ent: {
+        name: 'ENT / Otolaryngology',
+        summary: 'Office procedures, diagnostics, surgeries and procedure-specific policy.',
+      },
+      physicalTherapy: {
+        name: 'Physical therapy',
+        summary: 'Therapy plans, utilization caps, authorization and modifier controls.',
+      },
+      occupationalTherapy: {
+        name: 'Occupational therapy',
+        summary: 'Plan-of-care compliance, units, functional goals and payer edits.',
+      },
+      speechPathology: {
+        name: 'Speech-language pathology',
+        summary: 'Therapy authorizations, provider taxonomy, telehealth and utilization.',
+      },
+      neurology: {
+        name: 'Neurology',
+        summary: 'Specialty testing, neurological procedures, coverage and referral management.',
+      },
+      dermatology: {
+        name: 'Dermatology',
+        summary: 'Minor procedures, pathology, excisions and medical necessity rules.',
+      },
+      gastroenterology: {
+        name: 'Gastroenterology',
+        summary: 'Endoscopy, screening versus diagnostic modifiers and facility coordination.',
+      },
+      orthopedics: {
+        name: 'Orthopedics',
+        summary: 'Surgery, imaging, postoperative global periods and therapy coordination.',
+      },
+      urgentCare: {
+        name: 'Urgent care',
+        summary: 'Walk-in eligibility, rapid charge capture and payer plan variations.',
+      },
+      radiology: {
+        name: 'Radiology / imaging',
+        summary: 'Technical and professional components, contrast and authorization workflows.',
+      },
+      homeHealth: {
+        name: 'Home health',
+        summary: 'Eligibility, certification, service records and complex payer documentation.',
+      },
+      psychiatry: {
+        name: 'Psychiatry',
+        summary: 'Evaluation, medication management and payer/clinician participation.',
+      },
+      chiropractic: {
+        name: 'Chiropractic',
+        summary: 'Visit limits, coverage boundaries, therapy rules and denials.',
+      },
+      multiSpecialty: {
+        name: 'Multi-specialty groups',
+        summary: 'Cross-specialty reporting, site of service, shared staff and payer contracts.',
+      },
+    },
+    pricing: {
+      notice:
+        'Demo 6 V4_PRICES terminology retained for bilingual parity. Indicative ranges are not invoices, payment outcomes or collections guarantees. Canonical SKUs remain in the public catalog.',
+      rules: [
+        {
+          id: 'free',
+          name: 'Free consultation',
+          price: '$0',
+          billing: 'No obligation',
+          summary: 'A discovery discussion about practice problems, technology and scope.',
+        },
+        {
+          id: 'explorer',
+          name: 'Explorer workspace',
+          price: 'Free',
+          billing: 'Limited access',
+          summary: 'Preview platform, assessment, saved sample views and guided onboarding.',
+        },
+        {
+          id: 'diagnostic',
+          name: 'Revenue Optimization Diagnostic',
+          price: '$2,500',
+          billing: 'Fixed fee / one time',
+          summary: 'A/R, denial, workflow and reporting review; opportunity register; 90-day roadmap.',
+        },
+        {
+          id: 'advanced',
+          name: 'Advanced Enterprise Diagnostic',
+          price: '$15,000',
+          billing: 'Proposed scope / one time',
+          summary:
+            'Larger multi-location / multi-payer assessment. Statement of work required before sale.',
+        },
+        {
+          id: 'managed',
+          name: 'Managed RCM',
+          price: 'Scoped',
+          billing: 'Onboarding from $1,500',
+          summary:
+            'End-to-end billing, denial operations, A/R and financial reporting by signed scope. Prototype collections-percentage figures are omitted from the public catalog.',
+        },
+        {
+          id: 'dirt',
+          name: 'DIRT / Revenue Intelligence',
+          price: 'Scoped',
+          billing: 'Indicative recurring range',
+          summary: 'Connected financial visibility, payer patterns and prioritized action.',
+        },
+        {
+          id: 'credentialing',
+          name: 'Credentialing & enrollment',
+          price: 'Per provider',
+          billing: 'Maintenance quoted separately',
+          summary: 'Provider enrollment, roster maintenance, follow-ups and revalidation.',
+        },
+        {
+          id: 'projects',
+          name: 'Projects & automation',
+          price: 'Scoped project range',
+          billing: 'Statement of work',
+          summary: 'Reporting, workflow automation, cleanup, technology and operating-system improvements.',
+        },
+        {
+          id: 'practice',
+          name: 'Practice setup & launch',
+          price: 'Custom quote',
+          billing: 'By state, service and launch scope',
+          summary: 'Operational setup, licensure milestones, EHR/PM and payer workflow readiness.',
+        },
+        {
+          id: 'office',
+          name: 'Virtual / office services',
+          price: 'Custom quote',
+          billing: 'Role and service-volume based',
+          summary: 'Front desk, scheduling, referral processing, prior auth and administrative support.',
+        },
+        {
+          id: 'digital',
+          name: 'Practice websites & digital operations',
+          price: 'Custom quote',
+          billing: 'Defined build + optional maintenance',
+          summary: 'Practice website design, accessible content architecture and digital workflows.',
+        },
+        {
+          id: 'mso',
+          name: 'Full MSO operating partnership',
+          price: 'Custom quote',
+          billing: 'Written partnership agreement',
+          summary: 'Revenue, technology, operations, people and leadership reporting.',
+        },
+        {
+          id: 'bundles',
+          name: 'RCM + Credentialing Bundle',
+          price: 'Custom bundle',
+          billing: 'Combined scope + agreed discount if approved',
+          summary: 'Coordinated claim operations and provider enrollment; a single accountability plan.',
+        },
+        {
+          id: 'intelbundle',
+          name: 'DIRT + Automation Bundle',
+          price: 'Custom bundle',
+          billing: 'Phased project + managed intelligence',
+          summary: 'Use analytics to prioritize carefully authorized automations.',
+        },
+      ],
+    },
+    portal: {
+      agingBands: {
+        '0-30': '0–30 days',
+        '31-60': '31–60 days',
+        '61-90': '61–90 days',
+        '90+': '90+ days',
+      },
+      denialCodes: {
+        'CO-4': 'CO-4 · procedure / modifier inconsistency (synthetic label)',
+        'CO-16': 'CO-16 · claim / service lacks information (synthetic label)',
+        'PR-204': 'PR-204 · service not covered / documentation gap (synthetic label)',
+      },
+      appealStatuses: {
+        open: 'Open',
+        inReview: 'In review',
+        waiting: 'Waiting',
+        draft: 'Appeal draft (not sent)',
+        closed: 'Closed (demo)',
+      },
+      credentialingStages: {
+        intake: 'Provider data intake',
+        licensure: 'Licensure and taxonomy check',
+        caqh: 'CAQH / PECOS readiness',
+        payerPacket: 'Payer packet assembly',
+        submitted: 'Submitted (demo label)',
+        followUp: 'Follow-up and revalidation',
+        active: 'Roster active (synthetic)',
+      },
+    },
+  },
 };
 
 type Messages = typeof en;
@@ -970,6 +1410,455 @@ const es: Messages = {
       'No se listan ejemplos CPT, HCPCS ni CIE. Los conjuntos de códigos cambian y deben ser validados por el fundador antes de publicarse.',
     marqueePause: 'Pausar plataformas en desplazamiento',
     marqueePlay: 'Reanudar plataformas en desplazamiento',
+  },
+  calculator: {
+    eyebrow: 'Planificación RCM empresarial',
+    title: 'Calculadora de fugas por denegación',
+    body: 'Estime la exposición anual por denegaciones a partir de cobros mensuales y una tasa de denegación asumida. Las cifras son ayudas ilustrativas de planificación para un alcance diagnóstico — no resultados de recobro verificados.',
+    collectionsLabel: 'Cobros mensuales',
+    collectionsHint:
+      'Rango $100k–$5M. Solo cifras empresariales; no introduzca identificadores de pacientes ni de reclamos.',
+    denialLabel: 'Tasa estimada de denegación',
+    denialHint:
+      'Rango 2%–25%. Ajústela a su informe interno, no a una exportación de portal de pagador.',
+    practiceLabel: 'Tipo de práctica',
+    practiceHint:
+      'Etiqueta el alcance del diagnóstico. No cambia el supuesto de recuperación.',
+    practiceTypes: {
+      independent: 'Clínica independiente',
+      asc: 'ASC',
+      mso: 'MSO',
+    },
+    annualLostLabel: 'Ingresos anuales perdidos estimados',
+    recoverableLabel: 'Ingresos recuperables vía ROOT',
+    recoverableHint:
+      'Supuesto de planificación: 85% de la pérdida anual estimada. No es una garantía de cobro.',
+    cleanClaimLabel: 'Meta de reclamo limpio',
+    cleanClaimHint:
+      'Participación implícita de reclamo limpio en primer paso según el deslizador (100% − tasa de denegación).',
+    disclaimer:
+      'Solo ilustrativo. Sin PHI. Sin afirmación de certificación HIPAA. Los adaptadores permanecen desactivados hasta que un compromiso escrito autorice importaciones.',
+    cta: 'Fijar el alcance del diagnóstico',
+  },
+  onboarding: {
+    title: 'Fije el alcance de su diagnóstico',
+    body: 'Revise los supuestos de la calculadora y continúe con una consulta diagnóstica solo empresarial. El pago y la autenticación siguen desactivados en esta versión.',
+    summaryTitle: 'Prefill de la calculadora',
+    emptyNote: 'No se suministraron valores de la calculadora. Los valores por defecto son solo de planificación.',
+    continueDiagnostic: 'Continuar al diagnóstico de ingresos',
+    backHome: 'Volver al inicio',
+  },
+  pricingPage: {
+    title: 'Precios y planificación de fugas',
+    body: 'Use la calculadora de fugas por denegación y luego compare el catálogo canónico de planes. Honorarios y exclusiones se confirman solo en un enunciado de trabajo escrito.',
+    catalogCta: 'Abrir el catálogo de planes',
+  },
+  dictionary: {
+    services: {
+      rcm: {
+        name: 'Ciclo de ingresos gestionado',
+        summary: 'Cargos, envío, pagos, denegaciones, cuentas por cobrar y control financiero.',
+        steps: [
+          'Inventario inicial de facturación',
+          'Colas de reclamos prioritarios',
+          'Resolver excepciones diarias',
+          'Informes transparentes de cobros',
+        ],
+      },
+      dirt: {
+        name: 'DIRT / inteligencia de datos',
+        summary:
+          'Señales de fuga, comportamiento de pagadores y acción financiera prioritaria. Datos de muestra hasta autorizar una importación.',
+        steps: [
+          'Conectar fuentes autorizadas',
+          'Normalizar y conciliar',
+          'Mapear estado, especialidad y pagador',
+          'Asignar acciones responsables',
+        ],
+      },
+      credential: {
+        name: 'Acreditación e inscripción',
+        summary:
+          'Preparación CAQH, PECOS/NPPES, solicitudes, plantilla y revalidación. No se afirma conexión en vivo con pagadores.',
+        steps: [
+          'Recopilar datos del proveedor',
+          'Verificar licencias y taxonomía',
+          'Presentación específica por pagador',
+          'Seguimiento y mantenimiento',
+        ],
+      },
+      licensing: {
+        name: 'Licencias de práctica y profesionales',
+        summary: 'Seguimiento de licencias profesionales, de grupo y de instalación por estado.',
+        steps: [
+          'Identificar clase de licencia',
+          'Validar requisitos estatales',
+          'Preparar solicitudes',
+          'Monitorear renovaciones',
+        ],
+      },
+      practiceLaunch: {
+        name: 'Creación y apertura de prácticas',
+        summary: 'Plan de apertura, taxonomías, pagadores, procesos y preparación de proveedores.',
+        steps: [
+          'Mapa de preparación',
+          'Lista de entidad y pagador',
+          'Diseño de personal y sistemas',
+          'Hitos de lanzamiento',
+        ],
+      },
+      virtual: {
+        name: 'Asistencia virtual',
+        summary: 'Apoyo administrativo para procesos no clínicos verificados.',
+        steps: [
+          'Definir función y horario',
+          'Formar sobre herramientas autorizadas',
+          'Asignar responsable',
+          'Revisar indicadores',
+        ],
+      },
+      office: {
+        name: 'Soporte de recepción y administración',
+        summary: 'Elegibilidad, referidos, coordinación de citas, seguimiento y documentación.',
+        steps: [
+          'Mapear tareas entrantes',
+          'Definir escalamiento',
+          'Gestionar colas diarias',
+          'Medir respuesta',
+        ],
+      },
+      scheduling: {
+        name: 'Citas y coordinación de referidos',
+        summary: 'Citas, confirmaciones, cambios y derivación con límites definidos.',
+        steps: [
+          'Mapear tipos de cita',
+          'Configurar guiones autorizados',
+          'Monitorear resultados',
+          'Revisar capacidad',
+        ],
+      },
+      priorAuth: {
+        name: 'Operaciones de autorización previa',
+        summary:
+          'Verificación de beneficios y póliza, preparación, documentación y escalamiento. No es un envío en vivo al pagador.',
+        steps: [
+          'Identificar reglas de pagadores',
+          'Preparar evidencia clínica',
+          'Monitorear autorización',
+          'Documentar resultados',
+        ],
+      },
+      website: {
+        name: 'Sitios y experiencia digital',
+        summary: 'Sitios accesibles, contenidos, páginas para pacientes y bases de SEO.',
+        steps: [
+          'Descubrimiento y estructura',
+          'Sistema de diseño',
+          'SEO y accesibilidad',
+          'Publicar y mantener',
+        ],
+      },
+      automation: {
+        name: 'Automatización e integraciones',
+        summary:
+          'Trabajo acotado de EHR o clearinghouse y automatización medida, solo si se autoriza. Los adaptadores de esta versión siguen desactivados.',
+        steps: [
+          'Inventario de sistemas',
+          'Verificar permisos y API',
+          'Prototipar en entorno seguro',
+          'Medir y optimizar',
+        ],
+      },
+      coding: {
+        name: 'Calidad de codificación y revisión',
+        summary:
+          'Revisión de brechas documentales para códigos y modificadores. Este sitio no publica conjuntos de códigos ni asesoría de facturación.',
+        steps: [
+          'Inventario de reglas',
+          'Detectar brechas documentales',
+          'Revisar encuentros de ejemplo',
+          'Monitorear causas corregidas',
+        ],
+      },
+      mso: {
+        name: 'Servicios de gestión MSO',
+        summary:
+          'Operaciones, personal, supervisión de proveedores, analítica y entrega responsable bajo un alcance escrito.',
+        steps: [
+          'Evaluar modelo operativo',
+          'Documentar responsabilidades',
+          'Iniciar servicios gestionados',
+          'Revisiones ejecutivas',
+        ],
+      },
+      advisory: {
+        name: 'Consultoría y optimización de ingresos',
+        summary:
+          'Auditorías, diagnóstico de causas de denegación y un plan de 90 días. No promete dólares recuperados.',
+        steps: [
+          'Cuantificar línea base',
+          'Identificar obstáculos',
+          'Priorizar oportunidades',
+          'Documentar plan de 90 días',
+        ],
+      },
+      analytics: {
+        name: 'Informes y analítica financiera',
+        summary:
+          'Tableros ejecutivos y mezcla de pagadores con cifras sintéticas hasta autorizar una fuente.',
+        steps: [
+          'Definir indicadores',
+          'Validar fuentes',
+          'Desarrollar paneles',
+          'Revisar desviaciones',
+        ],
+      },
+      patient: {
+        name: 'Experiencia financiera del paciente',
+        summary:
+          'Flujos de estados de cuenta y saldos. Esta demo no guarda saldos de pacientes ni datos clínicos.',
+        steps: [
+          'Revisar política de saldos',
+          'Diseñar comunicación aprobada',
+          'Monitorear disputas',
+          'Medir experiencia',
+        ],
+      },
+    },
+    specialties: {
+      cardiology: {
+        name: 'Cardiología',
+        summary:
+          'Procedimientos cardiovasculares, dispositivos, autorizaciones y reglas del pagador.',
+      },
+      asc: {
+        name: 'Cirugía ambulatoria / ASC',
+        summary:
+          'Reclamos de centro y profesionales, periodos globales, implantes y contratos.',
+      },
+      podiatry: {
+        name: 'Podología',
+        summary: 'Cirugía de pie y tobillo, pie diabético y necesidad médica.',
+      },
+      woundCare: {
+        name: 'Cuidado de heridas',
+        summary: 'Modalidades avanzadas, insumos, documentación y autorización.',
+      },
+      painManagement: {
+        name: 'Manejo del dolor',
+        summary: 'Autorización de inyecciones y procedimientos, cobertura y modificadores.',
+      },
+      behavioralHealth: {
+        name: 'Salud conductual / psicoterapia',
+        summary: 'Modalidades de consulta, credenciales y cobertura de terapia.',
+      },
+      familyMedicine: {
+        name: 'Medicina familiar',
+        summary: 'Evaluación primaria, prevención y gestión de cuidados crónicos.',
+      },
+      internalMedicine: {
+        name: 'Medicina interna',
+        summary: 'Atención compleja, cuidados crónicos y documentación longitudinal.',
+      },
+      ophthalmology: {
+        name: 'Oftalmología',
+        summary: 'Cirugía global, inyecciones, unidades de medicamentos y pruebas.',
+      },
+      anesthesiology: {
+        name: 'Anestesiología / CRNA',
+        summary: 'Unidades de tiempo, concurrencia, modificadores y acuerdos del pagador.',
+      },
+      ent: {
+        name: 'Otorrinolaringología',
+        summary: 'Procedimientos de consulta, diagnósticos y cirugías.',
+      },
+      physicalTherapy: {
+        name: 'Fisioterapia',
+        summary: 'Planes terapéuticos, límites de uso, autorizaciones y modificadores.',
+      },
+      occupationalTherapy: {
+        name: 'Terapia ocupacional',
+        summary: 'Cumplimiento del plan, unidades, objetivos y reglas del pagador.',
+      },
+      speechPathology: {
+        name: 'Fonoaudiología',
+        summary: 'Autorizaciones, taxonomía, telesalud y utilización.',
+      },
+      neurology: {
+        name: 'Neurología',
+        summary: 'Pruebas especializadas, procedimientos y derivaciones.',
+      },
+      dermatology: {
+        name: 'Dermatología',
+        summary: 'Procedimientos menores, patología y necesidad médica.',
+      },
+      gastroenterology: {
+        name: 'Gastroenterología',
+        summary: 'Endoscopia, modificadores de prevención y coordinación de centros.',
+      },
+      orthopedics: {
+        name: 'Ortopedia',
+        summary: 'Cirugía, imágenes, periodos posoperatorios y terapia.',
+      },
+      urgentCare: {
+        name: 'Urgencias ambulatorias',
+        summary: 'Elegibilidad, cargos rápidos y variaciones de cobertura.',
+      },
+      radiology: {
+        name: 'Radiología / imágenes',
+        summary: 'Componentes técnicos y profesionales y autorizaciones.',
+      },
+      homeHealth: {
+        name: 'Atención domiciliaria',
+        summary: 'Elegibilidad, certificación y documentación para pagadores.',
+      },
+      psychiatry: {
+        name: 'Psiquiatría',
+        summary: 'Evaluación, medicación y participación del profesional.',
+      },
+      chiropractic: {
+        name: 'Quiropráctica',
+        summary: 'Límites de visitas, cobertura y denegaciones.',
+      },
+      multiSpecialty: {
+        name: 'Grupos multiespecialidad',
+        summary: 'Informes transversales, múltiples sedes, personal y contratos.',
+      },
+    },
+    pricing: {
+      notice:
+        'Se conserva la terminología V4_PRICES de Demo 6 para paridad bilingüe. Los rangos indicativos no son facturas, resultados de pago ni garantías de cobro. Los SKU canónicos siguen en el catálogo público.',
+      rules: [
+        {
+          id: 'free',
+          name: 'Consulta gratuita',
+          price: '$0',
+          billing: 'Sin compromiso',
+          summary: 'Conversación sobre desafíos, tecnología y alcance.',
+        },
+        {
+          id: 'explorer',
+          name: 'Espacio Explorer',
+          price: 'Gratis',
+          billing: 'Acceso limitado',
+          summary: 'Vista previa, evaluación y guía de incorporación.',
+        },
+        {
+          id: 'diagnostic',
+          name: 'Diagnóstico de optimización de ingresos',
+          price: '$2,500',
+          billing: 'Tarifa fija / pago único',
+          summary: 'Revisión de CxC, denegaciones, procesos, informe y plan de 90 días.',
+        },
+        {
+          id: 'advanced',
+          name: 'Diagnóstico avanzado empresarial',
+          price: '$15,000',
+          billing: 'Alcance propuesto / único',
+          summary: 'Evaluación extensa multicentro/multipagador. Requiere propuesta.',
+        },
+        {
+          id: 'managed',
+          name: 'RCM gestionado',
+          price: 'Según alcance',
+          billing: 'Incorporación desde $1,500',
+          summary:
+            'Facturación, denegaciones, CxC y reportes por alcance acordado. Las cifras de porcentaje sobre cobros del prototipo se omiten del catálogo público.',
+        },
+        {
+          id: 'dirt',
+          name: 'DIRT / Inteligencia de ingresos',
+          price: 'Según alcance',
+          billing: 'Rango mensual indicativo',
+          summary: 'Visibilidad financiera, patrones por pagador y acciones prioritarias.',
+        },
+        {
+          id: 'credentialing',
+          name: 'Acreditación e inscripción',
+          price: 'Por profesional',
+          billing: 'Mantenimiento cotizado aparte',
+          summary: 'Inscripción de proveedores, mantenimiento y revalidación.',
+        },
+        {
+          id: 'projects',
+          name: 'Proyectos y automatización',
+          price: 'Rango por proyecto',
+          billing: 'Enunciado de trabajo',
+          summary: 'Informes, automatización, limpieza y mejoras de sistemas.',
+        },
+        {
+          id: 'practice',
+          name: 'Puesta en marcha de prácticas',
+          price: 'Cotización a medida',
+          billing: 'Según estado y alcance',
+          summary: 'Apertura, licencias, sistemas y preparación de pagadores.',
+        },
+        {
+          id: 'office',
+          name: 'Servicios virtuales y de oficina',
+          price: 'Cotización a medida',
+          billing: 'Por rol y volumen',
+          summary: 'Recepción, citas, referidos, autorizaciones y soporte.',
+        },
+        {
+          id: 'digital',
+          name: 'Webs y operaciones digitales',
+          price: 'Cotización a medida',
+          billing: 'Desarrollo y mantenimiento opcional',
+          summary: 'Diseño web, contenido accesible y procesos digitales.',
+        },
+        {
+          id: 'mso',
+          name: 'Alianza MSO integral',
+          price: 'Cotización a medida',
+          billing: 'Acuerdo escrito',
+          summary: 'Ingresos, tecnología, operaciones, personal e informes.',
+        },
+        {
+          id: 'bundles',
+          name: 'Paquete RCM + Acreditación',
+          price: 'Paquete a medida',
+          billing: 'Alcance conjunto y posible descuento',
+          summary: 'RCM e inscripción coordinados con responsabilidades claras.',
+        },
+        {
+          id: 'intelbundle',
+          name: 'Paquete DIRT + Automatización',
+          price: 'Paquete a medida',
+          billing: 'Proyecto por fases e inteligencia',
+          summary: 'Use análisis para priorizar automatizaciones autorizadas.',
+        },
+      ],
+    },
+    portal: {
+      agingBands: {
+        '0-30': '0–30 días',
+        '31-60': '31–60 días',
+        '61-90': '61–90 días',
+        '90+': '90+ días',
+      },
+      denialCodes: {
+        'CO-4': 'CO-4 · inconsistencia de procedimiento / modificador (etiqueta sintética)',
+        'CO-16': 'CO-16 · falta información del reclamo / servicio (etiqueta sintética)',
+        'PR-204': 'PR-204 · servicio no cubierto / brecha documental (etiqueta sintética)',
+      },
+      appealStatuses: {
+        open: 'Abierta',
+        inReview: 'En revisión',
+        waiting: 'En espera',
+        draft: 'Borrador de apelación (no enviado)',
+        closed: 'Cerrada (demo)',
+      },
+      credentialingStages: {
+        intake: 'Recolección de datos del profesional',
+        licensure: 'Verificación de licencia y taxonomía',
+        caqh: 'Preparación CAQH / PECOS',
+        payerPacket: 'Armado del paquete para el pagador',
+        submitted: 'Enviado (etiqueta demo)',
+        followUp: 'Seguimiento y revalidación',
+        active: 'Plantilla activa (sintético)',
+      },
+    },
   },
 };
 
