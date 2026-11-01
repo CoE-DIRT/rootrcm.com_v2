@@ -1,0 +1,37 @@
+name: Go Healthcare Service
+
+on:
+  pull_request:
+    paths:
+      - 'services/healthcare-go/**'
+      - '.github/workflows/go.yml'
+  push:
+    branches: [main, 'feat/**']
+    paths:
+      - 'services/healthcare-go/**'
+      - '.github/workflows/go.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  go-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - uses: actions/setup-go@f111f3307d8850f501ac008e886eec1fd1932a34 # v5.3.0
+        with:
+          go-version: '1.23.x'
+          cache-dependency-path: services/healthcare-go/go.mod
+
+      - name: Go test
+        working-directory: services/healthcare-go
+        run: go test -v ./...
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@55c2c1448f86e01eaae002a5a3a9624417608d84 # v6.5.2
+        with:
+          version: v1.64.5
+          working-directory: services/healthcare-go
