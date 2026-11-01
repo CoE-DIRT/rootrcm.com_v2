@@ -1,1 +1,1 @@
-ROOT design tokens are in src/app/globals.css for the first skeleton. Final components must use export from approved Figma variable modes and component variants; see docs/01-foundations.md.
+Design tokens live in `src/app/globals.css` and map to Figma page `01 — Foundations` (`2:2`). Public chrome maps to `03 — Public Website` home/services/pricing frames `4:2`, `4:40`, `4:88`, `4:126`. Button primitive maps to `ROOT / Button` `3:21`.
