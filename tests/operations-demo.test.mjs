@@ -4,8 +4,8 @@ import fs from 'node:fs';
 
 const source = fs.readFileSync('src/content/operations-demo.ts', 'utf8');
 const commandCenter = fs.readFileSync('src/components/app-shell/operations-command-center.tsx', 'utf8');
-const client = fs.readFileSync('src/app/[locale]/preview/client/page.tsx', 'utf8');
-const credentialing = fs.readFileSync('src/app/[locale]/preview/credentialing/page.tsx', 'utf8');
+const client = fs.readFileSync('src/app/[locale]/(public)/preview/client/page.tsx', 'utf8');
+const credentialing = fs.readFileSync('src/app/[locale]/(public)/preview/credentialing/page.tsx', 'utf8');
 
 test('command center covers the full practice to payment cycle', () => {
   for (const step of ['Scheduling', 'Eligibility', 'Authorization', 'Charge & coding',
@@ -37,6 +37,6 @@ test('client, credentialing and staff previews preserve existing shells and inte
   assert.match(client, /OperationsCommandCenter/);
   assert.match(credentialing, /OperationsCommandCenter/);
   assert.match(credentialing, /initialTab="credentialing"/);
-  assert.match(fs.readFileSync('src/app/[locale]/preview/staff/page.tsx','utf8'), /OperationsCommandCenter/);
+  assert.match(fs.readFileSync('src/app/[locale]/(public)/preview/staff/page.tsx','utf8'), /OperationsCommandCenter/);
   assert.match(client, /clientQueue\.map/);
 });
