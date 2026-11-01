@@ -48,7 +48,7 @@ async function expectCaptionReadable(page: Page, text: string) {
           : 'none',
       };
     });
-    return { ok: checks.some((check) => check.ok), checks };
+    return { ok: checks.length > 0 && checks.every((check) => check.inside && check.ok), checks };
   });
   expect(hit.ok, JSON.stringify(hit.checks)).toBe(true);
 }
