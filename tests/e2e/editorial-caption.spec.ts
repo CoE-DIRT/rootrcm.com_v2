@@ -9,7 +9,7 @@ async function visibleCaption(page: Page) {
 async function expectCaptionReadable(page: Page, text: string) {
   const caption = await visibleCaption(page);
   await expect(caption).toHaveText(text);
-  await caption.evaluate((element) => element.scrollIntoView({ block: 'end', inline: 'nearest' }));
+  await caption.scrollIntoViewIfNeeded();
   const overlap = await page.evaluate(() => {
     const captionEl = [...document.querySelectorAll('[data-testid="root-editorial-caption"]')].find((element) => {
       const rect = element.getBoundingClientRect();
@@ -30,14 +30,27 @@ async function expectCaptionReadable(page: Page, text: string) {
     });
   });
   expect(overlap).toBe(false);
-  const hitsCaption = await caption.evaluate((element) => {
+  const hit = await caption.evaluate((element) => {
     const range = document.createRange();
     range.selectNodeContents(element);
-    const rect = range.getBoundingClientRect();
-    const target = document.elementFromPoint(rect.left + Math.min(12, rect.width / 2), rect.top + rect.height / 2);
-    return Boolean(target && element.contains(target));
+    const rects = [...range.getClientRects()].filter((rect) => rect.width > 0 && rect.height > 0);
+    const checks = rects.map((rect) => {
+      const x = rect.left + Math.min(8, rect.width / 2);
+      const y = rect.top + rect.height / 2;
+      const inside =
+        x >= 0 && y >= 0 && x <= window.innerWidth && y <= window.innerHeight;
+      const target = inside ? document.elementFromPoint(x, y) : null;
+      return {
+        inside,
+        ok: Boolean(target && element.contains(target)),
+        target: target
+          ? `${target.tagName.toLowerCase()} ${target.getAttribute('data-testid') ?? ''}`.trim()
+          : 'none',
+      };
+    });
+    return { ok: checks.some((check) => check.ok), checks };
   });
-  expect(hitsCaption).toBe(true);
+  expect(hit.ok, JSON.stringify(hit.checks)).toBe(true);
 }
 
 async function expectLauncherUsable(page: Page) {
@@ -72,6 +85,7 @@ test('Spanish and English captions stay clear of Ask ROOT at 375 and in short la
   await expectCaptionReadable(page, 'Editorial photograph. Not ROOT staff.');
 
   await page.setViewportSize({ width: 812, height: 375 });
+  await expect(page.locator('[data-node-id="4:153"]')).toBeVisible();
   await expectCaptionReadable(page, 'Editorial photograph. Not ROOT staff.');
   await expectLauncherUsable(page);
   await page.getByRole('link', { name: 'Switch language' }).click();

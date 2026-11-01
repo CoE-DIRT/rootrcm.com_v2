@@ -80,7 +80,7 @@ export function PageHero({
 
   return (
     <section
-      className="root-visual-hero group relative isolate mt-5 min-h-[480px] overflow-hidden rounded-[26px] border border-[#2e5773] bg-[#071b32] px-6 py-9 text-white shadow-[0_28px_80px_rgba(3,14,29,0.25)] sm:px-9 sm:py-12 lg:min-h-[540px] lg:px-14 lg:py-16"
+      className="root-visual-hero group relative isolate mt-5 min-h-0 overflow-clip rounded-[26px] border border-[#2e5773] bg-[#071b32] px-6 py-9 text-white shadow-[0_28px_80px_rgba(3,14,29,0.25)] sm:px-9 sm:py-12 lg:min-h-[540px] lg:px-14 lg:py-16"
       data-node-id={nodeId}
       data-testid="root-visual-hero"
     >
@@ -133,11 +133,11 @@ export function PageHero({
         </div>
         {editorial ? (
           <figure
-            className="flex w-full max-w-[420px] flex-col overflow-hidden rounded-[18px] border border-white/25 bg-[#071423] shadow-[0_16px_40px_rgba(0,0,0,0.28)] lg:max-w-none lg:justify-self-end"
+            className="flex w-full max-w-[420px] flex-col overflow-clip rounded-[18px] border border-white/25 bg-[#071423] shadow-[0_16px_40px_rgba(0,0,0,0.28)] lg:max-w-none lg:justify-self-end"
             data-testid="root-editorial-photo"
           >
             <figcaption
-              className="bg-[#071423] px-3 py-2.5 text-[12px] font-semibold leading-snug text-[#f5fbff] max-lg:scroll-mb-28 lg:order-last"
+              className="scroll-mt-24 bg-[#071423] px-3 py-2.5 text-[12px] font-semibold leading-snug text-[#f5fbff] max-lg:scroll-mb-28 lg:order-last"
               data-testid="root-editorial-caption"
             >
               {editorial.caption[locale]}
