@@ -24,7 +24,7 @@ const publicPages = [
 
 test('approved public routes exist for locale IA', () => {
   for (const route of publicPages) {
-    const file = path.join('src', 'app', '[locale]', route, 'page.tsx');
+    const file = path.join('src', 'app', '[locale]', '(public)', route, 'page.tsx');
     assert.ok(fs.existsSync(file), `missing ${file}`);
   }
 });

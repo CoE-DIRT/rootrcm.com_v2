@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { SpecialtyGrid } from '@/components/commercial/specialty-grid';
+import { SpecialtyPlanner } from '@/components/commercial/specialty-planner';
 import { Breadcrumb } from '@/components/ui/breadcrumb';
 import { copy } from '@/content/messages';
 import { requireLocale } from '@/lib/locale';
@@ -32,6 +33,7 @@ export default async function SpecialtiesIndexPage({
       <Breadcrumb
         items={[{ href: localizedPath(locale), label: t.brand }, { label: t.nav.specialties }]}
       />
+      <SpecialtyPlanner locale={locale} />
       <SpecialtyGrid locale={locale} variant="catalog" />
     </main>
   );

@@ -27,6 +27,7 @@ export const rootMegaMenus: readonly MenuItem[] = [
     { path: '/technology', en: 'DIRT and integrations', es: 'DIRT e integraciones', hintEn: 'Go APIs and connected platforms', hintEs: 'API Go y plataformas' },
     { path: '/preview/client', en: 'Client workspace', es: 'Espacio del cliente', hintEn: 'Full-cycle operational preview', hintEs: 'Vista de operaciones' },
     { path: '/preview/dirt', en: 'Revenue analytics', es: 'Analítica de ingresos', hintEn: 'KPI and AR intelligence', hintEs: 'KPI e inteligencia de cuentas' },
+    { path: '/portal', en: 'Client portal', es: 'Portal del cliente', hintEn: 'Synthetic organization workspace', hintEs: 'Espacio sintético de la organización' },
     { path: '/preview/sales', en: 'Sales to onboarding', es: 'Ventas a incorporación', hintEn: 'Explore the lifecycle', hintEs: 'Explore el ciclo completo' },
   ] },
   { path: '/plans', key: 'plans', en: 'The right way to get started', es: 'La forma de comenzar', links: [
