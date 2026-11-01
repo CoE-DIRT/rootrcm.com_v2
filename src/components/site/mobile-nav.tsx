@@ -14,13 +14,37 @@ export function MobileNav({ locale }: { locale: Locale }) {
   const [expanded, setExpanded] = useState<number | null>(null);
   const panelId = useId();
   const toggleRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
+    if (!open) return;
+    const panel = panelRef.current;
+    const focusable = () =>
+      Array.from(
+        panel?.querySelectorAll<HTMLElement>('a[href], button:not([disabled]), input, select, textarea') ?? [],
+      );
+    focusable()[0]?.focus();
+
     function onKey(event: KeyboardEvent) {
-      if (event.key !== 'Escape' || !open) return;
-      setOpen(false);
-      setExpanded(null);
-      toggleRef.current?.focus();
+      if (event.key === 'Escape') {
+        setOpen(false);
+        setExpanded(null);
+        toggleRef.current?.focus();
+        return;
+      }
+      if (event.key !== 'Tab') return;
+      const items = focusable();
+      if (items.length === 0) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (!first || !last) return;
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     }
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
@@ -47,6 +71,7 @@ export function MobileNav({ locale }: { locale: Locale }) {
       </button>
       {open && (
         <nav
+          ref={panelRef}
           id={panelId}
           className="absolute inset-x-2 top-full z-40 max-h-[min(76dvh,680px)] overflow-y-auto overscroll-contain rounded-b-[22px] border border-[var(--border)] bg-[var(--surface)] p-3 shadow-[0_25px_75px_rgba(3,16,33,.3)] backdrop-blur-xl"
           aria-label={es ? 'Navegación principal' : 'Primary navigation'}
@@ -84,8 +109,9 @@ export function MobileNav({ locale }: { locale: Locale }) {
             );
           })}
           <div className="mt-4 grid gap-2">
-            <Link href={localizedPath(locale, '/sign-in')} className="btn-secondary" onClick={close}>{t.nav.signIn}</Link>
-            <Link href={localizedPath(locale, '/consultation')} className="btn-primary" onClick={close}>{t.nav.consultation} →</Link>
+            <Link href={localizedPath(locale, '/portal')} className="btn-primary" onClick={close}>{t.nav.clientPortal}</Link>
+            <Link href={localizedPath(locale, '/consultation')} className="btn-secondary" onClick={close}>{t.nav.freeConsultation}</Link>
+            <Link href={localizedPath(locale, '/sign-in')} className="btn-ghost" onClick={close}>{t.nav.signIn}</Link>
           </div>
         </nav>
       )}

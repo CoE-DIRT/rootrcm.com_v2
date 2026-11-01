@@ -112,8 +112,9 @@ export function SiteFooter({ locale }: { locale: Locale }) {
           <nav className="flex flex-wrap gap-x-5 gap-y-2" aria-label={es ? 'Enlaces legales' : 'Legal links'}>
             <Link href={localizedPath(locale, '/privacy')} className="hover:text-[var(--cyan)]">{es ? 'Privacidad' : 'Privacy'}</Link>
             <Link href={localizedPath(locale, '/terms')} className="hover:text-[var(--cyan)]">{es ? 'Términos' : 'Terms'}</Link>
+            <Link href={localizedPath(locale, '/refunds')} className="hover:text-[var(--cyan)]">{es ? 'Reembolsos' : 'Refunds'}</Link>
             <Link href={localizedPath(locale, '/cookies')} className="hover:text-[var(--cyan)]">{es ? 'Cookies' : 'Cookie choices'}</Link>
-            <Link href={localizedPath(locale, '/resources')} className="hover:text-[var(--cyan)]">{es ? 'Recursos' : 'Resources'}</Link>
+            <Link href={localizedPath(locale, '/faqs')} className="hover:text-[var(--cyan)]">{es ? 'Preguntas frecuentes' : 'FAQs'}</Link>
           </nav>
         </div>
         <p className="muted mt-3 text-[11px]">

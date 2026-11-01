@@ -22,9 +22,25 @@ const publicPages = [
   'cookies',
 ];
 
+const inPublicGroup = new Set([
+  'why-root',
+  'company',
+  'consultation',
+  'account',
+  'diagnostic',
+  'custom',
+  'custom-rcm',
+  'sign-in',
+  'privacy',
+  'terms',
+  'cookies',
+]);
+
 test('approved public routes exist for locale IA', () => {
   for (const route of publicPages) {
-    const file = path.join('src', 'app', '[locale]', route, 'page.tsx');
+    const file = inPublicGroup.has(route)
+      ? path.join('src', 'app', '[locale]', '(public)', route, 'page.tsx')
+      : path.join('src', 'app', '[locale]', route, 'page.tsx');
     assert.ok(fs.existsSync(file), `missing ${file}`);
   }
 });
