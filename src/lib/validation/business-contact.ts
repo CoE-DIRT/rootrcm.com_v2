@@ -25,8 +25,30 @@ export type FieldErrorKey = (typeof fieldErrorKeys)[number];
 export type FieldErrors = Partial<Record<keyof BusinessContact, FieldErrorKey>>;
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const personalEmailDomains = new Set([
+  'gmail.com',
+  'googlemail.com',
+  'yahoo.com',
+  'yahoo.co.uk',
+  'hotmail.com',
+  'outlook.com',
+  'live.com',
+  'icloud.com',
+  'me.com',
+  'aol.com',
+  'proton.me',
+  'protonmail.com',
+  'gmx.com',
+  'mail.com',
+]);
 const phiHint =
   /\b(patient|ssn|social security|dob|date of birth|mrn|diagnosis|icd-?10|cpt\s*\d)\b/i;
+
+function isPersonalEmailDomain(email: string): boolean {
+  const at = email.lastIndexOf('@');
+  if (at < 0) return false;
+  return personalEmailDomains.has(email.slice(at + 1).toLowerCase());
+}
 
 export function isBusinessContact(value: unknown): value is BusinessContact {
   return validateBusinessContact(value).ok;
@@ -49,7 +71,7 @@ export function validateBusinessContact(
 
   if (name.length < 2) fieldErrors.name = 'nameShort';
   if (name.length > 120) fieldErrors.name = 'nameLong';
-  if (!emailPattern.test(email)) fieldErrors.email = 'emailInvalid';
+  if (!emailPattern.test(email) || isPersonalEmailDomain(email)) fieldErrors.email = 'emailInvalid';
   if (email.length > 254) fieldErrors.email = 'emailLong';
   if (organization.length < 2) fieldErrors.organization = 'orgShort';
   if (organization.length > 200) fieldErrors.organization = 'orgLong';

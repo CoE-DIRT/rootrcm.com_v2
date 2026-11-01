@@ -161,8 +161,8 @@ const en = {
     ],
   },
   technology: {
-    title: 'Purposeful intelligence. Traceable actions.',
-    body: 'DIRT is ROOT’s embedded intelligence capability, not a standalone product. Dashboards in this build are synthetic previews.',
+    title: 'DIRT — Data, Intelligence, Revenue & Transparency',
+    body: 'DIRT is ROOT’s embedded intelligence capability, not a standalone product. This page describes the architecture and a synthetic Go claim-edit preview. Dashboards remain labeled previews until an authorized import exists.',
     cta: 'Open DIRT preview',
     sections: [
       {
@@ -178,6 +178,84 @@ const en = {
         body: 'Each insight is meant to name an owner and a next step. No model is presented as autonomously collecting cash.',
       },
     ],
+    architectureEyebrow: 'Platform architecture',
+    architectureTitle: 'Five layers from ingestion to executive BI',
+    architectureBody:
+      'Each layer is designed to stay auditable. Live EHR, clearinghouse and payer connections stay disabled in this build.',
+    layers: [
+      {
+        title: 'EHR Ingestion',
+        body: 'Normalize encounter and charge signals from practice systems without storing PHI on the public edge.',
+      },
+      {
+        title: 'Claim Edit Scrubbing',
+        body: 'ASC coding checks for unbundling, bilateral modifiers and MPPR before a claim leaves the workqueue.',
+      },
+      {
+        title: 'Payer Contract Variance Engine',
+        body: 'Compare remits against contracted fee schedules to surface underpayment patterns.',
+      },
+      {
+        title: 'Denial Root-Cause Machine',
+        body: 'Cluster denial reasons into owned next actions instead of opaque score dumps.',
+      },
+      {
+        title: 'Executive BI',
+        body: 'Role-ready views for cash, aging and exception ownership — labeled synthetic until authorized.',
+      },
+    ],
+    matrixEyebrow: 'DIRT feature matrix',
+    matrixTitle: 'Interactive revenue intelligence capabilities',
+    matrixBody: 'Select a capability to review the synthetic signal set. No production clearinghouse is connected.',
+    features: {
+      underpayment: {
+        label: 'Payer underpayment',
+        title: 'Payer Underpayment Discovery',
+        body: 'Compare 835 remittance lines to contracted fee schedules and flag variance above configured tolerance.',
+        signals: [
+          'Contracted allowed vs paid delta by payer',
+          'Fee-schedule version and effective window',
+          'Owner-ready exception queue — not automatic cash posting',
+        ],
+      },
+      timelyFiling: {
+        label: 'Timely filing risk',
+        title: 'Timely Filing Risk Predictor',
+        body: 'Surface 60- and 90-day filing windows by payer so teams act before contractual cutoffs.',
+        signals: [
+          'Payer-specific timely-filing calendars',
+          '60 / 90 day alert bands on open inventory',
+          'Workqueue prioritization without inventing payer outcomes',
+        ],
+      },
+      implantCarveOut: {
+        label: 'Implant carve-out',
+        title: 'Implant Carve-Out Recovery',
+        body: 'Detect missing high-cost implant lines on ASC cases where carve-outs should have been billed.',
+        signals: [
+          'High-cost implant catalog hints (synthetic)',
+          'Case-to-claim implant presence checks',
+          'Recovery candidates labeled for human review',
+        ],
+      },
+    },
+    goPreview: {
+      eyebrow: 'Go edge service · synthetic',
+      title: 'Claim-edit microservice preview',
+      body: 'Run ASC edit scenarios with synthetic CPT lines. Responses are client-simulated microsecond timings that mirror the Go pkg/rcm rules — no patient identifiers accepted.',
+      disclaimer: 'Simulated edge environment. No production clearinghouse or patient EHR connected.',
+      scenariosLabel: 'Synthetic CPT scenarios',
+      scenarios: {
+        bundled: '29881 + 29877 unbundled',
+        distinct: '29881 + 29877 with -59',
+        bilateral: '29881 with -50',
+      },
+      cptLine: 'Synthetic CPT line',
+      running: 'Simulating edge response…',
+      responseTime: 'Edge response · {us} µs (simulated)',
+      accepted: 'Accepted with recommendations',
+      rejected: 'Edit required before submission',
+    },
   },
   plans: {
     title: 'Transparent scope. A clear place to start.',
@@ -648,8 +726,8 @@ const es: Messages = {
     ],
   },
   technology: {
-    title: 'Inteligencia con propósito. Acciones trazables.',
-    body: 'DIRT es la capacidad de inteligencia embebida de ROOT, no un producto aparte. Los tableros de esta versión son vistas sintéticas.',
+    title: 'DIRT — Datos, Inteligencia, Ingresos y Transparencia',
+    body: 'DIRT es la capacidad de inteligencia embebida de ROOT, no un producto aparte. Esta página describe la arquitectura y una vista sintética de edición de reclamos en Go. Los tableros siguen etiquetados como previas hasta una importación autorizada.',
     cta: 'Abrir vista DIRT',
     sections: [
       {
@@ -665,6 +743,84 @@ const es: Messages = {
         body: 'Cada hallazgo debe nombrar un responsable y un siguiente paso. Ningún modelo se presenta como cobrador autónomo.',
       },
     ],
+    architectureEyebrow: 'Arquitectura de plataforma',
+    architectureTitle: 'Cinco capas desde la ingestión hasta el BI ejecutivo',
+    architectureBody:
+      'Cada capa está pensada para permanecer auditable. Las conexiones en vivo a EHR, clearinghouse y pagadores permanecen desactivadas en esta versión.',
+    layers: [
+      {
+        title: 'Ingestión EHR',
+        body: 'Normaliza señales de encuentros y cargos sin almacenar PHI en el borde público.',
+      },
+      {
+        title: 'Depuración de ediciones',
+        body: 'Controles ASC de desagregación, modificadores bilaterales y MPPR antes de salir de la cola.',
+      },
+      {
+        title: 'Motor de varianza contractual',
+        body: 'Compara remesas con tarifas contratadas para detectar patrones de pago insuficiente.',
+      },
+      {
+        title: 'Causa raíz de denegaciones',
+        body: 'Agrupa motivos de denegación en siguientes acciones con dueño, no en puntuaciones opacas.',
+      },
+      {
+        title: 'BI ejecutivo',
+        body: 'Vistas por rol para caja, antigüedad y excepciones — sintéticas hasta autorización.',
+      },
+    ],
+    matrixEyebrow: 'Matriz de funciones DIRT',
+    matrixTitle: 'Capacidades interactivas de inteligencia de ingresos',
+    matrixBody: 'Seleccione una capacidad para revisar señales sintéticas. No hay clearinghouse de producción conectado.',
+    features: {
+      underpayment: {
+        label: 'Pago insuficiente',
+        title: 'Descubrimiento de pagos insuficientes',
+        body: 'Compara líneas 835 con tarifas contratadas y marca variaciones por encima de la tolerancia.',
+        signals: [
+          'Delta permitido vs pagado por pagador',
+          'Versión de tarifa y ventana de vigencia',
+          'Cola de excepciones para un dueño — no posting automático',
+        ],
+      },
+      timelyFiling: {
+        label: 'Riesgo de presentación',
+        title: 'Predictor de riesgo de presentación oportuna',
+        body: 'Superficie ventanas de 60 y 90 días por pagador para actuar antes de los cortes contractuales.',
+        signals: [
+          'Calendarios de presentación oportuna por pagador',
+          'Bandas de alerta de 60 / 90 días en inventario abierto',
+          'Priorización de cola sin inventar resultados de pagador',
+        ],
+      },
+      implantCarveOut: {
+        label: 'Implantes ASC',
+        title: 'Recuperación de carve-out de implantes',
+        body: 'Detecta líneas de implantes de alto costo faltantes en casos ASC donde debieron facturarse.',
+        signals: [
+          'Pistas de catálogo de implantes (sintéticas)',
+          'Comprobación de presencia caso-reclamo',
+          'Candidatos de recuperación para revisión humana',
+        ],
+      },
+    },
+    goPreview: {
+      eyebrow: 'Servicio perimetral Go · sintético',
+      title: 'Vista previa del microservicio de ediciones',
+      body: 'Ejecute escenarios ASC con líneas CPT sintéticas. Los tiempos en microsegundos son simulados en el cliente y reflejan las reglas Go pkg/rcm — no se aceptan identificadores de pacientes.',
+      disclaimer: 'Entorno perimetral simulado. No hay clearinghouse de producción ni EHR de pacientes conectado.',
+      scenariosLabel: 'Escenarios CPT sintéticos',
+      scenarios: {
+        bundled: '29881 + 29877 sin desagregar',
+        distinct: '29881 + 29877 con -59',
+        bilateral: '29881 con -50',
+      },
+      cptLine: 'Línea CPT sintética',
+      running: 'Simulando respuesta perimetral…',
+      responseTime: 'Respuesta perimetral · {us} µs (simulada)',
+      accepted: 'Aceptado con recomendaciones',
+      rejected: 'Se requiere edición antes del envío',
+    },
   },
   plans: {
     title: 'Alcance transparente. Un punto de partida claro.',

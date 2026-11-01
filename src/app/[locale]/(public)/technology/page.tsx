@@ -1,9 +1,8 @@
 import type { Metadata } from 'next';
-import { EcosystemMarquees } from '@/components/commercial/ecosystem-marquees';
-import { GoHealthcarePreview } from '@/components/commercial/go-healthcare-preview';
 import { MarketingPage } from '@/components/site/marketing-page';
 import { StatusBanner } from '@/components/ui/status';
 import { copy } from '@/content/messages';
+import { DirtArchitecture, DirtFeatureMatrix, GoClaimPreview } from '@/features/technology';
 import { requireLocale } from '@/lib/locale';
 import { publicPageMetadata } from '@/lib/metadata';
 import { localizedPath } from '@/lib/paths';
@@ -28,14 +27,14 @@ export default async function TechnologyPage({ params }: { params: Promise<{ loc
       body={t.technology.body}
       cta={t.technology.cta}
       ctaHref={localizedPath(locale, '/preview/dirt')}
-      sections={t.technology.sections}
       nodeId="6:22"
     >
       <div className="mt-8">
         <StatusBanner tone="warning">{t.preview}</StatusBanner>
       </div>
-      <EcosystemMarquees locale={locale} />
-      <GoHealthcarePreview locale={locale} />
+      <DirtArchitecture locale={locale} />
+      <DirtFeatureMatrix locale={locale} />
+      <GoClaimPreview locale={locale} />
     </MarketingPage>
   );
 }
