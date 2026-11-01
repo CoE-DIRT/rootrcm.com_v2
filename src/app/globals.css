@@ -443,6 +443,17 @@ a.btn-primary {
   backdrop-filter: blur(17px);
 }
 
+.orb-card {
+  position: relative;
+  padding: 22px;
+  border-radius: 23px;
+  border: 1px solid color-mix(in srgb, var(--cyan) 35%, var(--border));
+  background:
+    radial-gradient(ellipse at 80% 0%, var(--glow), transparent 55%),
+    linear-gradient(130deg, var(--panel), var(--surface));
+  box-shadow: var(--shadow);
+}
+
 .overline {
   color: var(--cyan);
   font-size: 10px;
@@ -497,6 +508,23 @@ a.btn-primary {
   font-size: clamp(29px, 3vw, 39px);
   line-height: 1.12;
   letter-spacing: -0.03em;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .orb-bar {
+    transform-box: fill-box;
+    transform-origin: bottom;
+    animation: orb-rise 700ms ease both;
+  }
+}
+
+@keyframes orb-rise {
+  from {
+    transform: scaleY(0.25);
+  }
+  to {
+    transform: scaleY(1);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

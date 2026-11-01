@@ -24,6 +24,10 @@ const publicPages = [
 
 const inPublicGroup = new Set([
   'why-root',
+  'services',
+  'solutions',
+  'plans',
+  'resources',
   'company',
   'consultation',
   'account',

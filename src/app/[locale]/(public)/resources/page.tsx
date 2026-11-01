@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { ResourceLibrary } from '@/components/commercial/resource-library';
 import { MarketingPage, PendingFaq } from '@/components/site/marketing-page';
 import { copy } from '@/content/messages';
 import { requireLocale } from '@/lib/locale';
@@ -26,6 +27,7 @@ export default async function ResourcesPage({ params }: { params: Promise<{ loca
       nodeId="6:49"
     >
       <PendingFaq locale={locale} faqs={t.resources.faqs} />
+      <ResourceLibrary locale={locale} />
     </MarketingPage>
   );
 }

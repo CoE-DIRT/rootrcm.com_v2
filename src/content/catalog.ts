@@ -2,6 +2,7 @@
 export const priceCatalog = [
   {
     id: 'free-account-consultation',
+    band: 'entry',
     href: '/account',
     priceLabel: { en: 'Free', es: 'Gratis' },
     name: { en: 'Free account & consultation', es: 'Cuenta gratuita y consulta' },
@@ -13,6 +14,7 @@ export const priceCatalog = [
   },
   {
     id: 'revenue-diagnostic',
+    band: 'diagnostic',
     href: '/diagnostic',
     priceLabel: { en: '$2,500', es: '$2,500' },
     name: { en: 'Revenue Diagnostic — $2,500', es: 'Diagnóstico de ingresos — $2,500' },
@@ -24,6 +26,7 @@ export const priceCatalog = [
   },
   {
     id: 'managed-rcm',
+    band: 'managed',
     href: '/custom',
     priceLabel: { en: 'Scoped', es: 'Según alcance' },
     name: { en: 'Managed RCM — scoped', es: 'RCM administrado — según alcance' },
@@ -35,6 +38,7 @@ export const priceCatalog = [
   },
   {
     id: 'dirt-intelligence',
+    band: 'managed',
     href: '/technology',
     priceLabel: { en: 'Scoped', es: 'Según alcance' },
     name: { en: 'DIRT Intelligence — scoped', es: 'Inteligencia DIRT — según alcance' },
@@ -46,6 +50,7 @@ export const priceCatalog = [
   },
   {
     id: 'credentialing',
+    band: 'projects',
     href: '/services',
     priceLabel: { en: 'Per provider', es: 'Por profesional' },
     name: { en: 'Credentialing — per provider', es: 'Credencialización — por profesional' },
@@ -57,6 +62,7 @@ export const priceCatalog = [
   },
   {
     id: 'custom-mso',
+    band: 'projects',
     href: '/custom',
     priceLabel: { en: 'Custom', es: 'A medida' },
     name: { en: 'Custom MSO partnership', es: 'Alianza MSO a medida' },

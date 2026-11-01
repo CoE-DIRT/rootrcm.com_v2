@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+import { CommercialNextActions } from '@/components/commercial/next-actions';
+import { PricingCatalog } from '@/components/commercial/pricing-catalog';
 import { MarketingPage } from '@/components/site/marketing-page';
 import { copy } from '@/content/messages';
 import { requireLocale } from '@/lib/locale';
@@ -12,22 +14,24 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const locale = await requireLocale(params);
   const t = copy(locale);
-  return publicPageMetadata(locale, t.services.title, t.services.body);
+  return publicPageMetadata(locale, t.plans.title, t.plans.body);
 }
 
-export default async function ServicesPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function PlansPage({ params }: { params: Promise<{ locale: string }> }) {
   const locale = await requireLocale(params);
   const t = copy(locale);
   return (
     <MarketingPage
       locale={locale}
-      title={t.services.title}
-      body={t.services.body}
-      cta={t.services.cta}
-      ctaHref={localizedPath(locale, '/diagnostic')}
-      tiles={t.services.tiles}
-      bands={t.services.bands}
-      nodeId="4:40"
-    />
+      title={t.plans.title}
+      body={t.plans.body}
+      cta={t.plans.cta}
+      ctaHref={localizedPath(locale, '/consultation')}
+      bands={t.plans.bands}
+      nodeId="4:88"
+    >
+      <PricingCatalog locale={locale} />
+      <CommercialNextActions locale={locale} />
+    </MarketingPage>
   );
 }

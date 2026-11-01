@@ -189,6 +189,17 @@ const en = {
       'Checkout and subscriptions are future production flows',
     ],
     sow: 'Fees, inclusions and exclusions are confirmed only in a written statement of work. This catalog is not an invoice, a payment outcome, or a collections guarantee.',
+    catalogGap:
+      'A prototype price sheet lists indicative ranges, including a collections percentage, that are not in this catalog. Those figures are omitted.',
+    bundlesEmpty: 'No priced bundle is published in this catalog.',
+    filters: {
+      all: 'All',
+      entry: 'Entry',
+      diagnostic: 'Diagnostic',
+      managed: 'Managed',
+      projects: 'Projects',
+      bundles: 'Bundles',
+    },
   },
   resources: {
     title: 'Methods you can put to work.',
@@ -665,6 +676,17 @@ const es: Messages = {
       'Checkout y suscripciones son flujos futuros de producción',
     ],
     sow: 'Honorarios, inclusiones y exclusiones se confirman solo en un enunciado de trabajo escrito. Este catálogo no es una factura, un resultado de pago ni una garantía de cobro.',
+    catalogGap:
+      'Un prototipo lista rangos indicativos, incluido un porcentaje sobre cobros, que no están en este catálogo. Esas cifras se omiten.',
+    bundlesEmpty: 'Este catálogo no publica un paquete con precio.',
+    filters: {
+      all: 'Todos',
+      entry: 'Entrada',
+      diagnostic: 'Diagnóstico',
+      managed: 'Administrado',
+      projects: 'Proyectos',
+      bundles: 'Paquetes',
+    },
   },
   resources: {
     title: 'Métodos que puede aplicar.',

@@ -1,6 +1,11 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { HeroOrbit } from '@/components/commercial/hero-orbit';
 import { HomeJourney } from '@/components/commercial/journey-sections';
+import { PainPointSelector } from '@/components/commercial/pain-point-selector';
+import { ServicesBento } from '@/components/commercial/services-bento';
+import { TimelineSection } from '@/components/commercial/timeline-section';
+import { TrustEvidence } from '@/components/commercial/trust-evidence';
 import { PageHero } from '@/components/site/page-hero';
 import { BandList, TileGrid } from '@/components/site/tile-grid';
 import { copy } from '@/content/messages';
@@ -56,6 +61,11 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           nodeId="4:126"
         />
       </div>
+      <HeroOrbit locale={locale} />
+      <PainPointSelector locale={locale} />
+      <ServicesBento locale={locale} />
+      <TimelineSection locale={locale} />
+      <TrustEvidence locale={locale} />
       <p className="eyebrow mt-10">{t.home.explore}</p>
       <div className="md:hidden">
         <TileGrid locale={locale} tiles={t.home.mobileTiles} hint={t.home.tileHint} />
