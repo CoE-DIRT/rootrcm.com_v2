@@ -1,7 +1,4 @@
 import type { Metadata } from 'next';
-import { SiteFooter } from '@/components/site/site-footer';
-import { SiteHeader } from '@/components/site/site-header';
-import { RootGuide } from '@/components/site/root-guide';
 import { SkipLink } from '@/components/site/skip-link';
 import { copy } from '@/content/messages';
 import { localeStaticParams, requireLocale } from '@/lib/locale';
@@ -30,10 +27,7 @@ export default async function LocaleLayout({
   return (
     <>
       <SkipLink locale={locale} />
-      <SiteHeader locale={locale} />
       {children}
-      <SiteFooter locale={locale} />
-      <RootGuide key={locale} locale={locale} />
     </>
   );
 }
