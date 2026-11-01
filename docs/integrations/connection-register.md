@@ -8,8 +8,8 @@
 | GitHub | Version control, PR, Actions, Issues | CoE-DIRT/rootrcm.com_v2 | Connected; public repo | Branch protection, approvals and CI checks |
 | Cursor / Codex / Claude / OpenCode | Code assistance | Local, least-privilege branch access | Developer tooling only | Repo rules and model spend limits |
 | Appwrite | V2 Auth, Teams, TablesDB, Functions, Storage, Sites | Separate V2 projects only | Adapter scaffold | Nonproduction project and tenant security review |
-| HubSpot | Sales CRM, contacts, companies, deals | Server API only | Adapter disabled | Consent/deduplication and sandbox |
-| Apollo.io | Prospecting and enrichment | Authorized B2B contacts only | Adapter disabled | Mapping, provenance and opt-out policy |
+| HubSpot | Sales CRM, contacts, companies, deals | Server API only | Adapter disabled; Cursor HubSpot MCP discovery **failed** | Founder reconnects MCP (sandbox). Consent/deduplication before `ROOT_ENABLE_CRM`. No live writes. |
+| Apollo.io | Prospecting and enrichment | Authorized B2B contacts only | Adapter disabled; Info Desk connected | Mapping, provenance and opt-out. No credit spend or sequences. |
 | Stripe | Checkout, billing and subscriptions | Verified server webhooks | Adapter disabled | Sandbox, financial reconciliation and legal approval |
 | Google Drive | Working docs and reviewed handoffs | Approved non-PHI files | Optional manual sync | File ownership, sharing and scope check |
 | Google Review Link & QR | Relevant business review links, when appropriate | Approved business profiles | Optional | Ownership and advertising/review-policy verification |
