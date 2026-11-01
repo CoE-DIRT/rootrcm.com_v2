@@ -6,7 +6,7 @@ Updated on the `fix/demo6-restoration-integrated` branch for PR #48. The section
 
 | Category | Previous | This pass | Why |
 | --- | --- | --- | --- |
-| Presentation and state | 22 | 24 | Caption clearance and delayed preview-bind / late-response coverage. Local Playwright 88 passed (6 workers, retries 0), including the caption and race specs. GitHub e2e on `acc4da3` failed the landscape hit test; `2db538f` clips the hero without a nested scrollport. No Figma pixel sign-off. The Cursor IDE browser did not keep a tab. Screenshots: `docs/release/evidence`. |
+| Presentation and state | 22 | 24 | Caption clearance and delayed preview-bind / late-response coverage. Local Playwright 88 passed (6 workers, retries 0), including the caption and race specs. GitHub e2e on `acc4da3` failed the landscape hit test; `2db538f` clips the hero without a nested scrollport. No Figma pixel sign-off. The IDE browser confirmed the Spanish and English captions at 375px and 812x375, in light and dark, and Ask ROOT opened and closed. Screenshots: `docs/release/evidence`. |
 | Release convergence | 20 | 22 | #46 is merged and Go tests ran with the Next tree. #44 and #47 stay open. |
 | Isolated hosting | 4 | 8 | File session driver and Appwrite discovery script exist. No isolated HTTPS deployment. |
 | Integrations | 5 | 12 | Local contracts exist. Sandbox and live activation are still false. |
