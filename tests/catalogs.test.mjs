@@ -156,10 +156,10 @@ test('commercial EN/ES keys stay in parity and new routes exist', () => {
   assert.equal(messages.en.nav.specialties.length > 0, true);
   assert.equal(messages.es.nav.specialties.length > 0, true);
   const files = [
-    path.join('src', 'app', '[locale]', 'specialties', 'page.tsx'),
-    path.join('src', 'app', '[locale]', 'specialties', 'infectious-disease', 'page.tsx'),
-    path.join('src', 'app', '[locale]', 'locations', 'new-york', 'page.tsx'),
-    path.join('src', 'app', '[locale]', 'locations', 'new-york-city', 'page.tsx'),
+    path.join('src', 'app', '[locale]', '(public)', 'specialties', 'page.tsx'),
+    path.join('src', 'app', '[locale]', '(public)', 'specialties', 'infectious-disease', 'page.tsx'),
+    path.join('src', 'app', '[locale]', '(public)', 'locations', 'new-york', 'page.tsx'),
+    path.join('src', 'app', '[locale]', '(public)', 'locations', 'new-york-city', 'page.tsx'),
   ];
   for (const file of files) {
     assert.ok(fs.existsSync(file), `missing ${file}`);
