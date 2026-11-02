@@ -178,6 +178,7 @@ export function DemoOperator({
           type="button"
           data-testid="reset-demo"
           className={opsButton}
+          disabled={pending}
           onClick={onReset}
         >
           <RotateCcw className="size-4" aria-hidden="true" />
