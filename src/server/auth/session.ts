@@ -18,7 +18,12 @@ export function canonicalMemberships(rows: unknown[], userId: string): Membershi
   const result: Membership[] = [];
   for (const value of rows) {
     if (!value || typeof value !== 'object') continue;
-    const row = value as Record<string, unknown>;
+    const record = value as Record<string, unknown>;
+    const row = record.data && typeof record.data === 'object' && !Array.isArray(record.data)
+      ? record.data as Record<string, unknown>
+      : record;
+    if (typeof row.status === 'string' && row.status !== 'active') continue;
+    if (row.revokedAt) continue;
     if (row.userId !== userId || typeof row.orgId !== 'string' || !row.orgId || !isRole(row.role)) continue;
     // Ambiguous role assignments fail closed rather than depending on row ordering.
     if (result.some(m => m.orgId === row.orgId)) throw new Error('ambiguous_membership');
@@ -27,13 +32,19 @@ export function canonicalMemberships(rows: unknown[], userId: string): Membershi
   return result;
 }
 export async function getAuthContext(header?: string | null): Promise<AuthContext> {
+  return getAuthContextFromSessionSecret(sessionSecret(header));
+}
+
+export async function getAuthContextFromSessionSecret(rawSecret?: string | null): Promise<AuthContext> {
   const denied: AuthContext = { session: null, memberships: [] };
   if (!liveAuthEnabled()) return denied;
-  const secret = sessionSecret(header);
+  const secret = rawSecret && rawSecret.length <= 4096 && !/[\r\n\0]/.test(rawSecret) ? rawSecret : undefined;
   if (!secret) return denied;
+  let verifiedSession: SessionPrincipal | undefined;
   try {
     const user = await authRequest<{ $id: string; email: string; emailVerification: boolean; status: boolean }>('/account', 'GET', undefined, secret);
     if (!user.status || !user.emailVerification || !user.$id) return denied;
+    verifiedSession = { userId: user.$id, email: user.email };
     const database = encodeURIComponent(process.env.APPWRITE_DATABASE_ID!);
     const query = new URLSearchParams();
     query.append('queries[]', JSON.stringify({ method: 'equal', attribute: 'userId', values: [user.$id] }));
@@ -41,5 +52,5 @@ export async function getAuthContext(header?: string | null): Promise<AuthContex
     const data = await authRequest<{ rows: unknown[]; total: number }>(`/tablesdb/${database}/tables/memberships/rows?${query}`, 'GET', undefined, undefined, true);
     if (data.total > 100) return denied;
     return { session: { userId: user.$id, email: user.email }, memberships: canonicalMemberships(data.rows, user.$id) };
-  } catch { return denied; }
+  } catch { return verifiedSession ? { session: verifiedSession, memberships: [] } : denied; }
 }
