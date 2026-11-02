@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { canonicalMemberships, getAuthContext, principalFromCookieHeader } from '../src/server/auth/session.ts';
+import { canonicalMemberships, getAuthContext, principalFromCookieHeader, sessionSecret } from '../src/server/auth/session.ts';
 import { requireMembership } from '../src/server/auth/policy.ts';
 
 test('unverified cookies never become a principal', async () => {
@@ -41,4 +41,11 @@ test('TablesDB nested and flat active membership rows resolve to canonical roles
     { orgId: 'root_internal', role: 'ROOT_SUPERADMIN' },
     { orgId: 'client_two', role: 'CLIENT_ADMIN' },
   ]);
+});
+
+test('valid encoded Appwrite session cookie keeps padding without granting trust', () => {
+  assert.equal(sessionSecret('root_v2_auth=abc.def%3D'), 'abc.def=');
+  assert.equal(sessionSecret('root_v2_auth=abc%2Fdef%2Bghi'), 'abc/def+ghi');
+  assert.equal(sessionSecret('root_v2_auth=abc%3Bunsafe'), undefined);
+  assert.equal(sessionSecret('root_v2_auth=one; root_v2_auth=two'), undefined);
 });
