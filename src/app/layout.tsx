@@ -1,4 +1,38 @@
 import type { Metadata } from 'next';
+import { headers } from 'next/headers';
+import { Inter } from 'next/font/google';
+import { ThemeScript } from '@/components/site/theme-script';
 import './globals.css';
-export const metadata: Metadata = { title:'ROOT | Revenue Operations & Outcomes Technology', description:'A technology-enabled operating partner for medical practices. Revenue cycle management, credentialing, DIRT intelligence and practice operations.', robots:{index:false,follow:false}};
-export default function RootLayout({children}:{children:React.ReactNode}) {return <html lang="en"><body>{children}</body></html>}
+
+const inter = Inter({
+  subsets: ['latin', 'latin-ext'],
+  display: 'swap',
+  variable: '--font-sans',
+});
+
+export const metadata: Metadata = {
+  title: {
+    default: 'ROOT | Revenue Operations & Outcomes Technology',
+    template: '%s | ROOT',
+  },
+  description:
+    'A technology-enabled operating partner for medical practices. Revenue cycle management, credentialing, DIRT intelligence and practice operations.',
+  applicationName: 'ROOT',
+  icons: {
+    icon: '/icon.svg',
+    apple: '/apple-icon',
+  },
+  robots: { index: false, follow: false },
+};
+
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const locale = (await headers()).get('x-root-locale') === 'es' ? 'es' : 'en';
+  return (
+    <html lang={locale} className={inter.variable} data-theme="dark" suppressHydrationWarning>
+      <head>
+        <ThemeScript />
+      </head>
+      <body className={inter.className}>{children}</body>
+    </html>
+  );
+}
