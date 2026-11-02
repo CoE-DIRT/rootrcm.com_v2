@@ -203,7 +203,12 @@ test.describe('ops cascade API', () => {
     expect(appBefore?.status).toBe('additional_information');
     const taskBefore = before.tasks.find((row) => row.relatedId === CRED_BOTTLENECK);
     expect(taskBefore?.status).toBe('blocked');
-    const relatedNoticesBefore = before.notifications.filter(
+    // Client projections intentionally hide staff-only notifications.
+    expect(before.notifications).toHaveLength(0);
+    const staffBeforeResponse = await getState(session.request, ORG, 'staff');
+    expect(staffBeforeResponse.status()).toBe(200);
+    const staffBefore = (await readJson<OpsView>(staffBeforeResponse)).data as OpsView;
+    const relatedNoticesBefore = staffBefore.notifications.filter(
       (row) => row.relatedId === CRED_BOTTLENECK,
     ).length;
     const auditBefore = before.auditEvents.length;
@@ -225,15 +230,20 @@ test.describe('ops cascade API', () => {
     expect(task?.status).toBe('open');
     expect(task?.status).not.toBe(taskBefore?.status);
 
+    // An operator's client-persona response must never reveal staff-only notices.
+    expect(view.notifications).toHaveLength(0);
+    const staffAfterResponse = await getState(session.request, ORG, 'staff');
+    expect(staffAfterResponse.status()).toBe(200);
+    const staffAfter = (await readJson<OpsView>(staffAfterResponse)).data as OpsView;
     expect(
-      view.notifications.some(
+      staffAfter.notifications.some(
         (row) =>
           row.relatedId === CRED_BOTTLENECK &&
           row.title.toLowerCase().includes('credentialing') &&
-          !before.notifications.some((prior) => prior.id === row.id),
+          !staffBefore.notifications.some((prior) => prior.id === row.id),
       ),
     ).toBe(true);
-    expect(view.notifications.filter((row) => row.relatedId === CRED_BOTTLENECK).length).toBeGreaterThan(
+    expect(staffAfter.notifications.filter((row) => row.relatedId === CRED_BOTTLENECK).length).toBeGreaterThan(
       relatedNoticesBefore,
     );
 
