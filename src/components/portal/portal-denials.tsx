@@ -15,6 +15,10 @@ import { usePortalDemo } from './portal-frame';
 
 type SortKey = 'payer' | 'status' | 'code' | 'priority' | 'amount';
 
+const seedRows = loadPortalDenials();
+
+const tabs: readonly DenialQueueTab[] = ['all', 'appeal', 'resolved', 'high'];
+
 export function PortalDenials() {
   const { locale } = usePortalDemo();
   const t = copy(locale).portal;

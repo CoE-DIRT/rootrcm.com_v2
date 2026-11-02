@@ -68,7 +68,7 @@ export function PortalFrame({ locale, children }: { locale: Locale; children: Re
               <Link
                 key={item.href}
                 href={localizedPath(locale, item.href)}
-                className="min-h-11 rounded-xl px-3 py-2 text-sm font-semibold hover:bg-[var(--surface-2)]"
+                className="min-h-11 rounded-xl px-3 py-2 text-sm font-semibold hover:bg-[var(--surface-2)] focus-visible:outline-offset-2"
               >
                 {portalLabels[item.key][locale]}
               </Link>

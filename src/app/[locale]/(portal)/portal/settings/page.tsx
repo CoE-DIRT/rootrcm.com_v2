@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { portalLabels } from '@/content/portal-demo';
+import { RbacSimulator } from '@/features/portal/settings/rbac-simulator';
 import { copy } from '@/content/messages';
 import { RbacSimulator } from '@/features/portal/settings/rbac-simulator';
 import { getFeatureFlags } from '@/lib/flags';
@@ -23,6 +23,7 @@ export default async function PracticeSettingsPage({
   const locale = await requireLocale(params);
   const t = copy(locale);
   const flags = getFeatureFlags();
+  const s = t.portalSettings;
   const es = locale === 'es';
   const portal = t.portal;
 
