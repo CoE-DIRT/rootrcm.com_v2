@@ -11,6 +11,9 @@ test('technology route provides an interactive Go healthcare API panel without c
   await panel.getByRole('button', { name: 'Credentialing' }).click();
   await expect(panel.getByRole('button', { name: 'Credentialing' })).toHaveAttribute('aria-pressed', 'true');
   await expect(panel.getByText('Synthetic data', { exact: false })).toBeVisible();
+  await expect(panel.getByText('Checking Go service…')).toHaveCount(0);
+  await panel.getByRole('button', { name: 'Credentialing' }).click();
+  await expect(panel.getByText('Checking Go service…')).toHaveCount(0);
 });
 
 test('Spanish technology route includes all three Go workflow categories', async ({ page }) => {
