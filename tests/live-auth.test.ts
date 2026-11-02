@@ -28,11 +28,11 @@ test('login limiter bounds attempts and expires', () => {
   assert.equal(allowAuthAttempt('test@example.invalid', 60002), true);
 });
 test('verified identity loads only server memberships; provider failures deny access', async () => {
-  const names = ['ROOT_ENABLE_AUTH', 'ROOT_ENABLE_LIVE_AUTH', 'APPWRITE_AUTH_API_KEY', 'ROOT_AUTH_ORIGIN', 'APPWRITE_DATABASE_ID'];
+  const names = ['APPWRITE_AUTH_PROJECT_ID', 'ROOT_AUTH_ENVIRONMENT', 'NEXT_PUBLIC_APPWRITE_PROJECT_ID', 'ROOT_ENABLE_AUTH', 'ROOT_ENABLE_LIVE_AUTH', 'APPWRITE_AUTH_API_KEY', 'ROOT_AUTH_ORIGIN', 'APPWRITE_DATABASE_ID'];
   const previous = names.map(name => process.env[name]);
   const originalFetch = globalThis.fetch;
   try {
-    Object.assign(process.env, { ROOT_ENABLE_AUTH: 'true', ROOT_ENABLE_LIVE_AUTH: 'true', APPWRITE_AUTH_API_KEY: 'synthetic-key', ROOT_AUTH_ORIGIN: 'https://preview.example.invalid', APPWRITE_DATABASE_ID: 'synthetic' });
+    Object.assign(process.env, { APPWRITE_AUTH_PROJECT_ID: 'synthetic-staging', ROOT_AUTH_ENVIRONMENT: 'staging', NEXT_PUBLIC_APPWRITE_PROJECT_ID: '', ROOT_ENABLE_AUTH: 'true', ROOT_ENABLE_LIVE_AUTH: 'true', APPWRITE_AUTH_API_KEY: 'synthetic-key', ROOT_AUTH_ORIGIN: 'https://preview.example.invalid', APPWRITE_DATABASE_ID: 'synthetic' });
     let calls = 0;
     globalThis.fetch = async (input, init) => {
       calls++;
@@ -64,11 +64,11 @@ test('verified identity loads only server memberships; provider failures deny ac
 
 test('HTTP auth rejects CSRF, keeps session tokens private and revokes logout', async () => {
   const { handleAuth } = await import('../src/server/auth/http.ts');
-  const names = ['ROOT_ENABLE_AUTH', 'ROOT_ENABLE_LIVE_AUTH', 'APPWRITE_AUTH_API_KEY', 'ROOT_AUTH_ORIGIN', 'APPWRITE_DATABASE_ID'];
+  const names = ['APPWRITE_AUTH_PROJECT_ID', 'ROOT_AUTH_ENVIRONMENT', 'NEXT_PUBLIC_APPWRITE_PROJECT_ID', 'ROOT_ENABLE_AUTH', 'ROOT_ENABLE_LIVE_AUTH', 'APPWRITE_AUTH_API_KEY', 'ROOT_AUTH_ORIGIN', 'APPWRITE_DATABASE_ID'];
   const previous = names.map(name => process.env[name]);
   const originalFetch = globalThis.fetch;
   try {
-    Object.assign(process.env, { ROOT_ENABLE_AUTH: 'true', ROOT_ENABLE_LIVE_AUTH: 'true', APPWRITE_AUTH_API_KEY: 'synthetic-key', ROOT_AUTH_ORIGIN: 'https://preview.example.invalid', APPWRITE_DATABASE_ID: 'synthetic' });
+    Object.assign(process.env, { APPWRITE_AUTH_PROJECT_ID: 'synthetic-staging', ROOT_AUTH_ENVIRONMENT: 'staging', NEXT_PUBLIC_APPWRITE_PROJECT_ID: '', ROOT_ENABLE_AUTH: 'true', ROOT_ENABLE_LIVE_AUTH: 'true', APPWRITE_AUTH_API_KEY: 'synthetic-key', ROOT_AUTH_ORIGIN: 'https://preview.example.invalid', APPWRITE_DATABASE_ID: 'synthetic' });
     const request = (origin: string, data: unknown = {}, cookie = '') => new Request('https://preview.example.invalid/api/v1/auth/login', { method: 'POST', headers: { origin, 'content-type': 'application/json', cookie }, body: JSON.stringify(data) });
     globalThis.fetch = async () => { throw new Error('CSRF must not call provider'); };
     assert.equal((await handleAuth(request('https://attacker.example.invalid'), 'login')).status, 403);
@@ -98,7 +98,7 @@ test('HTTP auth rejects CSRF, keeps session tokens private and revokes logout', 
 test('signup and verification/recovery contracts in EN/ES preserve least privilege', async () => {
   const { handleAuth } = await import('../src/server/auth/http.ts');
   const { requireMembership } = await import('../src/server/auth/policy.ts');
-  const names = ['ROOT_ENABLE_AUTH', 'ROOT_ENABLE_LIVE_AUTH', 'APPWRITE_AUTH_API_KEY', 'ROOT_AUTH_ORIGIN', 'APPWRITE_DATABASE_ID'];
+  const names = ['APPWRITE_AUTH_PROJECT_ID', 'ROOT_AUTH_ENVIRONMENT', 'NEXT_PUBLIC_APPWRITE_PROJECT_ID', 'ROOT_ENABLE_AUTH', 'ROOT_ENABLE_LIVE_AUTH', 'APPWRITE_AUTH_API_KEY', 'ROOT_AUTH_ORIGIN', 'APPWRITE_DATABASE_ID'];
   const previous = names.map(name => process.env[name]);
   const originalFetch = globalThis.fetch;
   const origin = 'https://preview.example.invalid';
@@ -106,7 +106,7 @@ test('signup and verification/recovery contracts in EN/ES preserve least privile
     method: 'POST', headers: { origin, 'content-type': 'application/json', cookie }, body: JSON.stringify(data),
   });
   try {
-    Object.assign(process.env, { ROOT_ENABLE_AUTH: 'true', ROOT_ENABLE_LIVE_AUTH: 'true', APPWRITE_AUTH_API_KEY: 'synthetic-key', ROOT_AUTH_ORIGIN: origin, APPWRITE_DATABASE_ID: 'synthetic' });
+    Object.assign(process.env, { APPWRITE_AUTH_PROJECT_ID: 'synthetic-staging', ROOT_AUTH_ENVIRONMENT: 'staging', NEXT_PUBLIC_APPWRITE_PROJECT_ID: '', ROOT_ENABLE_AUTH: 'true', ROOT_ENABLE_LIVE_AUTH: 'true', APPWRITE_AUTH_API_KEY: 'synthetic-key', ROOT_AUTH_ORIGIN: origin, APPWRITE_DATABASE_ID: 'synthetic' });
     for (const locale of ['en', 'es']) {
       const calls: { path: string; method?: string; body: Record<string, unknown>; headers: Record<string, string> }[] = [];
       globalThis.fetch = async (url, init) => {
@@ -173,6 +173,62 @@ test('signup and verification/recovery contracts in EN/ES preserve least privile
     rows = [];
     context = await getAuthContext('root_v2_auth=synthetic-session');
     assert.equal(requireMembership(context, 'tenant-a', 'root_admin.manage').allow, false);
+  } finally {
+    globalThis.fetch = originalFetch;
+    names.forEach((name, i) => { if (previous[i] === undefined) delete process.env[name]; else process.env[name] = previous[i]; });
+  }
+});
+
+test('staging configuration rejects missing, public-only, mismatched and production targets before network', async () => {
+  const { liveAuthEnabled, stagingAuthConfig } = await import('../src/server/auth/live-config.ts');
+  const names = ['APPWRITE_AUTH_PROJECT_ID', 'ROOT_AUTH_ENVIRONMENT', 'NEXT_PUBLIC_APPWRITE_PROJECT_ID', 'ROOT_ENABLE_AUTH', 'ROOT_ENABLE_LIVE_AUTH', 'APPWRITE_AUTH_API_KEY', 'ROOT_AUTH_ORIGIN', 'APPWRITE_DATABASE_ID'];
+  const previous = names.map(name => process.env[name]);
+  const originalFetch = globalThis.fetch;
+  const valid = { APPWRITE_AUTH_PROJECT_ID: 'synthetic-staging', ROOT_AUTH_ENVIRONMENT: 'staging', NEXT_PUBLIC_APPWRITE_PROJECT_ID: '', ROOT_ENABLE_AUTH: 'true', ROOT_ENABLE_LIVE_AUTH: 'true', APPWRITE_AUTH_API_KEY: 'synthetic-key', ROOT_AUTH_ORIGIN: 'https://staging.example.invalid:8443', APPWRITE_DATABASE_ID: 'synthetic' };
+  try {
+    globalThis.fetch = async () => { throw new Error('unexpected_network'); };
+    for (const patch of [
+      { APPWRITE_AUTH_PROJECT_ID: '' },
+      { APPWRITE_AUTH_PROJECT_ID: '', NEXT_PUBLIC_APPWRITE_PROJECT_ID: 'synthetic-staging' },
+      { APPWRITE_AUTH_PROJECT_ID: 'bad/project' },
+      { NEXT_PUBLIC_APPWRITE_PROJECT_ID: 'different-project' },
+      { ROOT_AUTH_ENVIRONMENT: '' }, { ROOT_AUTH_ENVIRONMENT: 'production' },
+      { ROOT_AUTH_ORIGIN: '' }, { ROOT_AUTH_ORIGIN: 'https://rootrcm.com' },
+      { ROOT_AUTH_ORIGIN: 'https://www.rootrcm.com' },
+      { ROOT_AUTH_ORIGIN: 'https://staging.example.invalid/' },
+      { ROOT_AUTH_ORIGIN: 'https://user@staging.example.invalid' },
+      { ROOT_AUTH_ORIGIN: 'https://staging.example.invalid/callback' },
+      { ROOT_AUTH_ORIGIN: 'http://staging.example.invalid' },
+      { APPWRITE_AUTH_API_KEY: '' }, { APPWRITE_DATABASE_ID: '' },
+      { ROOT_ENABLE_AUTH: 'false' }, { ROOT_ENABLE_LIVE_AUTH: 'false' },
+    ]) {
+      Object.assign(process.env, valid, patch);
+      assert.equal(liveAuthEnabled(), false, JSON.stringify(patch));
+      await assert.rejects(authRequest('/account'), /live_auth_not_configured/);
+    }
+    Object.assign(process.env, valid);
+    assert.deepEqual(stagingAuthConfig(), { projectId: 'synthetic-staging', origin: valid.ROOT_AUTH_ORIGIN });
+    globalThis.fetch = async (_url, init) => {
+      assert.equal((init?.headers as Record<string, string>)['X-Appwrite-Project'], 'synthetic-staging');
+      return Response.json({});
+    };
+    await authRequest('/account');
+    const { handleAuth } = await import('../src/server/auth/http.ts');
+    const request = (origin: string) => new Request(`${valid.ROOT_AUTH_ORIGIN}/api/v1/auth/signup`, {
+      method: 'POST', headers: { origin, 'content-type': 'application/json' },
+      body: JSON.stringify({ email: 'port@example.invalid', password: 'synthetic-password', locale: 'es' }),
+    });
+    assert.equal((await handleAuth(request('https://staging.example.invalid'), 'signup')).status, 403);
+    globalThis.fetch = async (url, init) => {
+      if (String(url).endsWith('/verification')) {
+        assert.equal(JSON.parse(String(init?.body)).url, `${valid.ROOT_AUTH_ORIGIN}/es/sign-in?mode=verify`);
+      }
+      return Response.json({ secret: 'synthetic-session', expire: '2099-01-01T00:00:00.000Z' });
+    };
+    const signup = await handleAuth(request(valid.ROOT_AUTH_ORIGIN), 'signup');
+    assert.equal(signup.status, 200);
+    assert.match(signup.headers.get('set-cookie')!, /Secure/);
+    assert.doesNotMatch(signup.headers.get('set-cookie')!, /Domain=/i);
   } finally {
     globalThis.fetch = originalFetch;
     names.forEach((name, i) => { if (previous[i] === undefined) delete process.env[name]; else process.env[name] = previous[i]; });
