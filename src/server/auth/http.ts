@@ -6,8 +6,8 @@ import { cleanEmail, validPassword } from './session-guards.ts';
 import { sessionSecret } from './session.ts';
 import { authRequest, AuthError } from './transport.ts';
 
-function reply(status: number, ok = false) {
-  return NextResponse.json({ ok }, { status, headers: { 'Cache-Control': 'no-store', 'Referrer-Policy': 'no-referrer' } });
+function reply(status: number, ok = false, verificationSent?: boolean) {
+  return NextResponse.json({ ok, ...(verificationSent === undefined ? {} : { verificationSent }) }, { status, headers: { 'Cache-Control': 'no-store', 'Referrer-Policy': 'no-referrer' } });
 }
 export async function handleAuth(request: Request, action: string) {
   if (!liveAuthEnabled()) return reply(503);
@@ -48,11 +48,16 @@ export async function handleAuth(request: Request, action: string) {
       if (action === 'signup') await authRequest('/account', 'POST', { userId: randomUUID(), email, password: body.password });
       const session = await authRequest<{ secret: string; expire: string }>('/account/sessions/email', 'POST', { email, password: body.password }, undefined, true);
       if (!session.secret || !Number.isFinite(Date.parse(session.expire))) return reply(502);
-      const response = reply(200, true);
-      response.cookies.set(ROOT_AUTH_COOKIE, session.secret, { httpOnly: true, secure: origin.protocol === 'https:', sameSite: 'strict', path: '/', expires: new Date(session.expire) });
+      let verificationSent: boolean | undefined;
       if (action === 'signup') {
-        try { await authRequest('/account/verification', 'POST', { url: callback('verify') }, session.secret); } catch { /* Can retry verification after login. */ }
+        verificationSent = false;
+        try {
+          await authRequest('/account/verification', 'POST', { url: callback('verify') }, session.secret);
+          verificationSent = true;
+        } catch { /* Preserve the created account/session so verification can be retried. */ }
       }
+      const response = reply(200, true, verificationSent);
+      response.cookies.set(ROOT_AUTH_COOKIE, session.secret, { httpOnly: true, secure: origin.protocol === 'https:', sameSite: 'strict', path: '/', expires: new Date(session.expire) });
       return response;
     }
     if (action === 'logout') {
