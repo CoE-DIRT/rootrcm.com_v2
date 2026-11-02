@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { ShieldCheck } from 'lucide-react';
 import type { Locale } from '@/i18n/locales';
+import { translateOpsAction } from '@/content/ops-actions';
 
 type Kind = 'capabilities' | 'eligibility' | 'claims' | 'credentialing';
 type Envelope = {
@@ -36,6 +37,19 @@ const copy = {
     refresh: 'Actualizar', error: 'Vista no disponible', provider: 'Pagador',
   },
 } as const;
+
+const fieldLabels: Record<string, { en: string; es: string }> = {
+  id: { en: 'ID', es: 'ID' },
+  applicationId: { en: 'Application ID', es: 'ID de solicitud' },
+  providerAlias: { en: 'Provider', es: 'Profesional' },
+  payer: { en: 'Payer', es: 'Pagador' },
+  transaction: { en: 'Transaction', es: 'Transacción' },
+  state: { en: 'State', es: 'Estado' },
+  stage: { en: 'Stage', es: 'Etapa' },
+  phase: { en: 'Phase', es: 'Fase' },
+  owner: { en: 'Owner', es: 'Responsable' },
+  nextAction: { en: 'Next action', es: 'Próxima acción' },
+};
 
 function fields(value: unknown): [string, string][] {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return [];
@@ -112,8 +126,8 @@ export function GoHealthcarePreview({ locale }: { locale: Locale }) {
               <dl className="rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-4" key={index}>
                 {fields(record).map(([key, value]) => (
                   <div key={key} className="mb-3">
-                    <dt className="text-[10px] font-bold uppercase tracking-wider text-[var(--muted)]">{key.replace(/([A-Z])/g, ' $1')}</dt>
-                    <dd className="mt-1 break-words text-sm font-semibold">{value}</dd>
+                    <dt className="text-[10px] font-bold uppercase tracking-wider text-[var(--muted)]">{fieldLabels[key]?.[locale] ?? key.replace(/([A-Z])/g, ' $1')}</dt>
+                    <dd className="mt-1 break-words text-sm font-semibold">{translateOpsAction(value)[locale]}</dd>
                   </div>
                 ))}
                 {!fields(record).length && <p className="muted text-sm">{t.noData}</p>}
