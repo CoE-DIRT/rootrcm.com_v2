@@ -4,7 +4,8 @@ export const ROOT_AUTH_ENDPOINT = 'https://nyc.cloud.appwrite.io/v1';
 export const ROOT_AUTH_COOKIE = 'root_v2_auth';
 
 export function liveAuthEnabled(): boolean {
-  return process.env.ROOT_ENABLE_LIVE_AUTH === 'true' &&
+  return process.env.ROOT_ENABLE_AUTH === 'true' && process.env.ROOT_ENABLE_LIVE_AUTH === 'true' &&
+    !!process.env.ROOT_AUTH_ORIGIN && !!process.env.APPWRITE_DATABASE_ID &&
     typeof process.env.APPWRITE_AUTH_API_KEY === 'string' &&
     process.env.APPWRITE_AUTH_API_KEY.length > 0;
 }

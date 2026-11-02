@@ -10,7 +10,7 @@ export const runtime = 'nodejs';
  */
 export async function GET(request: Request, context: { params: Promise<{ orgId: string }> }) {
   const { orgId } = await context.params;
-  const ctx = getAuthContext(request.headers.get('cookie'));
+  const ctx = await getAuthContext(request.headers.get('cookie'));
   const decision = requireOrgMembership(ctx, orgId, 'organization.read');
   if (!decision.allow) return policyDenied(decision);
 
