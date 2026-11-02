@@ -66,12 +66,14 @@ test.describe('public IA', () => {
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
   });
 
-  test('consultation form is visible but cannot submit while inquiries are disabled', async ({ page }) => {
+  test('consultation offers direct contact while online intake is unavailable', async ({ page }) => {
     await page.goto('/en/consultation');
     await expect(page.getByRole('heading', { level: 1, name: 'Talk with a revenue expert' })).toBeVisible();
-    await expect(page.getByText('Online inquiries are not active yet')).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Send business inquiry' })).toBeDisabled();
-    await expect(page.locator('main form')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Speak with the ROOT team' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Email ROOT' })).toHaveAttribute('href', /mailto:info@rootrcm.com/);
+    await expect(page.getByRole('link', { name: 'WhatsApp' })).toHaveAttribute('href', 'https://wa.me/13025064685');
+    await expect(page.getByRole('link', { name: 'Call ROOT' })).toHaveAttribute('href', 'tel:+13024965648');
+    await expect(page.locator('main form')).toHaveCount(0);
   });
 
   test('keyboard can reach skip link and primary CTA', async ({ page }) => {
