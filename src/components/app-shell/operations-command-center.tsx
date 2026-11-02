@@ -208,9 +208,13 @@ function CredentialTimeline({
   );
 }
 
-function RevenuePipeline({ locale, counts }: { locale: Locale; counts: Record<string, number> }) {
+function RevenuePipeline({ locale, state }: { locale: Locale; state: OpsState }) {
   const t = workspaceDemoText[locale];
-  const values = revenueStages.map((stage) => pipelineCount(stage.id, counts));
+  const values = revenueStages.map((stage) => {
+    if (stage.id === 'schedule') return state.appointments.length;
+    if (stage.id === 'eligibility') return state.eligibility.length;
+    return pipelineCount(stage.id, state.metrics.claimCountsByStage);
+  });
   const numeric = values.filter((value): value is number => value !== null);
   const max = Math.max(1, ...(numeric.length > 0 ? numeric : [0]));
   return (
@@ -431,7 +435,7 @@ export function OperationsCommandCenter({
             )}
             {(activeTab === 'overview' || activeTab === 'revenue') && (
               <div className="grid gap-5 xl:grid-cols-[1.2fr_1fr]">
-                <RevenuePipeline locale={locale} counts={state.metrics.claimCountsByStage} />
+                <RevenuePipeline locale={locale} state={state} />
                 <ClaimsBoard
                   locale={locale}
                   claims={state.claims}
