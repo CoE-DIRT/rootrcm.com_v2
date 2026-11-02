@@ -41,8 +41,7 @@ export function AuthForm({ locale, logout = false }: { locale: Locale; logout?: 
           setAction('login');
           setToken({ userId: '', secret: '' });
           setStatus('verified');
-          router.replace('/' + locale + '/sign-in?verified=1');
-          router.refresh();
+          window.location.assign('/' + locale + '/dashboard');
         }).catch(() => setStatus('verifyFailed'));
       }
     }, 0);
@@ -62,7 +61,8 @@ export function AuthForm({ locale, logout = false }: { locale: Locale; logout?: 
           setStatus('success');
           window.location.assign('/' + locale + '/dashboard');
         } else if (action === 'signup' || action === 'verification') {
-          setStatus(action === 'signup' && data.verificationSent === false ? 'verificationFailed' : 'signupSent');
+          if (action === 'verification' && data.verified === true) { window.location.assign('/' + locale + '/dashboard'); return; }
+          setStatus(data.verificationSent === false ? 'verificationFailed' : 'signupSent');
         } else if (action === 'recover') {
           setStatus('recoverySent');
         } else if (action === 'reset') {
@@ -74,8 +74,8 @@ export function AuthForm({ locale, logout = false }: { locale: Locale; logout?: 
         }
       } catch { setStatus('error'); }
     }}>
-      {['login', 'signup', 'recover'].includes(action) && <label className="block">{t.email}<input className="block w-full rounded border bg-transparent p-3" name="email" type="email" autoComplete="email" required maxLength={254} /></label>}
-      {['login', 'signup', 'reset'].includes(action) && <label className="block">{t.password}<input className="block w-full rounded border bg-transparent p-3" name="password" type="password" autoComplete={action === 'login' ? 'current-password' : 'new-password'} minLength={action === 'login' ? 1 : 12} maxLength={256} required /></label>}
+      {['login', 'signup', 'recover', 'verification'].includes(action) && <label className="block">{t.email}<input className="block w-full rounded border bg-transparent p-3" name="email" type="email" autoComplete="email" required maxLength={254} /></label>}
+      {['login', 'signup', 'reset', 'verification'].includes(action) && <label className="block">{t.password}<input className="block w-full rounded border bg-transparent p-3" name="password" type="password" autoComplete={action === 'login' ? 'current-password' : 'new-password'} minLength={action === 'login' ? 1 : 12} maxLength={256} required /></label>}
       <button className="btn-primary" disabled={status === 'pending' || action === 'verify'}>{status === 'pending' ? t.pending : t[action]}</button>
       <p role="status" aria-live="polite">{status === 'success' ? t.success
         : status === 'verificationFailed' ? t.verificationFailed
