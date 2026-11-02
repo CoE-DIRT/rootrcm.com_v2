@@ -174,7 +174,7 @@ test('signup and verification/recovery contracts in EN/ES preserve least privile
     let rows: unknown[] | undefined = undefined;
     globalThis.fetch = async url => String(url).endsWith('/account')
       ? Response.json({ $id: 'synthetic-user', email: 'client@example.invalid', status: true, emailVerification: true })
-      : Response.json({ total: rows?.length ?? 1, rows: rows ?? [{ userId: 'synthetic-user', orgId: 'tenant-a', role }] });
+      : Response.json({ total: rows?.length ?? 1, rows: rows ?? [{ data: { userId: 'synthetic-user', orgId: 'tenant-a', role, status: 'active', revokedAt: null } }] });
     let context = await getAuthContext('root_v2_auth=synthetic-session');
     assert.equal(requireMembership(context, 'tenant-a', 'organization.read').allow, true);
     assert.equal(requireMembership(context, 'tenant-a', 'root_admin.manage').allow, false);
