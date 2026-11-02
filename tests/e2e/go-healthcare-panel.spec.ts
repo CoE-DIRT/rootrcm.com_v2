@@ -1,0 +1,35 @@
+import { expect, test } from '@playwright/test';
+
+test('technology route provides an interactive Go healthcare API panel without claiming payer connectivity', async ({ page }) => {
+  await page.goto('/en/technology');
+  const panel = page.getByTestId('go-healthcare-preview');
+  await expect(panel).toBeVisible();
+  await expect(panel.getByText('Go healthcare API architecture')).toBeVisible();
+  await expect(panel.getByRole('button', { name: 'Eligibility 270/271' })).toBeVisible();
+  await expect(panel.getByRole('button', { name: 'Claim status 276/277' })).toBeVisible();
+  await expect(panel.getByRole('button', { name: 'Credentialing' })).toBeVisible();
+  await panel.getByRole('button', { name: 'Credentialing' }).click();
+  await expect(panel.getByRole('button', { name: 'Credentialing' })).toHaveAttribute('aria-pressed', 'true');
+  await expect(panel.getByText('Synthetic data', { exact: false })).toBeVisible();
+  await expect(panel.getByText('Checking Go service…')).toHaveCount(0);
+  await panel.getByRole('button', { name: 'Credentialing' }).click();
+  await expect(panel.getByText('Checking Go service…')).toHaveCount(0);
+});
+
+test('Spanish technology route includes all three Go workflow categories', async ({ page }) => {
+  await page.route('**/api/v1/healthcare/demo?**', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ source: 'synthetic', mode: 'demo', data: [{ id: 'elg-bv-02', payer: 'Aetna', state: '271_active', nextAction: 'Confirm plan-level coverage before service' }] }),
+    });
+  });
+  await page.goto('/es/technology');
+  const panel = page.getByTestId('go-healthcare-preview');
+  await expect(panel.getByRole('button', { name: 'Elegibilidad 270/271' })).toBeVisible();
+  await expect(panel.getByRole('button', { name: 'Estado de reclamos 276/277' })).toBeVisible();
+  await expect(panel.getByRole('button', { name: 'Credencialización' })).toBeVisible();
+  await expect(panel.getByText('Confirmar la cobertura del plan antes del servicio')).toBeVisible();
+  await expect(panel.getByText('Próxima acción')).toBeVisible();
+  await expect(panel.getByText('271 activa')).toBeVisible();
+});

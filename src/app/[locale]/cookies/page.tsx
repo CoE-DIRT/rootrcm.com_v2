@@ -1,0 +1,14 @@
+import { CookiePreferenceEditor } from '@/components/site/cookie-preference-editor';
+import { MarketingPage } from '@/components/site/marketing-page';
+import { copy } from '@/content/messages';
+import { requireLocale } from '@/lib/locale';
+
+export default async function CookiesPage({ params }: { params: Promise<{ locale: string }> }) {
+  const locale = await requireLocale(params);
+  const t = copy(locale);
+  return (
+    <MarketingPage locale={locale} title={t.legal.cookiesTitle} body={t.legal.body} nodeId="6:175">
+      <CookiePreferenceEditor locale={locale} />
+    </MarketingPage>
+  );
+}

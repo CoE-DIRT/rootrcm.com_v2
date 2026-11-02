@@ -1,0 +1,153 @@
+{
+  "retrieved": "2026-10-31",
+  "license": "https://www.pexels.com/license/",
+  "licenseSummary": "Pexels License: free commercial use and modification. Attribution is not required. Depicted people must not be presented as ROOT staff, clients, or endorsers.",
+  "assets": [
+    {
+      "id": "practice-doctor-laptop",
+      "status": "mounted",
+      "placement": "PageHero nodes 4:2, 4:126, 4:153, and 4:40",
+      "sourceUrl": "https://www.pexels.com/photo/a-doctor-working-on-his-laptop-4989174/",
+      "photographer": "Ivan S",
+      "sourceDate": "2020-07-30",
+      "retrieved": "2026-10-31",
+      "original": { "width": 6240, "height": 4160 },
+      "files": [
+        {
+          "path": "public/media/stock/practice-doctor-laptop.webp",
+          "format": "webp",
+          "width": 1600,
+          "height": 1067,
+          "bytes": 49866,
+          "sha256": "03f9a11946dc8639060dbccf8ff87c89c9ae8a68016a383c3e3fba9c987519ca"
+        },
+        {
+          "path": "public/media/stock/practice-doctor-laptop.avif",
+          "format": "avif",
+          "width": 1600,
+          "height": 1067,
+          "bytes": 29781,
+          "sha256": "db7613acf721edb1df8f6aa772706eb298b4bd12283b329bb11aab3c4c462ce8"
+        }
+      ],
+      "suitability": "Physician at a laptop in an office. The screen is not readable. No patient and no clinical paperwork are visible."
+    },
+    {
+      "id": "analytics-team",
+      "status": "mounted",
+      "placement": "PageHero node 6:22",
+      "sourceUrl": "https://www.pexels.com/photo/a-person-using-a-laptop-while-in-a-meeting-7693733/",
+      "photographer": "Yan Krukau",
+      "sourceDate": "2021-04-28",
+      "retrieved": "2026-10-31",
+      "original": { "width": 6000, "height": 4000 },
+      "files": [
+        {
+          "path": "public/media/stock/analytics-team.webp",
+          "format": "webp",
+          "width": 1600,
+          "height": 1067,
+          "bytes": 144590,
+          "sha256": "bcb9e7e0271cb5890cc6024135f49f49adf9f144f350e84fdf0beae449d8691f"
+        },
+        {
+          "path": "public/media/stock/analytics-team.avif",
+          "format": "avif",
+          "width": 1600,
+          "height": 1067,
+          "bytes": 68462,
+          "sha256": "769b93fdc816663549640b83df92ce953f7ca2b675f3bdec1ee874fcc7530d34"
+        }
+      ],
+      "suitability": "Meeting table with a laptop and printed business charts. No patient record is readable. Faces are mostly out of frame."
+    },
+    {
+      "id": "infectious-disease-hospital",
+      "status": "downloaded-not-mounted",
+      "placement": "Held for the infectious disease page. Not mounted in this slice.",
+      "sourceUrl": "https://www.pexels.com/photo/medical-professionals-walking-in-a-hallway-9574339/",
+      "photographer": "Tima Miroshnichenko",
+      "sourceDate": "2021-09-16",
+      "retrieved": "2026-10-31",
+      "original": { "width": 3723, "height": 5584 },
+      "files": [
+        {
+          "path": "public/media/stock/infectious-disease-hospital.webp",
+          "format": "webp",
+          "width": 1600,
+          "height": 2400,
+          "bytes": 61274,
+          "sha256": "eb559a0b0b5de52872aa09a82f302cce3c1bcf568fac327fd9e237c775d8a02e"
+        },
+        {
+          "path": "public/media/stock/infectious-disease-hospital.avif",
+          "format": "avif",
+          "width": 1600,
+          "height": 2400,
+          "bytes": 42325,
+          "sha256": "f025432577b8f48bfe5a33fd38d08cc8eb5f1a296368220090ea87a4b89c3784"
+        }
+      ],
+      "suitability": "Staff in protective clothing in a sterile hallway. No patient is shown and no record is readable. Pexels tags include Patients; the photograph and description do not show a patient. This is not a ROOT facility."
+    },
+    {
+      "id": "revenue-analytics",
+      "status": "downloaded-not-mounted",
+      "placement": "Held for the Go healthcare preview. Not mounted in this slice.",
+      "sourceUrl": "https://www.pexels.com/photo/people-looking-at-graphs-on-a-laptop-and-a-digital-tablet-6930432/",
+      "photographer": "Mikhail Nilov",
+      "sourceDate": "2021-02-23",
+      "retrieved": "2026-10-31",
+      "original": { "width": 3840, "height": 5760 },
+      "files": [
+        {
+          "path": "public/media/stock/revenue-analytics.webp",
+          "format": "webp",
+          "width": 1600,
+          "height": 2400,
+          "bytes": 141470,
+          "sha256": "6eb0324abe7a414d4637c010066e4832db032ed6b99eb4bfa5ff7c37daeab34a"
+        },
+        {
+          "path": "public/media/stock/revenue-analytics.avif",
+          "format": "avif",
+          "width": 1600,
+          "height": 2400,
+          "bytes": 80676,
+          "sha256": "b558900316db5163f0bfd8ab208c8856260897719f24d23de7d040ebb512e41d"
+        }
+      ],
+      "suitability": "Hands, a laptop, and a tablet showing charts. Notebook handwriting is not a readable patient record."
+    }
+  ],
+  "rejected": [
+    {
+      "sourceUrl": "https://www.pexels.com/photo/medical-professionals-using-a-laptop-7800551/",
+      "photographer": "Nadezhda Moryak",
+      "sourceDate": "2021-05-06",
+      "original": { "width": 4000, "height": 6000 },
+      "reason": "Free to use, but the frame shows printed clinical paperwork and a coagulation drawer label. Not published."
+    },
+    {
+      "sourceUrl": "https://www.pexels.com/photo/healthcare-workers-having-a-discussion-6129657/",
+      "photographer": "RDNE Stock project",
+      "sourceDate": "2020-12-08",
+      "original": { "width": 6520, "height": 4347 },
+      "reason": "Free to use, but the listing describes a patient-care discussion and tags include Patients. Not placed beside the team grid."
+    },
+    {
+      "sourceUrl": "https://www.pexels.com/photo/an-elderly-doctor-looking-at-the-monitor-of-a-laptop-8376296/",
+      "photographer": "Tima Miroshnichenko",
+      "sourceDate": "2021-06-17",
+      "original": { "width": 5961, "height": 3974 },
+      "reason": "Free to use, but the desk includes a clipboard and a pill organizer. Not published."
+    },
+    {
+      "sourceUrl": "https://www.pexels.com/photo/a-doctor-using-laptop-8376228/",
+      "photographer": "Tima Miroshnichenko",
+      "sourceDate": "2021-06-17",
+      "original": { "width": 5958, "height": 3972 },
+      "reason": "Free to use, but the frame includes a clipboard and medicine bottles. Not published."
+    }
+  ]
+}
