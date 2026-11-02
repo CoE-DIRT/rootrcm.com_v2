@@ -71,7 +71,7 @@ test.describe('public IA', () => {
     await expect(page.getByRole('heading', { level: 1, name: 'Talk with a revenue expert' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Speak with the ROOT team' })).toBeVisible();
     await expect(page.getByRole('link', { name: 'Email ROOT' })).toHaveAttribute('href', /mailto:info@rootrcm.com/);
-    await expect(page.getByRole('link', { name: 'WhatsApp' })).toHaveAttribute('href', 'https://wa.me/13025064685');
+    await expect(page.getByRole('region', { name: 'Contact ROOT' }).getByRole('link', { name: 'WhatsApp' })).toHaveAttribute('href', 'https://wa.me/13025064685');
     await expect(page.getByRole('link', { name: 'Call ROOT' })).toHaveAttribute('href', 'tel:+13024965648');
     await expect(page.locator('main form')).toHaveCount(0);
   });
