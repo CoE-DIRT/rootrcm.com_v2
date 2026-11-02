@@ -1,19 +1,8 @@
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
+import seed from '../../../../data/seed/portal-denials.example.json' with { type: 'json' };
 import { HIGH_PRIORITY_USD, type DenialQueueTab, type PortalDenialRow } from './types.ts';
 
-type DenialSeed = { rows: PortalDenialRow[] };
-
-function readDenialSeed(): DenialSeed {
-  const file = join(process.cwd(), 'data', 'seed', 'portal-denials.example.json');
-  return JSON.parse(readFileSync(file, 'utf8')) as DenialSeed;
-}
-
-let cached: readonly PortalDenialRow[] | null = null;
-
 export function loadPortalDenials(): readonly PortalDenialRow[] {
-  if (!cached) cached = readDenialSeed().rows;
-  return cached;
+  return seed.rows as readonly PortalDenialRow[];
 }
 
 export function filterDenialsByTab(
