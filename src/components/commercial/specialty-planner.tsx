@@ -1,6 +1,7 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { Suspense, useMemo } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import type { Locale } from '@/i18n/locales';
 import { specialties } from '@/content/specialties';
 
@@ -17,21 +18,42 @@ const states = [
 
 const payers = ['Medicare', 'Medicaid', 'BCBS', 'Commercial'] as const;
 
-export function SpecialtyPlanner({ locale }: { locale: Locale }) {
-  const [stateCode, setStateCode] = useState<(typeof states)[number][0]>('TX');
-  const [slug, setSlug] = useState(specialties[0]?.slug ?? 'internal-family-medicine');
-  const [payer, setPayer] = useState<(typeof payers)[number]>('Medicare');
+function SpecialtyPlannerInner({ locale }: { locale: Locale }) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const specParam = searchParams.get('spec');
+  const stateParam = searchParams.get('state');
+  const payerParam = searchParams.get('payer');
+
+  const stateCode = (states.find(([code]) => code === stateParam)?.[0] ?? 'TX') as (typeof states)[number][0];
+  const payer = (payers.find((item) => item === payerParam) ?? 'Medicare') as (typeof payers)[number];
+
+  const activeIndex = useMemo(() => {
+    if (specParam == null || specParam === '') return 0;
+    const index = Number(specParam);
+    if (!Number.isInteger(index) || index < 0 || index >= specialties.length) return 0;
+    return index;
+  }, [specParam]);
+
+  const specialty = specialties[activeIndex] ?? specialties[0];
   const es = locale === 'es';
-  const specialty = useMemo(
-    () => specialties.find((item) => item.slug === slug) ?? specialties[0],
-    [slug],
-  );
-  const stateName = states.find((item) => item[0] === stateCode)?.[1] ?? stateCode;
   if (!specialty) return null;
   const asc = specialty.slug === 'ambulatory-surgery';
+  const stateName = states.find((item) => item[0] === stateCode)?.[1] ?? stateCode;
+
+  function patchParams(patch: Record<string, string | null>) {
+    const params = new URLSearchParams(searchParams.toString());
+    for (const [key, value] of Object.entries(patch)) {
+      if (value == null || value === '') params.delete(key);
+      else params.set(key, value);
+    }
+    const query = params.toString();
+    router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
+  }
 
   return (
-    <section className="mt-8" aria-labelledby="planner-heading">
+    <section className="mt-8" aria-labelledby="planner-heading" data-testid="specialty-planner">
       <p className="overline">{es ? 'Especialidades / pagadores' : 'Specialties / payers'}</p>
       <h2 id="planner-heading" className="enterprise-title mt-2 font-extrabold">
         {es ? 'Mapee la relación. No prometa la regla.' : 'Map the relationship. Do not promise the rule.'}
@@ -44,7 +66,10 @@ export function SpecialtyPlanner({ locale }: { locale: Locale }) {
       <div className="mt-4 grid gap-3 md:grid-cols-3">
         <label className="field">
           <span>{es ? 'Estado' : 'State'}</span>
-          <select value={stateCode} onChange={(event) => setStateCode(event.target.value as (typeof states)[number][0])}>
+          <select
+            value={stateCode}
+            onChange={(event) => patchParams({ state: event.target.value })}
+          >
             {states.map(([code, name]) => (
               <option key={code} value={code}>
                 {name}
@@ -54,9 +79,16 @@ export function SpecialtyPlanner({ locale }: { locale: Locale }) {
         </label>
         <label className="field">
           <span>{es ? 'Especialidad' : 'Specialty'}</span>
-          <select value={specialty.slug} onChange={(event) => setSlug(event.target.value)}>
-            {specialties.map((item) => (
+          <select
+            value={specialty.slug}
+            onChange={(event) => {
+              const index = specialties.findIndex((item) => item.slug === event.target.value);
+              patchParams({ spec: index >= 0 ? String(index) : '0' });
+            }}
+          >
+            {specialties.map((item, index) => (
               <option key={item.slug} value={item.slug}>
+                {index === activeIndex ? '• ' : ''}
                 {item.name[locale]}
               </option>
             ))}
@@ -64,7 +96,7 @@ export function SpecialtyPlanner({ locale }: { locale: Locale }) {
         </label>
         <label className="field">
           <span>{es ? 'Clase de pagador' : 'Payer class'}</span>
-          <select value={payer} onChange={(event) => setPayer(event.target.value as (typeof payers)[number])}>
+          <select value={payer} onChange={(event) => patchParams({ payer: event.target.value })}>
             {payers.map((item) => (
               <option key={item} value={item}>
                 {item}
@@ -83,7 +115,7 @@ export function SpecialtyPlanner({ locale }: { locale: Locale }) {
               : 'Licensure, Medicaid administration and local registration affect enrollment readiness. Confirm the state source.'}
           </p>
         </article>
-        <article className="surface p-4">
+        <article className="surface p-4" id={`specialty-${specialty.slug}`}>
           <p className="overline">02 / {es ? 'Especialidad' : 'Specialty'}</p>
           <h3 className="mt-2 font-bold">{specialty.name[locale]}</h3>
           <p className="muted mt-2 text-sm">{specialty.summary[locale]}</p>
@@ -98,25 +130,25 @@ export function SpecialtyPlanner({ locale }: { locale: Locale }) {
                 : 'Medicaid varies by state. This card does not claim a plan directory.'
               : es
                 ? 'La clase de pagador cambia formularios y plazos. No hay conexión en vivo.'
-                : 'Payer class changes forms and timing. There is no live connection.'}
+                : 'Payer class changes forms and timelines. There is no live connection.'}
           </p>
+          {asc ? (
+            <p className="mt-2 text-xs text-[var(--amber)]">
+              {es
+                ? 'ASC: confirme privilegios de instalación y anexos de contrato de muestra.'
+                : 'ASC: confirm facility privileges and sample contract exhibits.'}
+            </p>
+          ) : null}
         </article>
       </div>
-      {asc ? (
-        <aside className="surface mt-4 p-4">
-          <h3 className="font-bold">{es ? 'Enfoque ASC · demo educativa' : 'ASC focus · educational demo'}</h3>
-          <ul className="mt-2 list-disc space-y-1 pl-5 text-sm">
-            {specialty.focus[locale].map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-          <p className="muted mt-3 text-sm">
-            {es
-              ? 'Modificador bilateral, carve-out de implante y la división centro versus profesional se revisan como trabajo administrativo. No garantizan un pago.'
-              : 'Bilateral modifier, implant carve-out and the facility versus professional split are reviewed as administrative work. They do not guarantee payment.'}
-          </p>
-        </aside>
-      ) : null}
     </section>
+  );
+}
+
+export function SpecialtyPlanner({ locale }: { locale: Locale }) {
+  return (
+    <Suspense fallback={<div className="surface mt-8 p-5 text-sm" aria-hidden="true" />}>
+      <SpecialtyPlannerInner locale={locale} />
+    </Suspense>
   );
 }

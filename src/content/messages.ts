@@ -22,6 +22,17 @@ const en = {
     freeConsultation: 'Free consultation',
     emergency: 'Business line only. Do not send patient information.',
   },
+  tenant: {
+    orgLabel: 'Organization',
+    navLabel: 'Portal navigation',
+    synthetic: 'Synthetic demo figures. Not verified customer results. No live payer connection.',
+    specialtyFallback: 'Specialty not labeled',
+    activeOrg: 'Active organization',
+    queueScoped: 'Work queue scoped to the active organization.',
+  },
+  chrome: {
+    preserveRoute: 'Stay on this page when switching language',
+  },
   theme: { light: 'Light theme', dark: 'Dark theme', toggle: 'Toggle color theme', short: 'Theme' },
   locale: { en: 'English', es: 'Español', switchTo: 'Switch language' },
   footer: {
@@ -507,6 +518,17 @@ const es: Messages = {
     clientPortal: 'Portal del cliente',
     freeConsultation: 'Consulta gratuita',
     emergency: 'Solo línea comercial. No envíe información de pacientes.',
+  },
+  tenant: {
+    orgLabel: 'Organización',
+    navLabel: 'Navegación del portal',
+    synthetic: 'Cifras sintéticas de demostración. No son resultados verificados de clientes. Sin conexión a pagadores.',
+    specialtyFallback: 'Especialidad sin etiqueta',
+    activeOrg: 'Organización activa',
+    queueScoped: 'Cola de trabajo acotada a la organización activa.',
+  },
+  chrome: {
+    preserveRoute: 'Permanecer en esta página al cambiar de idioma',
   },
   theme: { light: 'Tema claro', dark: 'Tema oscuro', toggle: 'Cambiar tema', short: 'Tema' },
   locale: { en: 'English', es: 'Español', switchTo: 'Cambiar idioma' },

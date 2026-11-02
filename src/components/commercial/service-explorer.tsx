@@ -1,6 +1,7 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { Suspense, useMemo, useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import type { Locale } from '@/i18n/locales';
 import {
   serviceBands,
@@ -16,16 +17,36 @@ const bandLabel: Record<ServiceBandFilter, { en: string; es: string }> = {
   strategy: { en: 'Strategy', es: 'Estrategia' },
 };
 
-export function ServiceExplorer({ locale }: { locale: Locale }) {
+function isServiceId(value: string | null): value is string {
+  return Boolean(value && serviceCapabilities.some((item) => item.id === value));
+}
+
+function ServiceExplorerInner({ locale }: { locale: Locale }) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const requested = searchParams.get('service');
+  const selectedId = isServiceId(requested) ? requested : (serviceCapabilities[0]?.id ?? 'rcm');
   const [band, setBand] = useState<ServiceBandFilter>('all');
-  const [selectedId, setSelectedId] = useState(serviceCapabilities[0]?.id ?? 'rcm');
   const es = locale === 'es';
+
   const visible = useMemo(
     () => serviceCapabilities.filter((item) => band === 'all' || item.band === band),
     [band],
   );
-  const selected = visible.find((item) => item.id === selectedId) ?? visible[0] ?? serviceCapabilities[0];
+  const selected =
+    visible.find((item) => item.id === selectedId) ??
+    serviceCapabilities.find((item) => item.id === selectedId) ??
+    visible[0] ??
+    serviceCapabilities[0];
   if (!selected) return null;
+
+  function selectService(id: string, nextBand: ServiceBandFilter = band) {
+    setBand(nextBand);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('service', id);
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  }
 
   return (
     <section className="mt-10" aria-labelledby="service-explorer-heading" data-testid="service-explorer">
@@ -42,9 +63,9 @@ export function ServiceExplorer({ locale }: { locale: Locale }) {
             data-active={band === item}
             aria-pressed={band === item}
             onClick={() => {
-              setBand(item);
               const next = serviceCapabilities.find((capability) => item === 'all' || capability.band === item);
-              if (next) setSelectedId(next.id);
+              if (next) selectService(next.id, item);
+              else setBand(item);
             }}
           >
             {bandLabel[item][locale]}
@@ -59,14 +80,14 @@ export function ServiceExplorer({ locale }: { locale: Locale }) {
                 type="button"
                 className="surface min-h-11 w-full px-3 py-3 text-left text-sm font-bold"
                 aria-pressed={selected.id === item.id}
-                onClick={() => setSelectedId(item.id)}
+                onClick={() => selectService(item.id)}
               >
                 {item.name[locale]}
               </button>
             </li>
           ))}
         </ul>
-        <article className="surface p-5">
+        <article className="surface p-5" id={`service-${selected.id}`}>
           <p className="overline">{bandLabel[selected.band][locale]}</p>
           <h3 className="mt-2 text-2xl font-extrabold">{selected.name[locale]}</h3>
           <p className="muted mt-2 text-sm">{selected.summary[locale]}</p>
@@ -86,5 +107,13 @@ export function ServiceExplorer({ locale }: { locale: Locale }) {
         </article>
       </div>
     </section>
+  );
+}
+
+export function ServiceExplorer({ locale }: { locale: Locale }) {
+  return (
+    <Suspense fallback={<div className="surface mt-10 p-5 text-sm" aria-hidden="true" />}>
+      <ServiceExplorerInner locale={locale} />
+    </Suspense>
   );
 }

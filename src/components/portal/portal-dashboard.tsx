@@ -2,15 +2,18 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { illustrativeAr, portalLabels, portalOrganizations } from '@/content/portal-demo';
+import { illustrativeAr } from '@/content/portal-demo';
+import { copy } from '@/content/messages';
 import { localizedPath } from '@/lib/paths';
+import { useTenant } from '@/lib/context/tenant-context';
 import { usePortalDemo } from './portal-frame';
 
 export function PortalDashboard() {
-  const { locale, orgId, persona } = usePortalDemo();
+  const { locale, persona } = usePortalDemo();
+  const { activeOrg, activeOrgId } = useTenant();
+  const t = copy(locale);
   const [note, setNote] = useState('');
-  const org = portalOrganizations.find((item) => item.id === orgId);
-  const figures = illustrativeAr(orgId);
+  const figures = illustrativeAr(activeOrgId);
   const es = locale === 'es';
   const money = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
   const cards = [
@@ -28,7 +31,8 @@ export function PortalDashboard() {
         {es ? 'Operaciones de ingresos, en vista de muestra' : 'Revenue operations, in a sample view'}
       </h1>
       <p className="muted mt-2 max-w-3xl text-sm">
-        {org?.name ?? orgId}. {portalLabels.synthetic[locale]}{' '}
+        {activeOrg?.name ?? activeOrgId}
+        {activeOrg?.specialty ? ` · ${activeOrg.specialty}` : ''}. {t.tenant.synthetic}{' '}
         {persona === 'operations-lead'
           ? es
             ? 'La vista de líder solo cambia esta etiqueta. No abre trabajo de otro inquilino.'

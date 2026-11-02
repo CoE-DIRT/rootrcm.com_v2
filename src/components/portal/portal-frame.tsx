@@ -4,12 +4,9 @@ import Link from 'next/link';
 import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
 import type { Locale } from '@/i18n/locales';
 import { localizedPath } from '@/lib/paths';
-import {
-  portalLabels,
-  portalNav,
-  portalOrganizations,
-  type PortalPersona,
-} from '@/content/portal-demo';
+import { useTenantRequired } from '@/lib/context/tenant-context';
+import { portalLabels, portalNav, type PortalPersona } from '@/content/portal-demo';
+import { copy } from '@/content/messages';
 
 type PortalDemo = {
   locale: Locale;
@@ -28,20 +25,44 @@ export function usePortalDemo() {
 }
 
 export function PortalFrame({ locale, children }: { locale: Locale; children: ReactNode }) {
-  const [orgId, setOrgId] = useState(portalOrganizations[0]?.id ?? 'sample-solo');
+  const t = copy(locale);
+  const { organizations, activeOrgId, activeOrg, setActiveOrgId } = useTenantRequired();
   const [persona, setPersona] = useState<PortalPersona>('practice-admin');
   const value = useMemo(
-    () => ({ locale, orgId, persona, setOrgId, setPersona }),
-    [locale, orgId, persona],
+    () => ({
+      locale,
+      orgId: activeOrgId,
+      persona,
+      setOrgId: setActiveOrgId,
+      setPersona,
+    }),
+    [locale, activeOrgId, persona, setActiveOrgId],
   );
-  const org = portalOrganizations.find((item) => item.id === orgId) ?? portalOrganizations[0];
 
   return (
     <PortalDemoContext.Provider value={value}>
       <div className="portal-shell">
-        <aside className="portal-sidebar" aria-label={locale === 'es' ? 'Navegación del portal' : 'Portal navigation'}>
+        <aside className="portal-sidebar" aria-label={t.tenant.navLabel}>
           <p className="overline">ROOT</p>
-          <p className="mt-2 text-sm font-bold">{portalLabels.synthetic[locale]}</p>
+          <p className="mt-2 text-sm font-bold">{t.tenant.synthetic}</p>
+          <label className="field mt-4">
+            <span>{t.tenant.orgLabel}</span>
+            <select
+              value={activeOrg?.id}
+              onChange={(event) => setActiveOrgId(event.target.value)}
+              aria-label={t.tenant.orgLabel}
+              data-testid="portal-org-select"
+            >
+              {organizations.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.name}
+                </option>
+              ))}
+            </select>
+          </label>
+          <p className="muted mt-2 text-xs">
+            {activeOrg?.specialty ?? t.tenant.specialtyFallback}
+          </p>
           <nav className="mt-4 grid gap-1">
             {portalNav.map((item) => (
               <Link
@@ -60,9 +81,13 @@ export function PortalFrame({ locale, children }: { locale: Locale; children: Re
         <div className="min-w-0">
           <div className="flex flex-wrap items-end gap-3 border-b border-[var(--border)] bg-[var(--surface)] px-4 py-3">
             <label className="field min-w-52">
-              <span>{portalLabels.orgLabel[locale]}</span>
-              <select value={org?.id} onChange={(event) => setOrgId(event.target.value)} aria-label={portalLabels.orgLabel[locale]}>
-                {portalOrganizations.map((item) => (
+              <span>{t.tenant.orgLabel}</span>
+              <select
+                value={activeOrg?.id}
+                onChange={(event) => setActiveOrgId(event.target.value)}
+                aria-label={t.tenant.orgLabel}
+              >
+                {organizations.map((item) => (
                   <option key={item.id} value={item.id}>
                     {item.name}
                   </option>

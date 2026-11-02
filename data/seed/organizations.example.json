@@ -2,32 +2,25 @@
   "_notice": "Entirely fictional. Never use patient-level data here.",
   "organizations": [
     {
-      "id": "sample-solo",
-      "name": "Cedar Grove Family Practice",
-      "type": "solo",
-      "plan": "Free",
-      "specialty": "Family Medicine"
-    },
-    {
-      "id": "sample-group",
-      "name": "Bayview Multi-Specialty Group",
-      "type": "group",
+      "id": "sample-austin-asc",
+      "name": "Austin Ambulatory Surgery Center",
+      "type": "asc",
       "plan": "Managed",
-      "specialty": "Multi-specialty"
+      "specialty": "ASC / Orthopedic Surgery"
     },
     {
-      "id": "sample-neuro",
-      "name": "Northline Behavioral Care",
-      "type": "solo",
+      "id": "sample-lone-star-mso",
+      "name": "Lone Star MSO Group",
+      "type": "mso",
+      "plan": "Managed",
+      "specialty": "Multi-Specialty Network"
+    },
+    {
+      "id": "sample-summit-clinic",
+      "name": "Summit Specialty Clinic",
+      "type": "group",
       "plan": "Growth",
-      "specialty": "Behavioral Health"
-    },
-    {
-      "id": "sample-cardiac",
-      "name": "Summit Cardiology Associates",
-      "type": "group",
-      "plan": "Managed",
-      "specialty": "Cardiology"
+      "specialty": "Cardiology & Vascular"
     }
   ]
 }

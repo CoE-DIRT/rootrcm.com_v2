@@ -55,15 +55,47 @@ export function MarketingPage({
   );
 }
 
+const SECTION_ANCHORS: Record<string, string> = {
+  'Revenue leakage': 'revenue-leakage',
+  'Fuga de ingresos': 'revenue-leakage',
+  'Aging A/R': 'aging-ar',
+  'A/R envejecida': 'aging-ar',
+  'Denials and appeals': 'denials-appeals',
+  'Denegaciones y apelaciones': 'denials-appeals',
+  'Enrollment bottlenecks': 'enrollment',
+  'Cuellos de inscripción': 'enrollment',
+  'Operational fragmentation': 'fragmentation',
+  'Fragmentación operativa': 'fragmentation',
+  'DIRT previews': 'dirt-previews',
+  'Vistas DIRT': 'dirt-previews',
+  'Systems stay in place': 'systems-stay',
+  'Los sistemas se quedan': 'systems-stay',
+  'Traceable next actions': 'traceable-actions',
+  'Siguientes acciones trazables': 'traceable-actions',
+  'Official forms': 'official-forms',
+  'Formularios oficiales': 'official-forms',
+  Templates: 'templates',
+  Plantillas: 'templates',
+  Education: 'education',
+  Educación: 'education',
+  'Public website': 'public-website',
+  'Sitio público': 'public-website',
+  'Client portal': 'client-portal',
+  'Portal del cliente': 'client-portal',
+};
+
 export function SectionGrid({ sections }: { sections: readonly { title: string; body: string }[] }) {
   return (
     <ul className="mt-8 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-      {sections.map((section) => (
-        <li key={section.title} className="surface p-[18px]">
-          <h2 className="text-lg font-bold">{section.title}</h2>
-          <p className="muted mt-2 text-sm">{section.body}</p>
-        </li>
-      ))}
+      {sections.map((section) => {
+        const id = SECTION_ANCHORS[section.title];
+        return (
+          <li key={section.title} id={id} className="surface scroll-mt-28 p-[18px]">
+            <h2 className="text-lg font-bold">{section.title}</h2>
+            <p className="muted mt-2 text-sm">{section.body}</p>
+          </li>
+        );
+      })}
     </ul>
   );
 }

@@ -7,12 +7,15 @@ import {
   escalationChecklist,
   type DenialRow,
 } from '@/content/portal-demo';
+import { useTenant } from '@/lib/context/tenant-context';
 import { usePortalDemo } from './portal-frame';
+import { PortalOrgScope } from './portal-org-scope';
 
 type SortKey = 'payer' | 'status' | 'code' | 'priority';
 
 export function PortalDenials() {
   const { locale } = usePortalDemo();
+  const { activeOrgId } = useTenant();
   const es = locale === 'es';
   const [payer, setPayer] = useState('all');
   const [status, setStatus] = useState('all');
@@ -22,12 +25,18 @@ export function PortalDenials() {
   const [direction, setDirection] = useState<'asc' | 'desc'>('asc');
   const [openId, setOpenId] = useState<string | null>(denialQueue[0]?.id ?? null);
 
-  const payers = ['all', ...new Set(denialQueue.map((row) => row.payer))];
-  const statuses = ['all', ...new Set(denialQueue.map((row) => row.status.en))];
-  const codes = ['all', ...new Set(denialQueue.map((row) => row.code))];
+  const scopedQueue = useMemo(() => {
+    const seed = activeOrgId.split('').reduce((sum, char) => sum + char.charCodeAt(0), 0);
+    const size = 1 + (seed % denialQueue.length);
+    return denialQueue.slice(0, size);
+  }, [activeOrgId]);
+
+  const payers = ['all', ...new Set(scopedQueue.map((row) => row.payer))];
+  const statuses = ['all', ...new Set(scopedQueue.map((row) => row.status.en))];
+  const codes = ['all', ...new Set(scopedQueue.map((row) => row.code))];
 
   const rows = useMemo(() => {
-    const filtered = denialQueue.filter((row) => {
+    const filtered = scopedQueue.filter((row) => {
       if (payer !== 'all' && row.payer !== payer) return false;
       if (status !== 'all' && row.status.en !== status) return false;
       if (code !== 'all' && row.code !== code) return false;
@@ -40,7 +49,7 @@ export function PortalDenials() {
       return direction === 'asc' ? left.localeCompare(right) : right.localeCompare(left);
     });
     return sorted;
-  }, [payer, status, code, priority, sortKey, direction, locale]);
+  }, [scopedQueue, payer, status, code, priority, sortKey, direction, locale]);
 
   const selected = rows.find((row) => row.id === openId) ?? rows[0] ?? null;
 
@@ -53,10 +62,10 @@ export function PortalDenials() {
   }
 
   return (
-    <div>
+    <PortalOrgScope showKpis>
       <p className="overline">{es ? 'Cola sintética ASC' : 'Synthetic ASC queue'}</p>
       <h1 className="enterprise-title mt-2 font-extrabold">
-        {es ? 'Denegaciones de demostración' : 'Demonstration denials'}
+        {es ? 'Denegaciones de demostración' : 'Demo denials'}
       </h1>
       <p className="muted mt-2 max-w-3xl text-sm">
         {es
@@ -86,7 +95,11 @@ export function PortalDenials() {
                 <tr key={row.id}>
                   <td>{row.payer}</td>
                   <td>{row.status[locale]}</td>
-                  <td><span className="status-badge" data-tone={row.priority === 'high' ? 'bad' : 'warn'}>{row.code}</span></td>
+                  <td>
+                    <span className="status-badge" data-tone={row.priority === 'high' ? 'bad' : 'warn'}>
+                      {row.code}
+                    </span>
+                  </td>
                   <td>{row.priority === 'high' ? (es ? 'Alta' : 'High') : es ? 'Media' : 'Medium'}</td>
                   <td>
                     <button type="button" className="btn-ghost" onClick={() => setOpenId(row.id)}>
@@ -101,7 +114,7 @@ export function PortalDenials() {
         </div>
         {selected ? <DenialDrawer locale={locale} row={selected} /> : null}
       </div>
-    </div>
+    </PortalOrgScope>
   );
 }
 
