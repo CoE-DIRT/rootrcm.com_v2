@@ -39,27 +39,6 @@ export const staffQueue = [
   },
 ] as const;
 
-export const dirtMetrics = [
-  {
-    label: { en: 'Net collection rate', es: 'Tasa neta de cobro' },
-    value: '—',
-    note: {
-      en: 'Synthetic placeholder; denominator unpublished',
-      es: 'Marcador sintético; denominador sin publicar',
-    },
-  },
-  {
-    label: { en: 'Denial rate', es: 'Tasa de denegación' },
-    value: '—',
-    note: { en: 'No live payer feed', es: 'Sin alimentación de pagador en vivo' },
-  },
-  {
-    label: { en: 'Days in A/R', es: 'Días en cuentas por cobrar' },
-    value: '—',
-    note: { en: 'Illustrative workspace only', es: 'Solo espacio ilustrativo' },
-  },
-] as const;
-
 export const credentialingStages: readonly CopyPair[] = [
   { en: 'Application', es: 'Solicitud' },
   { en: 'Primary source', es: 'Fuente primaria' },

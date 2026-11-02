@@ -1,7 +1,7 @@
 import { AppShell } from '@/components/app-shell/app-shell';
-import { Card } from '@/components/ui/card';
+import { DirtLedgerPreview } from '@/components/operations/dirt-metrics-panel';
 import { copy } from '@/content/messages';
-import { dirtMetrics, previewOrgs } from '@/content/preview-fixtures';
+import { previewOrgs } from '@/content/preview-fixtures';
 import { requireLocale } from '@/lib/locale';
 
 export default async function DirtPreviewPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -10,15 +10,7 @@ export default async function DirtPreviewPage({ params }: { params: Promise<{ lo
   return (
     <main id="main">
       <AppShell locale={locale} role="client" orgName={previewOrgs[1].name} title={t.workspace.dirtPreviewTitle}>
-        <div className="grid gap-3 md:grid-cols-3">
-          {dirtMetrics.map((metric) => (
-            <Card
-              key={metric.label.en}
-              title={metric.label[locale]}
-              body={`${metric.value} · ${metric.note[locale]}`}
-            />
-          ))}
-        </div>
+        <DirtLedgerPreview locale={locale} />
       </AppShell>
     </main>
   );

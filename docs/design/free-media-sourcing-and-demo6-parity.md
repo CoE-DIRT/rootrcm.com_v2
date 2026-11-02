@@ -23,7 +23,18 @@
 | Consultations / virtual support | Senior doctor at laptop in office | https://www.pexels.com/photo/a-doctor-using-laptop-8376228/ | Free | `public/media/stock/virtual-practice-support.webp` |
 | Go/RCM operations and integrations | Team looking at graphs on digital screens | https://www.pexels.com/photo/people-looking-at-graphs-on-a-laptop-and-a-digital-tablet-6930432/ | Free | `public/media/stock/revenue-analytics.webp` |
 
-**These are candidates, not downloaded/committed files.** A filename in this table does not mean it exists. Pick the most context-appropriate photos and avoid using many staged human photos with no diversity or business context. Match aspect ratios before implementation.
+**Retrieval on 2026-10-31.** Each page below was opened. "Free" was confirmed on the listing. Only photographs without readable clinical paperwork, medication, or a patient-care scene were optimized into `public/media/stock/`. Details, SHA-256, and dimensions are in `editorial-media-manifest.json`.
+
+| Candidate | Result |
+|---|---|
+| `7800551` | Rejected. Clipboard paperwork and a coagulation label. Not published. |
+| `4989174` | Accepted. Mounted on homepage and services heroes. Ivan S. |
+| `6129657` | Rejected. Listing describes a patient-care discussion. Not published. |
+| `7693733` | Accepted. Mounted on the technology hero. Yan Krukau. |
+| `8376296` | Rejected. Clipboard and pill organizer. Not published. |
+| `9574339` | Accepted and stored. Not mounted; the infectious disease section is outside this slice. Tima Miroshnichenko. |
+| `8376228` | Rejected. Clipboard and medicine bottles. Not published. |
+| `6930432` | Accepted and stored. Not mounted; the Go preview is outside this slice. Mikhail Nilov. |
 
 ## Cursor execution workflow
 

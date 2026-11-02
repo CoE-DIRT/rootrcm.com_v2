@@ -1,6 +1,8 @@
 # Appwrite V2 isolated development environment
 
-**Status:** preparation only. No project, Sites host, function, or paid resource was created in this pass.
+**Status:** preparation only. No project, Sites host, function, or paid resource was created in this pass. The Appwrite API namespace failed discovery and CLI login is not available on this machine. Discover with `scripts/appwrite/New-IsolatedV2Preview.ps1`. Create only with `-Create` after `appwrite login`. Do not modify project `6ac42012001069444210` or site `root-website`.
+
+API key scopes for the new project only: `users.read`, `teams.read`, `sessions.write`, `tables.read`, `rows.read`, `rows.write`. Do not grant `projects.write` or any scope on the V1 project. Variable names: `NEXT_PUBLIC_APPWRITE_ENDPOINT`, `NEXT_PUBLIC_APPWRITE_PROJECT_ID`, `APPWRITE_API_KEY`, `APPWRITE_DATABASE_ID`, `ROOT_DEMO_SESSION_BACKEND`, `ROOT_DEMO_SESSION_DIR`.
 
 ## Constraint
 

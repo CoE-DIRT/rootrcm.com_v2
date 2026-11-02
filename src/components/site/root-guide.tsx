@@ -128,20 +128,20 @@ export function RootGuide({ locale }: { locale: Locale }) {
   }
 
   return (
-    <aside className="pointer-events-none fixed bottom-[max(12px,env(safe-area-inset-bottom))] right-3 z-[60] flex max-w-[calc(100vw-24px)] flex-col items-end gap-3 sm:bottom-6 sm:right-6" data-testid="root-guide-dock">
+    <aside className="pointer-events-none fixed bottom-[max(12px,env(safe-area-inset-bottom))] right-3 z-[100] flex max-h-[calc(100svh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-12px)] max-w-[calc(100vw-24px)] flex-col items-end gap-3 sm:bottom-6 sm:right-6" data-testid="root-guide-dock">
       {open && (
         <section
           id="root-guide-panel"
-          className="pointer-events-auto flex h-[min(520px,calc(100dvh-108px))] w-[min(390px,calc(100vw-24px))] flex-col overflow-hidden rounded-[22px] border border-[var(--border)] bg-[var(--surface)] text-[var(--text)] shadow-[0_25px_85px_rgba(0,9,27,.34)] backdrop-blur-2xl motion-safe:animate-[root-guide-in_230ms_cubic-bezier(.2,.8,.2,1)]"
+          className="pointer-events-auto flex h-[min(520px,calc(100svh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-6.5rem))] min-h-0 w-[min(390px,calc(100vw-24px))] flex-col overflow-hidden rounded-[22px] border border-[var(--border)] bg-[var(--surface)] text-[var(--text)] shadow-[0_25px_85px_rgba(0,9,27,.34)] backdrop-blur-2xl motion-safe:animate-[root-guide-in_230ms_cubic-bezier(.2,.8,.2,1)]"
           aria-label={t.guide}
           data-testid="root-guide-panel"
         >
-          <div className="flex items-center justify-between bg-[#0b2945] px-5 py-4 text-[#f5fbff]">
+          <div className="flex shrink-0 items-center justify-between bg-[#0b2945] px-5 py-4 text-[#f5fbff]">
             <div>
               <p className="text-base font-extrabold">{t.title}</p>
               <p className="mt-1 text-[11px] text-[#bcd8ea]">{t.scripted}</p>
             </div>
-            <button className="flex size-11 items-center justify-center rounded-xl text-[#f5fbff] transition hover:bg-white/15" onClick={() => { setOpen(false); launchRef.current?.focus(); }} type="button" aria-label={t.close}><X className="size-5" aria-hidden="true"/></button>
+            <button className="flex size-11 shrink-0 items-center justify-center rounded-xl text-[#f5fbff] transition hover:bg-white/15" data-testid="root-guide-close" onClick={() => { setOpen(false); launchRef.current?.focus(); }} type="button" aria-label={t.close}><X className="size-5" aria-hidden="true"/></button>
           </div>
           <div ref={logRef} role="log" aria-live="polite" aria-label={t.guide} className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto overscroll-contain px-4 py-4 text-sm">
             {messages.map((message) => (

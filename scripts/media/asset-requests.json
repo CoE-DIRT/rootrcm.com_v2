@@ -1,0 +1,21 @@
+{
+  "version": "2026-10-31",
+  "policy": "Search only. Never publish without independent image rights review, photographer/source provenance, and explicit approval record.",
+  "assets": [
+    {"id":"home-clinical","query":"healthcare professionals collaborating laptop hospital administrative office","orientation":"landscape","placement":"homepage clinical hero secondary","altEn":"Healthcare professionals collaborating at a workstation","altEs":"Profesionales sanitarios colaborando en una estación de trabajo"},
+    {"id":"home-analytics","query":"business analysts healthcare data dashboard modern office","orientation":"landscape","placement":"homepage DIRT intelligence", "altEn":"Team reviewing analytics in a modern office","altEs":"Equipo revisando análisis en una oficina moderna"},
+    {"id":"service-medical-billing","query":"healthcare office team working computer medical administration","orientation":"landscape","placement":"medical billing service", "altEn":"Healthcare office employees working at computers","altEs":"Personal administrativo sanitario trabajando con computadoras"},
+    {"id":"service-credentialing","query":"doctor office laptop medical paperwork","orientation":"landscape","placement":"credentialing services", "altEn":"Medical professional working at an office computer","altEs":"Profesional sanitario trabajando con una computadora"},
+    {"id":"service-practice-ops","query":"clinical practice manager medical office teamwork","orientation":"landscape","placement":"practice operations", "altEn":"Healthcare team discussing practice operations","altEs":"Equipo sanitario conversando sobre operaciones"},
+    {"id":"technology-dirt","query":"professional data analysts team computer monitors dashboard","orientation":"landscape","placement":"technology DIRT", "altEn":"Team reviewing business information on screens","altEs":"Equipo revisando información empresarial en pantallas"},
+    {"id":"specialty-infectious-disease","query":"healthcare professionals walking hospital hallway","orientation":"landscape","placement":"infectious disease service", "altEn":"Healthcare professionals in a hospital hallway","altEs":"Profesionales sanitarios en un pasillo de hospital"},
+    {"id":"specialty-cardiology","query":"cardiology clinic healthcare team consultation office","orientation":"landscape","placement":"cardiology specialty", "altEn":"Clinical staff collaborating in a medical practice","altEs":"Personal clínico colaborando en un consultorio"},
+    {"id":"specialty-podiatry","query":"doctor medical consultation office podiatry","orientation":"landscape","placement":"podiatry specialty", "altEn":"Healthcare consultation in an office","altEs":"Consulta sanitaria en un consultorio"},
+    {"id":"solutions-asc","query":"ambulatory surgery center medical facility corridor","orientation":"landscape","placement":"ambulatory surgery centers", "altEn":"Modern outpatient medical facility","altEs":"Centro médico ambulatorio moderno"},
+    {"id":"company-team","query":"professional diverse people discussing laptop office","orientation":"landscape","placement":"company corporate culture", "altEn":"Professionals collaborating in a shared office","altEs":"Profesionales colaborando en una oficina"},
+    {"id":"consultation","query":"doctor video consultation laptop office","orientation":"landscape","placement":"consultation lead page", "altEn":"Healthcare professional using a laptop","altEs":"Profesional sanitario utilizando una computadora portátil"},
+    {"id":"resources","query":"medical office research books computer reference","orientation":"landscape","placement":"resources hero", "altEn":"Reference materials and a computer in an office","altEs":"Materiales de referencia y computadora en una oficina"},
+    {"id":"pricing","query":"professional healthcare business team meeting","orientation":"landscape","placement":"plans page", "altEn":"Business team discussing plans in an office","altEs":"Equipo de negocios analizando planes en una oficina"},
+    {"id":"nyc-healthcare","query":"new york city skyline healthcare modern office","orientation":"landscape","placement":"New York market page", "altEn":"New York City skyline","altEs":"Horizonte de la ciudad de Nueva York"}
+  ]
+}

@@ -28,7 +28,7 @@ Do not treat this hostname as a client demo once the process exits.
 
 ## Issue #29
 
-Engine isolation is on the consolidated candidate via [PR #30](https://github.com/CoE-DIRT/rootrcm.com_v2/pull/30) (`5c025cd`): signed httpOnly presentation cookies, per-session snapshots, operator capability from `/preview/staff` (not JSON `persona`). Skip-free Playwright coverage is `tests/e2e/ops-session-isolation.spec.ts`. Omitted capability now fails closed to `client`. A documented persistence adapter exists (`memory` + fail-closed durable stub via `ROOT_DEMO_SESSION_BACKEND`). The memory Map is still **per-process**; keep #29 open until a reviewed Appwrite V2/KV driver is provisioned. Do not invent those credentials.
+Engine isolation remains signed httpOnly presentation cookies and per-session snapshots. `ROOT_DEMO_SESSION_BACKEND=file` with `ROOT_DEMO_SESSION_DIR` writes one JSON file per session, expires rows, caps retention, and survives a process restart on that directory. Unset/`memory` is still per-process. `appwrite` and `kv` stay fail-closed. No isolated HTTPS host is using the file driver, so a hosted demo is not restart-safe yet. Keep #29 open until the deployed host uses a persistent directory or a reviewed Appwrite driver.
 
 ## Remaining founder actions (exact)
 
@@ -48,3 +48,7 @@ Engine isolation is on the consolidated candidate via [PR #30](https://github.co
 - No Appwrite V1 site, function, or table was modified.
 - No Netlify/Vercel production host was added.
 - Integrations remain typed disabled.
+
+## Recheck — 2026-11-01
+
+No HTTPS release URL exists for the convergence commit. The GitHub `preview` environment still has zero secrets. This workstation has no `APPWRITE_API_KEY`, `NETLIFY_AUTH_TOKEN`, or `VERCEL_TOKEN`, and no Appwrite, Netlify, or Vercel CLI. There is no `.env.local` and no Netlify link. Local production checks used `http://127.0.0.1:3011` and were stopped afterward. That address is not a client deployment. Do not revive the 2026-10-31 Cloudflare tunnel as the release endpoint.

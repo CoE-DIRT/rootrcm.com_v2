@@ -14,10 +14,10 @@ export default async function SignInPage({ params }: { params: Promise<{ locale:
         <StatusBanner tone="warning">{t.adaptersOff}</StatusBanner>
       </div>
       <div className="mt-6 flex flex-wrap gap-3">
-        <Link className="btn-primary" href={localizedPath(locale, '/preview/client')}>
+        <Link className="btn-primary" href={localizedPath(locale, '/preview/client')} prefetch={false}>
           {t.signIn.clientPreview}
         </Link>
-        <Link className="btn-secondary" href={localizedPath(locale, '/preview/staff')}>
+        <Link className="btn-secondary" href={localizedPath(locale, '/preview/staff')} prefetch={false}>
           {t.signIn.staffPreview}
         </Link>
       </div>

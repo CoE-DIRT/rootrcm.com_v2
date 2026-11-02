@@ -6,15 +6,18 @@
  *
  * Backend selection (`ROOT_DEMO_SESSION_BACKEND`):
  * - unset, empty, or `memory` → process-local Map (single Node instance only)
- * - any other value → durable stub that fails closed (no-op writes, empty loads)
+ * - `file` plus `ROOT_DEMO_SESSION_DIR` → one JSON file per session on local disk
+ * - any other value, including `appwrite` or `kv` → fail-closed stub
  *
- * Issue #29: the memory Map is still per-process. Multi-instance hosts will not
- * share demo snapshots until a reviewed driver is provisioned. Do not invent
- * Appwrite project IDs, API keys, or KV credentials here.
+ * The file driver survives a process restart on one host with a persistent
+ * directory. It does not share snapshots across machines. Do not invent
+ * cloud credentials here.
  */
+import { mkdirSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
+import { join, resolve } from 'node:path';
 import { cloneSnapshot, type OpsSnapshot } from '../../domain/operations/types.ts';
 
-export type DemoSessionBackendKind = 'memory' | 'durable_stub';
+export type DemoSessionBackendKind = 'memory' | 'file' | 'durable_stub';
 
 export type DemoSessionRecord = {
   sessionId: string;
@@ -33,6 +36,9 @@ export interface DemoSessionPersistence {
   prune(now?: number): void;
 }
 
+/** Process-local cap. Expired rows are removed before the soonest expiry is evicted. */
+export const MAX_DEMO_SESSIONS = 128;
+
 export class MemoryDemoSessionStore implements DemoSessionPersistence {
   readonly kind = 'memory' as const;
   readonly writable = true;
@@ -43,6 +49,18 @@ export class MemoryDemoSessionStore implements DemoSessionPersistence {
   }
 
   save(record: DemoSessionRecord): void {
+    this.prune();
+    if (!this.slots.has(record.sessionId) && this.slots.size >= MAX_DEMO_SESSIONS) {
+      let oldestId: string | null = null;
+      let oldest = Number.POSITIVE_INFINITY;
+      for (const [id, existing] of this.slots) {
+        if (existing.expiresAt < oldest) {
+          oldest = existing.expiresAt;
+          oldestId = id;
+        }
+      }
+      if (oldestId) this.slots.delete(oldestId);
+    }
     this.slots.set(record.sessionId, record);
   }
 
@@ -87,20 +105,131 @@ export class DurableStubDemoSessionStore implements DemoSessionPersistence {
   }
 }
 
+const SESSION_FILE = /^[A-Za-z0-9_-]{1,80}$/;
+
+function sessionFileName(sessionId: string): string | null {
+  if (!SESSION_FILE.test(sessionId)) return null;
+  return `${sessionId}.json`;
+}
+
+/**
+ * Disk-backed demo sessions. Expired rows are removed. The directory is capped
+ * at MAX_DEMO_SESSIONS. A new process reading the same directory sees prior writes.
+ */
+export class FileDemoSessionStore implements DemoSessionPersistence {
+  readonly kind = 'file' as const;
+  readonly writable = true;
+  private readonly directory: string;
+
+  constructor(directory: string) {
+    this.directory = resolve(directory);
+    mkdirSync(this.directory, { recursive: true });
+  }
+
+  private pathFor(sessionId: string): string | null {
+    const name = sessionFileName(sessionId);
+    if (!name) return null;
+    return join(/* turbopackIgnore: true */ this.directory, name);
+  }
+
+  load(sessionId: string): DemoSessionRecord | null {
+    const path = this.pathFor(sessionId);
+    if (!path) return null;
+    try {
+      const parsed = JSON.parse(readFileSync(path, 'utf8')) as DemoSessionRecord;
+      if (!parsed || parsed.sessionId !== sessionId || !parsed.snapshot) return null;
+      return {
+        sessionId: parsed.sessionId,
+        snapshot: cloneSnapshot(parsed.snapshot),
+        expiresAt: parsed.expiresAt,
+        actionTimes: Array.isArray(parsed.actionTimes) ? [...parsed.actionTimes] : [],
+      };
+    } catch {
+      return null;
+    }
+  }
+
+  save(record: DemoSessionRecord): void {
+    const path = this.pathFor(record.sessionId);
+    if (!path) throw new Error('Demo session id is not a safe file name.');
+    this.prune();
+    const names = this.listNames();
+    if (!names.includes(`${record.sessionId}.json`) && names.length >= MAX_DEMO_SESSIONS) {
+      this.dropSoonest();
+    }
+    const body = JSON.stringify({
+      sessionId: record.sessionId,
+      snapshot: cloneSnapshot(record.snapshot),
+      expiresAt: record.expiresAt,
+      actionTimes: [...record.actionTimes],
+    });
+    const temp = `${path}.tmp`;
+    writeFileSync(temp, body, { encoding: 'utf8' });
+    rmSync(path, { force: true });
+    renameSync(temp, path);
+  }
+
+  clear(sessionId: string): void {
+    const path = this.pathFor(sessionId);
+    if (!path) return;
+    rmSync(path, { force: true });
+  }
+
+  prune(now = Date.now()): void {
+    for (const name of this.listNames()) {
+      const id = name.slice(0, -'.json'.length);
+      const record = this.load(id);
+      if (!record || record.expiresAt <= now) this.clear(id);
+    }
+  }
+
+  private listNames(): string[] {
+    return readdirSync(this.directory).filter((name) => name.endsWith('.json'));
+  }
+
+  private dropSoonest(): void {
+    let oldestId: string | null = null;
+    let oldest = Number.POSITIVE_INFINITY;
+    for (const name of this.listNames()) {
+      const id = name.slice(0, -'.json'.length);
+      const record = this.load(id);
+      if (!record) continue;
+      if (record.expiresAt < oldest) {
+        oldest = record.expiresAt;
+        oldestId = id;
+      }
+    }
+    if (oldestId) this.clear(oldestId);
+  }
+}
+
 const memoryBackend = new MemoryDemoSessionStore();
 const durableStub = new DurableStubDemoSessionStore();
+const fileBackends = new Map<string, FileDemoSessionStore>();
 
 export function configuredDemoSessionBackend(): string {
   return process.env.ROOT_DEMO_SESSION_BACKEND?.trim() ?? '';
 }
 
 /**
- * Only `memory` (or unset) is an implemented driver. Any other configured
- * value — including `appwrite` or `kv` — selects the fail-closed stub.
+ * `memory` (or unset) is process-local. `file` is durable only when
+ * ROOT_DEMO_SESSION_DIR is set. `appwrite`, `kv`, and every other value stay
+ * on the fail-closed stub.
  */
 export function getDemoSessionBackend(): DemoSessionPersistence {
   const configured = configuredDemoSessionBackend();
   if (!configured || configured === 'memory') return memoryBackend;
+  if (configured === 'file') {
+    const directory = process.env.ROOT_DEMO_SESSION_DIR?.trim() ?? '';
+    if (!directory) return durableStub;
+    const key = resolve(/* turbopackIgnore: true */ directory);
+    let store = fileBackends.get(key);
+    if (!store) {
+      store = new FileDemoSessionStore(key);
+      fileBackends.set(key, store);
+    }
+    return store;
+  }
   return durableStub;
 }
 

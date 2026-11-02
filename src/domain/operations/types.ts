@@ -388,6 +388,21 @@ export function nextCredentialingOutcome(
   return credentialingHappyPath[index + 1] ?? null;
 }
 
+const credentialingStatusValues = new Set<string>([
+  ...credentialingHappyPath,
+  'additional_information',
+  'on_hold',
+  'revalidation_due',
+  'rejected',
+  'withdrawn',
+]);
+
+/** Terminal and unknown statuses cannot be advanced. */
+export function canAdvanceCredentialingStatus(status: string): boolean {
+  if (!credentialingStatusValues.has(status)) return false;
+  return nextCredentialingOutcome(status as CredentialingOutcome) !== null;
+}
+
 export function credentialingNextAction(status: CredentialingOutcome): string {
   switch (status) {
     case 'intake':

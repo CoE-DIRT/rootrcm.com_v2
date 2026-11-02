@@ -106,6 +106,39 @@ test.describe('public IA', () => {
   });
 });
 
+test.describe('header fit', () => {
+  test('Spanish desktop menu stays on one line and does not cover actions at 1366', async ({ page }) => {
+    await page.setViewportSize({ width: 1366, height: 900 });
+    await page.goto('/es');
+    const header = page.locator('header');
+    const nav = header.getByTestId('root-mega-nav');
+    await expect(nav).toBeVisible();
+    const label = nav.getByRole('link', { name: 'Por qué ROOT' });
+    const labelBox = await label.boundingBox();
+    expect(labelBox?.height ?? 99).toBeLessThanOrEqual(48);
+    const action = header.getByRole('link', { name: /Consulta/ });
+    await expect(action).toBeVisible();
+    const actionBox = await action.boundingBox();
+    const navBox = await nav.boundingBox();
+    expect(navBox!.x + navBox!.width).toBeLessThanOrEqual((actionBox?.x ?? 0) + 1);
+    expect((actionBox?.x ?? 0) + (actionBox?.width ?? 0)).toBeLessThanOrEqual(1366);
+    await expect(header.getByRole('link', { name: 'Iniciar sesión' })).toBeVisible();
+  });
+
+  test('1024px keeps the menu control and header actions inside the viewport', async ({ page }) => {
+    await page.setViewportSize({ width: 1024, height: 800 });
+    await page.goto('/es');
+    const menu = page.getByRole('button', { name: 'Abrir menú' });
+    await expect(menu).toBeVisible();
+    await expect(page.getByTestId('root-mega-nav')).toBeHidden();
+    const box = await menu.boundingBox();
+    expect(box!.x).toBeGreaterThanOrEqual(0);
+    expect(box!.x + box!.width).toBeLessThanOrEqual(1024);
+    await expect(page.getByRole('link', { name: 'Iniciar sesión' })).toBeVisible();
+    await expect(page.locator('header').getByRole('link', { name: /Consulta/ })).toBeVisible();
+  });
+});
+
 test.describe('responsive overflow', () => {
   for (const width of [375, 768, 1366, 2560]) {
     test(`${width}px home does not overflow horizontally`, async ({ page }) => {

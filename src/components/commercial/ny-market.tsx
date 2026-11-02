@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { SectionHeader } from '@/components/commercial/section-header';
 import { copy } from '@/content/messages';
 import { nyBoroughs, nyMarketMeta, nyPayers, type ProgramType } from '@/content/markets/ny-payers';
@@ -15,6 +16,16 @@ export function NyMarket({ locale, variant }: { locale: Locale; variant: 'state'
   return (
     <div className="mt-10 grid gap-10">
       <SectionHeader eyebrow={t.commercial.nyEyebrow} title={title} body={body} headingLevel={1} />
+      <div className="overflow-hidden rounded-[18px] border border-[#1e4460] bg-[#071423]">
+        <Image
+          src="/brand/waveLower.webp"
+          alt=""
+          width={1600}
+          height={138}
+          sizes="(max-width: 768px) 100vw, 1200px"
+          className="h-auto w-full"
+        />
+      </div>
       <section aria-labelledby="boroughs-heading">
         <h2 id="boroughs-heading" className="text-xl font-bold">
           {t.commercial.boroughsLabel}

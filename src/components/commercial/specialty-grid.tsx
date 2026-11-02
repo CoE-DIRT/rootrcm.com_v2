@@ -28,7 +28,7 @@ export function SpecialtyGrid({
       />
       <ul className="mt-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
         {items.map((specialty) => (
-          <li key={specialty.slug}>
+          <li key={specialty.slug} className="min-w-0">
             <Card
               className={specialty.dedicatedPage ? 'ring-1 ring-[var(--cyan)]' : ''}
               title={specialtyLabel(specialty, locale, featured)}

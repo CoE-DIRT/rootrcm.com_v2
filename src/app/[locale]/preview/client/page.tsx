@@ -1,9 +1,12 @@
+import Link from 'next/link';
 import { AppShell } from '@/components/app-shell/app-shell';
+import { PreviewSessionBinder } from '@/components/operations/preview-session-binder';
 import { OperationsCommandCenter } from '@/components/app-shell/operations-command-center';
 import { Card } from '@/components/ui/card';
 import { copy } from '@/content/messages';
 import { clientQueue, previewOrgs } from '@/content/preview-fixtures';
 import { requireLocale } from '@/lib/locale';
+import { localizedPath } from '@/lib/paths';
 
 export default async function ClientPreviewPage({ params }: { params: Promise<{ locale: string }> }) {
   const locale = await requireLocale(params);
@@ -11,12 +14,17 @@ export default async function ClientPreviewPage({ params }: { params: Promise<{ 
   const org = previewOrgs[1];
   return (
     <main id="main">
+      <PreviewSessionBinder path={`/${locale}/preview/client`}>
       <AppShell locale={locale} role="client" orgName={org.name} title={t.workspace.clientTitle}>
         <p className="muted">
           {org.name} · {org.plan} · {t.preview}
         </p>
         <div className="mt-6"><OperationsCommandCenter locale={locale} role="client" /></div>
-        <h2 className="mt-8 text-xl font-extrabold">{t.workspace.requests}</h2>
+        <h2 className="mt-8 text-xl font-extrabold">
+          <Link className="underline-offset-4 hover:underline" href={localizedPath(locale, '/preview/client/requests')}>
+            {t.workspace.requests}
+          </Link>
+        </h2>
         <div className="mt-4 grid gap-3 md:grid-cols-2">
           {clientQueue.map((item) => (
             <Card
@@ -24,10 +32,12 @@ export default async function ClientPreviewPage({ params }: { params: Promise<{ 
               title={item.title[locale]}
               body={`${item.owner[locale]} · ${item.state[locale]}`}
               kicker={item.id}
+              href={localizedPath(locale, `/preview/client/requests#${item.id}`)}
             />
           ))}
         </div>
       </AppShell>
+      </PreviewSessionBinder>
     </main>
   );
 }

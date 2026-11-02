@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { isPreviewPrefetch } from '@/server/operations/session';
 import { bindPreviewCookies } from '@/server/operations/session-http';
 
 const locales = new Set(['en', 'es']);
@@ -28,6 +29,9 @@ export async function middleware(request: NextRequest) {
   const rest = pathname.slice(first.length + 1) || '/';
   requestHeaders.set('x-root-path', rest.startsWith('/') ? rest : `/${rest}`);
   const response = NextResponse.next({ request: { headers: requestHeaders } });
+  // Prefetch must not mint or replace preview cookies. A cached staff click
+  // can skip middleware; PreviewSessionBinder repeats the bind on a real visit.
+  if (isPreviewPrefetch(request.headers)) return response;
   return bindPreviewCookies(request, response);
 }
 
