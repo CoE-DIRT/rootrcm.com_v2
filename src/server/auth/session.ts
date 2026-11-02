@@ -18,8 +18,13 @@ export function canonicalMemberships(rows: unknown[], userId: string): Membershi
   const result: Membership[] = [];
   for (const value of rows) {
     if (!value || typeof value !== 'object') continue;
-    const row = value as Record<string, unknown>;
+    const envelope = value as Record<string, unknown>;
+    // TablesDB rows may expose columns under `data`; accept both supported shapes.
+    const row = envelope.data && typeof envelope.data === 'object' && !Array.isArray(envelope.data)
+      ? envelope.data as Record<string, unknown>
+      : envelope;
     if (row.userId !== userId || typeof row.orgId !== 'string' || !row.orgId || !isRole(row.role)) continue;
+    if (row.status !== 'active' || row.revokedAt) continue;
     // Ambiguous role assignments fail closed rather than depending on row ordering.
     if (result.some(m => m.orgId === row.orgId)) throw new Error('ambiguous_membership');
     result.push({ orgId: row.orgId, role: row.role });
