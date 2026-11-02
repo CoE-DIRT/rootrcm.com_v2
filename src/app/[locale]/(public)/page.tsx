@@ -9,6 +9,7 @@ import { TrustEvidence } from '@/components/commercial/trust-evidence';
 import { PageHero } from '@/components/site/page-hero';
 import { BandList, TileGrid } from '@/components/site/tile-grid';
 import { copy } from '@/content/messages';
+import { RevenueCalculator } from '@/features/home/revenue-calculator';
 import { requireLocale } from '@/lib/locale';
 import { publicPageMetadata } from '@/lib/metadata';
 import { localizedPath } from '@/lib/paths';
@@ -66,6 +67,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <ServicesBento locale={locale} />
       <TimelineSection locale={locale} />
       <TrustEvidence locale={locale} />
+      <RevenueCalculator locale={locale} />
       <p className="eyebrow mt-10">{t.home.explore}</p>
       <div className="md:hidden">
         <TileGrid locale={locale} tiles={t.home.mobileTiles} hint={t.home.tileHint} />
