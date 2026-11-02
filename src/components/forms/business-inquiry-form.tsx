@@ -67,6 +67,31 @@ export function BusinessInquiryForm({ locale }: { locale: Locale }) {
     }
   }
 
+  if (!inquirySubmissionEnabled) {
+    return (
+      <section className="surface mt-8 max-w-xl space-y-5 p-6" aria-label={locale === 'es' ? 'Póngase en contacto con ROOT' : 'Contact ROOT'}>
+        <h2 className="text-xl font-extrabold">{locale === 'es' ? 'Hable con nuestro equipo' : 'Speak with the ROOT team'}</h2>
+        <p className="text-sm text-[var(--muted)]">
+          {locale === 'es'
+            ? 'Cuéntenos sobre su práctica y sus objetivos. Puede comunicarse directamente por correo, teléfono o WhatsApp.'
+            : 'Tell us about your practice and goals. Reach our team directly by email, phone or WhatsApp.'}
+        </p>
+        <div className="flex flex-wrap gap-3">
+          <a className="btn-primary" href="mailto:info@rootrcm.com?subject=ROOT%20Practice%20Consultation">
+            {locale === 'es' ? 'Enviar correo' : 'Email ROOT'}
+          </a>
+          <a className="btn-secondary" href="https://wa.me/13025064685" target="_blank" rel="noopener noreferrer">
+            WhatsApp
+          </a>
+          <a className="btn-secondary" href="tel:+13024965648">
+            {locale === 'es' ? 'Llamar' : 'Call ROOT'}
+          </a>
+        </div>
+        <p className="text-xs text-[var(--muted)]">{t.footer.noPhi}</p>
+      </section>
+    );
+  }
+
   return (
     <form className="surface mt-8 grid max-w-xl gap-4 p-6" onSubmit={onSubmit} noValidate>
       <TextInput
