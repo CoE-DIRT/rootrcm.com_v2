@@ -11,8 +11,12 @@ export function principalFromCookieHeader(header: string | null | undefined): Se
 export function sessionSecret(header?: string | null): string | undefined {
   const values = (header ?? '').split(';').map(s => s.trim()).filter(s => s.startsWith(`${SESSION_COOKIE_NAME}=`));
   if (values.length !== 1) return undefined;
-  const value = values[0].slice(SESSION_COOKIE_NAME.length + 1);
-  return /^[A-Za-z0-9._~+\/-]{1,4096}$/.test(value) ? value : undefined;
+  const encoded = values[0].slice(SESSION_COOKIE_NAME.length + 1);
+  // RequestCookies may percent-encode a session secret during serialization.
+  // Appwrite secrets can also contain base64 padding; decode then validate.
+  let value: string;
+  try { value = decodeURIComponent(encoded); } catch { return undefined; }
+  return /^[A-Za-z0-9._~+\/=\-]{1,4096}$/.test(value) ? value : undefined;
 }
 export function canonicalMemberships(rows: unknown[], userId: string): Membership[] {
   const result: Membership[] = [];
