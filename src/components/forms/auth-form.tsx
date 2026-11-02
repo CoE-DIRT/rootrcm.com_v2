@@ -5,24 +5,44 @@ import { useRouter } from 'next/navigation';
 import { authCopy } from '@/content/auth-messages';
 import type { Locale } from '@/i18n/locales';
 type Action = 'login' | 'signup' | 'recover' | 'reset' | 'verify' | 'verification' | 'logout';
+type Status = 'idle' | 'pending' | 'success' | 'verificationFailed' | 'verificationRequired' | 'signupSent' | 'verified' | 'verifyFailed' | 'recoverySent' | 'passwordReset' | 'error';
 export function AuthForm({ locale, logout = false }: { locale: Locale; logout?: boolean }) {
   const t = authCopy[locale];
   const router = useRouter();
   const [action, setAction] = useState<Action>(logout ? 'logout' : 'login');
   const [token, setToken] = useState({ userId: '', secret: '' });
-  const [status, setStatus] = useState<'idle' | 'pending' | 'success' | 'verificationFailed' | 'error'>('idle');
+  const [status, setStatus] = useState<Status>('idle');
   useEffect(() => {
     const timer = window.setTimeout(() => {
-    const url = new URL(window.location.href);
-    const mode = url.searchParams.get('mode');
-    if (mode === 'verify' || mode === 'reset') {
-      setAction(mode);
-      setToken({ userId: url.searchParams.get('userId') ?? '', secret: url.searchParams.get('secret') ?? '' });
-      window.history.replaceState(null, '', url.pathname);
-    }
+      const url = new URL(window.location.href);
+      const mode = url.searchParams.get('mode');
+      if (mode === 'verify' || mode === 'reset') {
+        const userId = url.searchParams.get('userId') ?? '';
+        const secret = url.searchParams.get('secret') ?? '';
+        window.history.replaceState(null, '', url.pathname);
+        setAction(mode);
+        if (mode === 'reset') {
+          setToken({ userId, secret });
+          return;
+        }
+        if (!userId || !secret) { setStatus('verifyFailed'); return; }
+        setStatus('pending');
+        void fetch('/api/v1/auth/verify', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ locale, userId, secret }),
+        }).then(response => {
+          if (!response.ok) throw new Error('verification_failed');
+          setAction('login');
+          setToken({ userId: '', secret: '' });
+          setStatus('verified');
+          router.replace('/' + locale + '/sign-in');
+          router.refresh();
+        }).catch(() => setStatus('verifyFailed'));
+      }
     }, 0);
     return () => window.clearTimeout(timer);
-  }, []);
+  }, [locale, router]);
   return <div className="mt-6 space-y-4">
     {!logout && <><p>{t.business}</p><div className="flex flex-wrap gap-3">{(['login', 'signup', 'recover', 'verification'] as const).map(mode => <button className="btn-secondary" key={mode} type="button" aria-pressed={action === mode} onClick={() => { setAction(mode); setStatus('idle'); }}>{t[mode]}</button>)}</div></>}
     <form className="space-y-4" onSubmit={async event => {
