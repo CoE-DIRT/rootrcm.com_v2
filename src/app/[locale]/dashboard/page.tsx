@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { requireLocale } from '@/lib/locale';
-import { getAuthContext } from '@/server/auth/session';
+import { getAuthContextFromSessionSecret, SESSION_COOKIE_NAME } from '@/server/auth/session';
 import { requireMembership } from '@/server/auth/policy';
 import { MarketingPage } from '@/components/site/marketing-page';
 import { AuthForm } from '@/components/forms/auth-form';
@@ -12,7 +12,7 @@ export const metadata = { robots: { index: false, follow: false }, referrer: 'no
 
 export default async function WorkspaceLanding({ params }: { params: Promise<{ locale: string }> }) {
   const locale = await requireLocale(params);
-  const ctx = await getAuthContext((await cookies()).toString());
+  const ctx = await getAuthContextFromSessionSecret((await cookies()).get(SESSION_COOKIE_NAME)?.value);
   if (!ctx.session) redirect('/' + locale + '/sign-in');
   const admin = ctx.memberships.find(m => requireMembership(ctx, m.orgId, 'root_admin.manage').allow);
   if (admin) redirect('/' + locale + '/dashboard/admin?orgId=' + encodeURIComponent(admin.orgId));
