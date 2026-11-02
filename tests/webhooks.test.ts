@@ -1,7 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createHmac } from 'node:crypto';
-import { readFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { catalogEntitlementsForOffer } from '../src/domain/catalog-entitlement.ts';
+import { FileEntitlementLedger, applyVerifiedStripeTestWebhook } from '../src/integrations/stripe/entitlements.ts';
 import { verifyStripeWebhookSignature } from '../src/integrations/stripe/webhooks.ts';
 
 const fixtureSecret = 'whsec_test_fixture_not_live';
@@ -80,6 +84,34 @@ test('webhook verifier accepts a well-formed local HMAC and rejects stale timest
   });
   assert.equal(stale.ok, false);
   if (!stale.ok) assert.equal(stale.code, 'timestamp_expired');
+});
+
+test('signed Stripe test webhook accepts a canonical underscore feature code', () => {
+  const priorFlag = process.env.ROOT_ENABLE_PAYMENTS;
+  const directory = mkdtempSync(join(tmpdir(), 'root-test-webhook-'));
+  try {
+    process.env.ROOT_ENABLE_PAYMENTS = 'true';
+    const featureCode = catalogEntitlementsForOffer('managed-rcm').find((feature) => feature === 'rcm_dashboard');
+    assert.equal(featureCode, 'rcm_dashboard');
+    const eventBody = JSON.stringify({
+      id: 'evt_synthetic_underscore',
+      type: 'checkout.session.completed',
+      data: { object: { livemode: false, payment_status: 'paid', metadata: { orgId: 'bayview', featureCode } } },
+    });
+    const result = applyVerifiedStripeTestWebhook({
+      payload: eventBody,
+      signatureHeader: signedHeader(eventBody),
+      secret: fixtureSecret,
+      ledger: new FileEntitlementLedger(join(directory, 'entitlements.json')),
+      nowMs: timestamp * 1000,
+    });
+    assert.equal(result.status, 'applied');
+    if (result.status === 'applied') assert.equal(result.entitlement.featureCode, featureCode);
+  } finally {
+    if (priorFlag === undefined) delete process.env.ROOT_ENABLE_PAYMENTS;
+    else process.env.ROOT_ENABLE_PAYMENTS = priorFlag;
+    rmSync(directory, { recursive: true, force: true });
+  }
 });
 
 test('Stripe webhook and checkout routes fail closed without body parse', () => {
