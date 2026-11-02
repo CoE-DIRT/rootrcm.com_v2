@@ -16,6 +16,11 @@ export function AuthForm({ locale, logout = false }: { locale: Locale; logout?: 
     const timer = window.setTimeout(() => {
       const url = new URL(window.location.href);
       const mode = url.searchParams.get('mode');
+      if (url.searchParams.get('verified') === '1') {
+        window.history.replaceState(null, '', url.pathname);
+        setStatus('verified');
+        return;
+      }
       if (mode === 'verify' || mode === 'reset') {
         const userId = url.searchParams.get('userId') ?? '';
         const secret = url.searchParams.get('secret') ?? '';
@@ -36,7 +41,7 @@ export function AuthForm({ locale, logout = false }: { locale: Locale; logout?: 
           setAction('login');
           setToken({ userId: '', secret: '' });
           setStatus('verified');
-          router.replace('/' + locale + '/sign-in');
+          router.replace('/' + locale + '/sign-in?verified=1');
           router.refresh();
         }).catch(() => setStatus('verifyFailed'));
       }
