@@ -60,7 +60,7 @@ try {
   }
   $qUser=[uri]::EscapeDataString(('{"method":"equal","attribute":"userId","values":["'+$u.'$id'+'"]}'))
   $qOrg=[uri]::EscapeDataString(('{"method":"equal","attribute":"orgId","values":["'+$orgId+'"]}'))
-  $existing=Invoke-Root 'GET' "$memberBase?queries[]=$qUser&queries[]=$qOrg"
+  $existing=Invoke-Root 'GET' "${memberBase}?queries[]=${qUser}&queries[]=${qOrg}"
   if ($existing.total -gt 1) { throw 'Duplicate membership rows detected. Stopped.' }
   if ($existing.total -eq 1) {
     $row=@($existing.rows)[0]
