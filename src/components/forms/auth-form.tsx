@@ -60,8 +60,7 @@ export function AuthForm({ locale, logout = false }: { locale: Locale; logout?: 
         if (action === 'login') {
           if (data.verified !== true) { setStatus('verificationRequired'); return; }
           setStatus('success');
-          router.replace('/' + locale + '/dashboard');
-          router.refresh();
+          window.location.assign('/' + locale + '/dashboard');
         } else if (action === 'signup' || action === 'verification') {
           setStatus(action === 'signup' && data.verificationSent === false ? 'verificationFailed' : 'signupSent');
         } else if (action === 'recover') {
