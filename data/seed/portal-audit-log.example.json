@@ -1,0 +1,70 @@
+{
+  "_notice": "Synthetic interactive audit log for the portal RBAC simulator. No patient identifiers. Events are demo labels only.",
+  "events": [
+    {
+      "id": "syn-aud-01",
+      "at": "2026-10-28T14:12:00Z",
+      "actorRole": "root-rcm-specialist",
+      "summary": {
+        "en": "835 ERA posted",
+        "es": "835 ERA registrada"
+      },
+      "detail": {
+        "en": "Synthetic remittance label for CLM-SYN-8404. No funds moved.",
+        "es": "Etiqueta de remesa sintética para CLM-SYN-8404. No se movieron fondos."
+      }
+    },
+    {
+      "id": "syn-aud-02",
+      "at": "2026-10-29T09:40:00Z",
+      "actorRole": "practice-admin",
+      "summary": {
+        "en": "Prior auth approved by BCBS",
+        "es": "Autorización previa aprobada por BCBS"
+      },
+      "detail": {
+        "en": "Demo status flip for REF-8491. Payer adapter disabled.",
+        "es": "Cambio de estado demo para REF-8491. Adaptador de pagador desactivado."
+      }
+    },
+    {
+      "id": "syn-aud-03",
+      "at": "2026-10-30T16:05:00Z",
+      "actorRole": "practice-physician",
+      "summary": {
+        "en": "Licensure renewal tracked",
+        "es": "Renovación de licencia registrada"
+      },
+      "detail": {
+        "en": "Synthetic surgeon B license alert acknowledged in roster demo.",
+        "es": "Alerta de licencia del cirujano sintético B reconocida en la plantilla demo."
+      }
+    },
+    {
+      "id": "syn-aud-04",
+      "at": "2026-10-31T11:22:00Z",
+      "actorRole": "root-rcm-specialist",
+      "summary": {
+        "en": "Denial appeal draft generated",
+        "es": "Borrador de apelación de denegación generado"
+      },
+      "detail": {
+        "en": "CMS-1500 / UB-04 style letter for CLM-SYN-8401. Not submitted.",
+        "es": "Carta estilo CMS-1500 / UB-04 para CLM-SYN-8401. No enviada."
+      }
+    },
+    {
+      "id": "syn-aud-05",
+      "at": "2026-11-01T08:15:00Z",
+      "actorRole": "practice-admin",
+      "summary": {
+        "en": "Persona switch simulated",
+        "es": "Cambio de persona simulado"
+      },
+      "detail": {
+        "en": "RBAC simulator only — server entitlements unchanged.",
+        "es": "Solo simulador RBAC — las autorizaciones del servidor no cambian."
+      }
+    }
+  ]
+}

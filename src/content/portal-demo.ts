@@ -1,9 +1,14 @@
 import type { CopyPair } from '@/content/ecosystem';
 import { previewOrgs } from '@/content/preview-fixtures';
+import { loadPortalDenials } from '@/features/portal/denials/load-denials';
+import type { PortalDenialRow } from '@/features/portal/denials/types';
 
 export const portalOrganizations = previewOrgs;
 
-export type PortalPersona = 'practice-admin' | 'operations-lead';
+export type PortalPersona =
+  | 'practice-physician'
+  | 'practice-admin'
+  | 'root-rcm-specialist';
 
 export const portalNav = [
   { href: '/portal', key: 'dashboard' },
@@ -21,8 +26,14 @@ export const portalLabels = {
   credentialing: { en: 'Credentialing roster', es: 'Plantilla de acreditación' },
   dirt: { en: 'DIRT intelligence', es: 'Inteligencia DIRT' },
   settings: { en: 'Practice settings', es: 'Ajustes de la práctica' },
-  personaAdmin: { en: 'Practice admin', es: 'Administración de la práctica' },
-  personaLead: { en: 'ROOT operations lead', es: 'Líder de operaciones ROOT' },
+  personaPhysician: {
+    en: 'Practice Physician/Owner',
+    es: 'Médico / propietario de la práctica',
+  },
+  personaAdmin: { en: 'Practice Administrator', es: 'Administrador de la práctica' },
+  personaSpecialist: { en: 'ROOT RCM Specialist', es: 'Especialista RCM de ROOT' },
+  /** @deprecated Use personaSpecialist — kept for any residual copy references */
+  personaLead: { en: 'ROOT RCM Specialist', es: 'Especialista RCM de ROOT' },
   personaNote: {
     en: 'Demo control only. Switching personas does not grant access and does not bypass server authorization.',
     es: 'Solo un control de demostración. Cambiar de persona no otorga acceso ni omite la autorización del servidor.',
@@ -36,94 +47,11 @@ export const portalLabels = {
   publicSite: { en: 'Public site', es: 'Sitio público' },
 } as const satisfies Record<string, CopyPair>;
 
-export type DenialRow = {
-  id: string;
-  payer: string;
-  status: CopyPair;
-  code: 'CO-4' | 'CO-16' | 'PR-204';
-  priority: 'high' | 'medium';
-  issue: CopyPair;
-  timeline: { en: readonly string[]; es: readonly string[] };
-  remark: CopyPair;
-};
+export type { PortalDenialRow as DenialRow } from '@/features/portal/denials/types';
+export { loadPortalDenials as denialQueueSource } from '@/features/portal/denials/load-denials';
 
-export const denialQueue: readonly DenialRow[] = [
-  {
-    id: 'syn-den-01',
-    payer: 'Medicare',
-    status: { en: 'Open', es: 'Abierta' },
-    code: 'CO-16',
-    priority: 'high',
-    issue: { en: 'Implant carve-out mismatch', es: 'Desajuste de carve-out de implante' },
-    timeline: {
-      en: [
-        'Day 0 · Synthetic remittance posted',
-        'Day 2 · Demo label CO-16 applied',
-        'Day 5 · Appeal draft not sent',
-      ],
-      es: [
-        'Día 0 · Remesa sintética registrada',
-        'Día 2 · Etiqueta demo CO-16 aplicada',
-        'Día 5 · Borrador de apelación no enviado',
-      ],
-    },
-    remark: {
-      en: 'Demo remark: the sample line does not match the contract carve-out exhibit. Not a live payer note.',
-      es: 'Nota demo: la línea de muestra no coincide con el anexo de carve-out. No es una nota real del pagador.',
-    },
-  },
-  {
-    id: 'syn-den-02',
-    payer: 'Commercial',
-    status: { en: 'In review', es: 'En revisión' },
-    code: 'CO-4',
-    priority: 'medium',
-    issue: { en: 'MPPR 50% sample', es: 'Muestra MPPR 50%' },
-    timeline: {
-      en: [
-        'Day 1 · Sample multiple-procedure reduction labeled',
-        'Day 3 · Owner assigned in the demo queue',
-        'Day 6 · No payer portal was contacted',
-      ],
-      es: [
-        'Día 1 · Reducción de procedimiento múltiple etiquetada',
-        'Día 3 · Responsable asignado en la cola demo',
-        'Día 6 · No se contactó un portal de pagador',
-      ],
-    },
-    remark: {
-      en: 'Demo remark: CO-4 is a synthetic label for a 50% MPPR teaching row.',
-      es: 'Nota demo: CO-4 es una etiqueta sintética para una fila didáctica de MPPR al 50%.',
-    },
-  },
-  {
-    id: 'syn-den-03',
-    payer: 'BCBS',
-    status: { en: 'Waiting', es: 'En espera' },
-    code: 'PR-204',
-    priority: 'high',
-    issue: {
-      en: 'Missing operative note / unbundled codes',
-      es: 'Falta nota operatoria / códigos no agrupados',
-    },
-    timeline: {
-      en: [
-        'Day 0 · Synthetic status set to waiting',
-        'Day 4 · Documentation request recorded as a label only',
-        'Day 7 · Escalation checklist incomplete',
-      ],
-      es: [
-        'Día 0 · Estado sintético en espera',
-        'Día 4 · Pedido de documentación solo como etiqueta',
-        'Día 7 · Lista de escalamiento incompleta',
-      ],
-    },
-    remark: {
-      en: 'Demo remark: PR-204 marks a sample documentation gap. Do not paste an operative note here.',
-      es: 'Nota demo: PR-204 marca una brecha documental de muestra. No pegue una nota operatoria aquí.',
-    },
-  },
-];
+/** ASC denial work queue — synthetic seed; inspector timeline preserved. */
+export const denialQueue: readonly PortalDenialRow[] = loadPortalDenials();
 
 export const appealTemplate: CopyPair = {
   en: 'Synthetic appeal outline: name the contract exhibit, the demo denial label, the owner and the next business day. Do not include patient identifiers, dates of birth, or clinical narrative.',

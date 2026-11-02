@@ -101,8 +101,9 @@ export function PortalFrame({ locale, children }: { locale: Locale; children: Re
                 onChange={(event) => setPersona(event.target.value as PortalPersona)}
                 aria-label={portalLabels.personaLabel[locale]}
               >
+                <option value="practice-physician">{portalLabels.personaPhysician[locale]}</option>
                 <option value="practice-admin">{portalLabels.personaAdmin[locale]}</option>
-                <option value="operations-lead">{portalLabels.personaLead[locale]}</option>
+                <option value="root-rcm-specialist">{portalLabels.personaSpecialist[locale]}</option>
               </select>
             </label>
             <p className="muted max-w-xl text-xs">{portalLabels.personaNote[locale]}</p>

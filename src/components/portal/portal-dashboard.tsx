@@ -33,13 +33,17 @@ export function PortalDashboard() {
       <p className="muted mt-2 max-w-3xl text-sm">
         {activeOrg?.name ?? activeOrgId}
         {activeOrg?.specialty ? ` · ${activeOrg.specialty}` : ''}. {t.tenant.synthetic}{' '}
-        {persona === 'operations-lead'
+        {persona === 'root-rcm-specialist'
           ? es
-            ? 'La vista de líder solo cambia esta etiqueta. No abre trabajo de otro inquilino.'
-            : 'The lead view only changes this label. It does not open another tenant’s work.'
-          : es
-            ? 'La vista de administración es la misma cola sintética.'
-            : 'The admin view is the same synthetic queue.'}
+            ? 'La vista de especialista RCM solo cambia esta etiqueta. No abre trabajo de otro inquilino.'
+            : 'The RCM specialist view only changes this label. It does not open another tenant’s work.'
+          : persona === 'practice-physician'
+            ? es
+              ? 'La vista de médico / propietario es la misma cola sintética con énfasis de alto nivel.'
+              : 'The physician / owner view is the same synthetic queue with a high-level emphasis.'
+            : es
+              ? 'La vista de administración es la misma cola sintética.'
+              : 'The admin view is the same synthetic queue.'}
       </p>
       <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
         {cards.map((card) => (

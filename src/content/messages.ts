@@ -933,6 +933,70 @@ const en = {
       },
     },
   },
+  portal: {
+    portalDenialsEyebrow: 'Synthetic ASC queue',
+    portalDenialsTitle: 'Denial work queue & appeal generator',
+    portalDenialsBody:
+      'Synthetic labels CO-4, CO-16 and PR-204 with REF-* patient references only. Not real claim identifiers or billing advice. Clearinghouse stays disabled.',
+    portalDenialsTabsLabel: 'Denial queue tabs',
+    portalDenialsTabAll: 'All Active Denials',
+    portalDenialsTabAppeal: 'Under Appeal',
+    portalDenialsTabResolved: 'Resolved / Paid',
+    portalDenialsTabHigh: 'High Priority (> $5k)',
+    portalDenialsClaim: 'Claim / REF',
+    portalDenialsAmount: 'Amount',
+    portalDenialsOpenAppeal: 'Open appeal generator',
+    portalDenialsAppealTitle: 'Appeal generator (CMS-1500 / UB-04 style)',
+    portalDenialsAppealClose: 'Close appeal dialog',
+    portalDenialsAppealCopy: 'Copy Appeal Text',
+    portalDenialsAppealCopied: 'Appeal text copied',
+    portalDenialsAppealResubmit: 'Simulate Electronic Resubmission',
+    portalDenialsAppealResubmitted: 'Simulation recorded · not transmitted',
+    portalDenialsAppealFailClosed:
+      'Fail-closed demo: no clearinghouse, payer portal, or production submission occurs.',
+    portalDenialsAppealLetter: 'Formal appeal letter',
+    portalPriorAuthEyebrow: 'No payer connectivity',
+    portalPriorAuthTitle: 'Prior authorization tracker',
+    portalPriorAuthBody:
+      'Synthetic Patient Reference IDs only (e.g. REF-8491). Statuses are demo labels. The payer adapter remains disabled.',
+    portalPriorAuthPatientRef: 'Patient Reference ID',
+    portalPriorAuthPhysician: 'Ordering Physician',
+    portalPriorAuthCpt: 'CPT',
+    portalPriorAuthPayer: 'Payer',
+    portalPriorAuthStatus: 'Status',
+    portalPriorAuthSla: 'SLA countdown',
+    portalSettingsEyebrow: 'Nothing is saved',
+    portalSettingsTitle: 'RBAC simulator & practice settings',
+    portalSettingsBody:
+      'Persona panels are a client-side demo. Switching personas does not grant access or bypass server authorization.',
+    portalSettingsPersona: 'RBAC persona',
+    portalSettingsAuditTitle: 'Interactive audit log (synthetic)',
+    portalSettingsAuditAdd: 'Append simulated event',
+    portalSettingsPanelPhysicianTitle: 'Physician / owner panel',
+    portalSettingsPanelPhysicianBody:
+      'Visibility focused on roster alerts, licensure renewals, and high-level cash posture — synthetic only.',
+    portalSettingsPanelPhysicianItems: [
+      'Licensure renewal tracker (demo)',
+      'High-dollar denial summary',
+      'No live clearinghouse controls',
+    ],
+    portalSettingsPanelAdminTitle: 'Practice administrator panel',
+    portalSettingsPanelAdminBody:
+      'Operations visibility for queues, prior auth SLAs, and adapter status — entitlements stay server-side.',
+    portalSettingsPanelAdminItems: [
+      'Prior auth SLA board',
+      'Denial queue filters',
+      'Adapter flags (read-only)',
+    ],
+    portalSettingsPanelSpecialistTitle: 'ROOT RCM specialist panel',
+    portalSettingsPanelSpecialistBody:
+      'Specialist tools for appeal drafts, 835 labels, and audit trail education — fail-closed adapters.',
+    portalSettingsPanelSpecialistItems: [
+      'Appeal generator access',
+      '835 ERA synthetic posting labels',
+      'Full interactive audit stream',
+    ],
+  },
 };
 
 type Messages = typeof en;
@@ -1881,6 +1945,70 @@ const es: Messages = {
         active: 'Plantilla activa (sintético)',
       },
     },
+  },
+  portal: {
+    portalDenialsEyebrow: 'Cola sintética ASC',
+    portalDenialsTitle: 'Cola de denegaciones y generador de apelaciones',
+    portalDenialsBody:
+      'Etiquetas sintéticas CO-4, CO-16 y PR-204 con referencias de paciente REF-* únicamente. No son identificadores de reclamos reales ni consejos de facturación. El intermediario permanece desactivado.',
+    portalDenialsTabsLabel: 'Pestañas de la cola de denegaciones',
+    portalDenialsTabAll: 'Todas las denegaciones activas',
+    portalDenialsTabAppeal: 'En apelación',
+    portalDenialsTabResolved: 'Resueltas / pagadas',
+    portalDenialsTabHigh: 'Alta prioridad (> $5k)',
+    portalDenialsClaim: 'Reclamo / REF',
+    portalDenialsAmount: 'Monto',
+    portalDenialsOpenAppeal: 'Abrir generador de apelación',
+    portalDenialsAppealTitle: 'Generador de apelación (estilo CMS-1500 / UB-04)',
+    portalDenialsAppealClose: 'Cerrar diálogo de apelación',
+    portalDenialsAppealCopy: 'Copiar texto de apelación',
+    portalDenialsAppealCopied: 'Texto de apelación copiado',
+    portalDenialsAppealResubmit: 'Simular reenvío electrónico',
+    portalDenialsAppealResubmitted: 'Simulación registrada · no transmitida',
+    portalDenialsAppealFailClosed:
+      'Demo con cierre a prueba de fallos: no hay intermediario, portal de pagador ni envío a producción.',
+    portalDenialsAppealLetter: 'Carta formal de apelación',
+    portalPriorAuthEyebrow: 'Sin conectividad de pagador',
+    portalPriorAuthTitle: 'Seguimiento de autorizaciones previas',
+    portalPriorAuthBody:
+      'Solo identificadores de referencia de paciente sintéticos (p. ej. REF-8491). Los estados son etiquetas demo. El adaptador de pagador permanece desactivado.',
+    portalPriorAuthPatientRef: 'ID de referencia del paciente',
+    portalPriorAuthPhysician: 'Médico ordenante',
+    portalPriorAuthCpt: 'CPT',
+    portalPriorAuthPayer: 'Pagador',
+    portalPriorAuthStatus: 'Estado',
+    portalPriorAuthSla: 'Cuenta regresiva SLA',
+    portalSettingsEyebrow: 'Nada se guarda',
+    portalSettingsTitle: 'Simulador RBAC y ajustes de la práctica',
+    portalSettingsBody:
+      'Los paneles de persona son una demo del cliente. Cambiar de persona no otorga acceso ni omite la autorización del servidor.',
+    portalSettingsPersona: 'Persona RBAC',
+    portalSettingsAuditTitle: 'Registro de auditoría interactivo (sintético)',
+    portalSettingsAuditAdd: 'Agregar evento simulado',
+    portalSettingsPanelPhysicianTitle: 'Panel de médico / propietario',
+    portalSettingsPanelPhysicianBody:
+      'Visibilidad centrada en alertas de plantilla, renovaciones de licencia y postura de efectivo a alto nivel — solo sintético.',
+    portalSettingsPanelPhysicianItems: [
+      'Seguimiento de renovación de licencia (demo)',
+      'Resumen de denegaciones de alto monto',
+      'Sin controles de intermediario en vivo',
+    ],
+    portalSettingsPanelAdminTitle: 'Panel de administrador de la práctica',
+    portalSettingsPanelAdminBody:
+      'Visibilidad operativa de colas, SLA de autorizaciones previas y estado de adaptadores — las autorizaciones siguen en el servidor.',
+    portalSettingsPanelAdminItems: [
+      'Tablero SLA de autorizaciones previas',
+      'Filtros de cola de denegaciones',
+      'Banderas de adaptador (solo lectura)',
+    ],
+    portalSettingsPanelSpecialistTitle: 'Panel de especialista RCM de ROOT',
+    portalSettingsPanelSpecialistBody:
+      'Herramientas de especialista para borradores de apelación, etiquetas 835 y educación del rastro de auditoría — adaptadores con cierre a prueba de fallos.',
+    portalSettingsPanelSpecialistItems: [
+      'Acceso al generador de apelaciones',
+      'Etiquetas sintéticas de publicación 835 ERA',
+      'Flujo completo de auditoría interactiva',
+    ],
   },
 };
 

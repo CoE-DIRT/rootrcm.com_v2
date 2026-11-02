@@ -1,0 +1,90 @@
+{
+  "_notice": "Synthetic prior-authorization tracker rows. Patient Reference IDs only (REF-*). No patient identifiers. Payer adapter disabled — statuses are demo labels.",
+  "rows": [
+    {
+      "id": "syn-pa-01",
+      "patientRef": "REF-8491",
+      "orderingPhysician": "Synthetic Surgeon A",
+      "cpt": "27447",
+      "payer": "BCBS",
+      "status": "approved",
+      "urgency": "elective",
+      "slaLabel": {
+        "en": "Elective: 5 business days",
+        "es": "Electiva: 5 días hábiles"
+      },
+      "slaRemaining": {
+        "en": "Completed · demo approval label",
+        "es": "Completada · etiqueta de aprobación demo"
+      }
+    },
+    {
+      "id": "syn-pa-02",
+      "patientRef": "REF-8492",
+      "orderingPhysician": "Synthetic Surgeon B",
+      "cpt": "29881",
+      "payer": "Aetna",
+      "status": "payer_review",
+      "urgency": "urgent",
+      "slaLabel": {
+        "en": "Urgent: 24h remaining",
+        "es": "Urgente: 24 h restantes"
+      },
+      "slaRemaining": {
+        "en": "Urgent: 24h remaining",
+        "es": "Urgente: 24 h restantes"
+      }
+    },
+    {
+      "id": "syn-pa-03",
+      "patientRef": "REF-8493",
+      "orderingPhysician": "Synthetic APP C",
+      "cpt": "63030",
+      "payer": "UHC",
+      "status": "peer_to_peer",
+      "urgency": "urgent",
+      "slaLabel": {
+        "en": "Urgent: 24h remaining",
+        "es": "Urgente: 24 h restantes"
+      },
+      "slaRemaining": {
+        "en": "Urgent: 18h remaining · peer-to-peer slot (demo)",
+        "es": "Urgente: 18 h restantes · franja peer-to-peer (demo)"
+      }
+    },
+    {
+      "id": "syn-pa-04",
+      "patientRef": "REF-8494",
+      "orderingPhysician": "Synthetic Surgeon A",
+      "cpt": "20610",
+      "payer": "Medicare",
+      "status": "additional_docs",
+      "urgency": "elective",
+      "slaLabel": {
+        "en": "Elective: 5 business days",
+        "es": "Electiva: 5 días hábiles"
+      },
+      "slaRemaining": {
+        "en": "Elective: 3 business days remaining",
+        "es": "Electiva: 3 días hábiles restantes"
+      }
+    },
+    {
+      "id": "syn-pa-05",
+      "patientRef": "REF-8495",
+      "orderingPhysician": "Synthetic Surgeon B",
+      "cpt": "29827",
+      "payer": "Commercial",
+      "status": "payer_review",
+      "urgency": "elective",
+      "slaLabel": {
+        "en": "Elective: 5 business days",
+        "es": "Electiva: 5 días hábiles"
+      },
+      "slaRemaining": {
+        "en": "Elective: 5 business days",
+        "es": "Electiva: 5 días hábiles"
+      }
+    }
+  ]
+}

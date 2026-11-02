@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
-import { PortalPriorAuthPanel } from '@/components/portal/portal-prior-auth-panel';
 import { portalLabels } from '@/content/portal-demo';
+import { copy } from '@/content/messages';
+import { PriorAuthTracker } from '@/features/portal/prior-auth/prior-auth-tracker';
 import { requireLocale } from '@/lib/locale';
 import { publicPageMetadata } from '@/lib/metadata';
 
@@ -13,6 +14,22 @@ export async function generateMetadata({
   return publicPageMetadata(locale, portalLabels.authorizations[locale], portalLabels.synthetic[locale]);
 }
 
-export default function PriorAuthPage() {
-  return <PortalPriorAuthPanel />;
+export default async function PriorAuthPage({ params }: { params: Promise<{ locale: string }> }) {
+  const locale = await requireLocale(params);
+  const t = copy(locale).portal;
+  return (
+    <PriorAuthTracker
+      labels={{
+        eyebrow: t.portalPriorAuthEyebrow,
+        title: t.portalPriorAuthTitle,
+        body: t.portalPriorAuthBody,
+        patientRef: t.portalPriorAuthPatientRef,
+        physician: t.portalPriorAuthPhysician,
+        cpt: t.portalPriorAuthCpt,
+        payer: t.portalPriorAuthPayer,
+        status: t.portalPriorAuthStatus,
+        sla: t.portalPriorAuthSla,
+      }}
+    />
+  );
 }
