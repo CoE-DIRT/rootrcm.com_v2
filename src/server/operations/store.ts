@@ -152,7 +152,7 @@ export function projectOpsView(
           byOrg(snapshot.notifications, orgId),
           staffAssignedNotifications(snapshot, orgId),
         )
-      : byOrg(snapshot.notifications, orgId);
+      : byOrg(snapshot.notifications, orgId).filter((item) => item.audience === 'client');
 
   const organizations =
     persona === 'staff' ? snapshot.organizations : snapshot.organizations.filter((row) => row.id === orgId);
