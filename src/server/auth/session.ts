@@ -18,7 +18,12 @@ export function canonicalMemberships(rows: unknown[], userId: string): Membershi
   const result: Membership[] = [];
   for (const value of rows) {
     if (!value || typeof value !== 'object') continue;
-    const row = value as Record<string, unknown>;
+    const record = value as Record<string, unknown>;
+    const row = record.data && typeof record.data === 'object' && !Array.isArray(record.data)
+      ? record.data as Record<string, unknown>
+      : record;
+    if (typeof row.status === 'string' && row.status !== 'active') continue;
+    if (row.revokedAt) continue;
     if (row.userId !== userId || typeof row.orgId !== 'string' || !row.orgId || !isRole(row.role)) continue;
     // Ambiguous role assignments fail closed rather than depending on row ordering.
     if (result.some(m => m.orgId === row.orgId)) throw new Error('ambiguous_membership');
@@ -27,9 +32,13 @@ export function canonicalMemberships(rows: unknown[], userId: string): Membershi
   return result;
 }
 export async function getAuthContext(header?: string | null): Promise<AuthContext> {
+  return getAuthContextFromSessionSecret(sessionSecret(header));
+}
+
+export async function getAuthContextFromSessionSecret(rawSecret?: string | null): Promise<AuthContext> {
   const denied: AuthContext = { session: null, memberships: [] };
   if (!liveAuthEnabled()) return denied;
-  const secret = sessionSecret(header);
+  const secret = rawSecret && rawSecret.length <= 4096 && !/[\r\n\0]/.test(rawSecret) ? rawSecret : undefined;
   if (!secret) return denied;
   try {
     const user = await authRequest<{ $id: string; email: string; emailVerification: boolean; status: boolean }>('/account', 'GET', undefined, secret);
