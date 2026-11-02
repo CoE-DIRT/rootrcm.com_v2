@@ -40,9 +40,11 @@ export async function getAuthContextFromSessionSecret(rawSecret?: string | null)
   if (!liveAuthEnabled()) return denied;
   const secret = rawSecret && rawSecret.length <= 4096 && !/[\r\n\0]/.test(rawSecret) ? rawSecret : undefined;
   if (!secret) return denied;
+  let verifiedSession: SessionPrincipal | undefined;
   try {
     const user = await authRequest<{ $id: string; email: string; emailVerification: boolean; status: boolean }>('/account', 'GET', undefined, secret);
     if (!user.status || !user.emailVerification || !user.$id) return denied;
+    verifiedSession = { userId: user.$id, email: user.email };
     const database = encodeURIComponent(process.env.APPWRITE_DATABASE_ID!);
     const query = new URLSearchParams();
     query.append('queries[]', JSON.stringify({ method: 'equal', attribute: 'userId', values: [user.$id] }));
@@ -50,5 +52,5 @@ export async function getAuthContextFromSessionSecret(rawSecret?: string | null)
     const data = await authRequest<{ rows: unknown[]; total: number }>(`/tablesdb/${database}/tables/memberships/rows?${query}`, 'GET', undefined, undefined, true);
     if (data.total > 100) return denied;
     return { session: { userId: user.$id, email: user.email }, memberships: canonicalMemberships(data.rows, user.$id) };
-  } catch { return denied; }
+  } catch { return verifiedSession ? { session: verifiedSession, memberships: [] } : denied; }
 }
