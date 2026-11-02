@@ -72,12 +72,25 @@ test('HTTP auth rejects CSRF, keeps session tokens private and revokes logout', 
     const request = (origin: string, data: unknown = {}, cookie = '') => new Request('https://preview.example.invalid/api/v1/auth/login', { method: 'POST', headers: { origin, 'content-type': 'application/json', cookie }, body: JSON.stringify(data) });
     globalThis.fetch = async () => { throw new Error('CSRF must not call provider'); };
     assert.equal((await handleAuth(request('https://attacker.example.invalid'), 'login')).status, 403);
-    globalThis.fetch = async () => Response.json({ secret: 'synthetic-session', expire: '2099-01-01T00:00:00.000Z' });
+    globalThis.fetch = async url => String(url).endsWith('/account')
+      ? Response.json({ status: true, emailVerification: true })
+      : Response.json({ secret: 'synthetic-session', expire: '2099-01-01T00:00:00.000Z' });
     const response = await handleAuth(request('https://preview.example.invalid', { email: 'http@example.invalid', password: 'synthetic-password' }), 'login');
     assert.equal(response.status, 200);
     const cookie = response.headers.get('set-cookie')!;
     for (const attribute of ['HttpOnly', 'Secure', 'SameSite=strict', 'Path=/']) assert.ok(cookie.includes(attribute));
-    assert.deepEqual(await response.json(), { ok: true });
+    assert.deepEqual(await response.json(), { ok: true, verified: true });
+    const unverifiedCalls: string[] = [];
+    globalThis.fetch = async url => {
+      unverifiedCalls.push(String(url));
+      return String(url).endsWith('/account')
+        ? Response.json({ status: true, emailVerification: false })
+        : Response.json({ secret: 'synthetic-session', expire: '2099-01-01T00:00:00.000Z' });
+    };
+    const unverified = await handleAuth(request('https://preview.example.invalid', { email: 'unverified@example.invalid', password: 'synthetic-password' }), 'login');
+    assert.deepEqual(await unverified.json(), { ok: true, verified: false });
+    assert.equal(unverifiedCalls.length, 2);
+    assert.ok(unverifiedCalls.every(url => !url.endsWith('/account/verification')), 'login never resends verification');
     let revoked = false;
     globalThis.fetch = async (url, init) => {
       assert.ok(String(url).endsWith('/account/sessions/current'));
