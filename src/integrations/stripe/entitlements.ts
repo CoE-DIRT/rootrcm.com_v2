@@ -133,7 +133,7 @@ export function applyVerifiedStripeTestWebhook(input: {
   const metadata = asRecord(object.metadata);
   const orgId = typeof metadata?.orgId === 'string' ? metadata.orgId : '';
   const featureCode = typeof metadata?.featureCode === 'string' ? metadata.featureCode : '';
-  if (!/^[a-z0-9-]{1,64}$/.test(orgId) || !/^[a-z0-9-]{1,64}$/.test(featureCode)) {
+  if (!/^[a-z0-9-]{1,64}$/.test(orgId) || !/^[a-z0-9_-]{1,64}$/.test(featureCode)) {
     return { status: 'rejected', reason: 'metadata' };
   }
   const entitlement: TestEntitlement = {
