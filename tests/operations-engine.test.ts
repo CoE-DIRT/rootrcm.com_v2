@@ -27,6 +27,16 @@ function uniqueIds(ids: string[]): void {
   assert.equal(new Set(ids).size, ids.length, `duplicate ids: ${ids.join(',')}`);
 }
 
+test('client projections exclude staff-audience notifications', () => {
+  const snapshot = createSeedSnapshot();
+  const staffOnly = snapshot.notifications.filter((n) => n.orgId === 'bayview' && n.audience === 'staff');
+  assert.ok(staffOnly.length > 0);
+  const clientView = projectOpsView(snapshot, 'bayview', 'client');
+  const staffView = projectOpsView(snapshot, 'bayview', 'staff');
+  assert.ok(clientView.notifications.every((n) => n.audience === 'client'));
+  assert.ok(staffView.notifications.some((n) => n.audience === 'staff'));
+});
+
 test('seed integrity: relational graph, stable ids, no PHI, origin synthetic', () => {
   const seed = createSeedSnapshot();
   const serialized = JSON.stringify(seed);
