@@ -36,15 +36,22 @@ export async function getAuthContext(header?: string | null): Promise<AuthContex
   if (!liveAuthEnabled()) return denied;
   const secret = sessionSecret(header);
   if (!secret) return denied;
+  let principal: SessionPrincipal;
   try {
     const user = await authRequest<{ $id: string; email: string; emailVerification: boolean; status: boolean }>('/account', 'GET', undefined, secret);
     if (!user.status || !user.emailVerification || !user.$id) return denied;
+    principal = { userId: user.$id, email: user.email };
+  } catch { return denied; }
+  try {
     const database = encodeURIComponent(process.env.APPWRITE_DATABASE_ID!);
     const query = new URLSearchParams();
-    query.append('queries[]', JSON.stringify({ method: 'equal', attribute: 'userId', values: [user.$id] }));
+    query.append('queries[]', JSON.stringify({ method: 'equal', attribute: 'userId', values: [principal.userId] }));
     query.append('queries[]', JSON.stringify({ method: 'limit', values: [100] }));
     const data = await authRequest<{ rows: unknown[]; total: number }>(`/tablesdb/${database}/tables/memberships/rows?${query}`, 'GET', undefined, undefined, true);
-    if (data.total > 100) return denied;
-    return { session: { userId: user.$id, email: user.email }, memberships: canonicalMemberships(data.rows, user.$id) };
-  } catch { return denied; }
+    if (data.total > 100) return { session: principal, memberships: [] };
+    return { session: principal, memberships: canonicalMemberships(data.rows, principal.userId) };
+  } catch {
+    // Fail closed for permissions while retaining independently verified identity.
+    return { session: principal, memberships: [] };
+  }
 }
