@@ -90,7 +90,7 @@ export function GoHealthcarePreview({ locale }: { locale: Locale }) {
         <p className="muted mt-3 max-w-3xl text-sm">{t.body}</p>
         <div className="mt-6 flex flex-wrap items-center gap-2" role="group" aria-label={t.heading}>
           {kinds.map((next) => (
-            <button key={next} type="button" onClick={() => { setLoading(true); setKind(next); }}
+            <button key={next} type="button" onClick={() => { if (next === kind) return; setLoading(true); setKind(next); }}
               className={`min-h-11 rounded-xl border px-3 py-2 text-sm font-bold transition focus-visible:outline-offset-2 ${next === kind ? 'border-[var(--cyan)] bg-[var(--surface-2)] text-[var(--cyan)]' : 'border-[var(--border)] text-[var(--muted)] hover:border-[var(--cyan)]'}`}
               aria-pressed={next === kind}>
               {t[next]}
