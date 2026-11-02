@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
-import { portalLabels } from '@/content/portal-demo';
+import { RbacSimulator } from '@/features/portal/settings/rbac-simulator';
 import { copy } from '@/content/messages';
+import { portalLabels } from '@/content/portal-demo';
 import { getFeatureFlags } from '@/lib/flags';
 import { requireLocale } from '@/lib/locale';
 import { publicPageMetadata } from '@/lib/metadata';
@@ -22,31 +23,53 @@ export default async function PracticeSettingsPage({
   const locale = await requireLocale(params);
   const t = copy(locale);
   const flags = getFeatureFlags();
+  const s = t.portalSettings;
   const es = locale === 'es';
-  const rows = [
-    ['Auth', flags.auth],
-    ['CRM', flags.crm],
-    ['Billing', flags.billing],
-    ['Prospecting', flags.prospecting],
-    ['Live claims', flags.liveClaims],
+
+  const labels = {
+    eyebrow: s.eyebrow,
+    title: s.title,
+    body: s.body,
+    personaLabel: s.personaLabel,
+    auditTitle: s.auditTitle,
+    addEvent: s.addEvent,
+    syntheticNote: s.syntheticNote,
+    panels: {
+      physician: {
+        title: s.panelPhysicianTitle,
+        body: s.panelPhysicianBody,
+        items: s.panelPhysicianItems,
+      },
+      admin: {
+        title: s.panelAdminTitle,
+        body: s.panelAdminBody,
+        items: s.panelAdminItems,
+      },
+      specialist: {
+        title: s.panelSpecialistTitle,
+        body: s.panelSpecialistBody,
+        items: s.panelSpecialistItems,
+      },
+    },
+  };
+
+  const adapterRows = [
+    { name: 'Auth', enabled: flags.auth, on: es ? 'Activado' : 'Enabled', off: es ? 'Desactivado' : 'Disabled' },
+    { name: 'CRM', enabled: flags.crm, on: es ? 'Activado' : 'Enabled', off: es ? 'Desactivado' : 'Disabled' },
+    { name: 'Billing', enabled: flags.billing, on: es ? 'Activado' : 'Enabled', off: es ? 'Desactivado' : 'Disabled' },
+    {
+      name: 'Prospecting',
+      enabled: flags.prospecting,
+      on: es ? 'Activado' : 'Enabled',
+      off: es ? 'Desactivado' : 'Disabled',
+    },
+    {
+      name: 'Live claims',
+      enabled: flags.liveClaims,
+      on: es ? 'Activado' : 'Enabled',
+      off: es ? 'Desactivado' : 'Disabled',
+    },
   ] as const;
-  return (
-    <div>
-      <p className="overline">{es ? 'Nada se guarda' : 'Nothing is saved'}</p>
-      <h1 className="enterprise-title mt-2 font-extrabold">{portalLabels.settings[locale]}</h1>
-      <p className="muted mt-2 max-w-3xl text-sm">
-        {portalLabels.personaNote[locale]} {t.adaptersOff}
-      </p>
-      <ul className="mt-4 grid gap-2 sm:grid-cols-2">
-        {rows.map(([name, enabled]) => (
-          <li key={name} className="surface flex items-center justify-between p-4 text-sm">
-            <span className="font-bold">{name}</span>
-            <span className="status-badge" data-tone={enabled ? 'good' : 'warn'}>
-              {enabled ? (es ? 'Activado' : 'Enabled') : es ? 'Desactivado' : 'Disabled'}
-            </span>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
+
+  return <RbacSimulator labels={labels} adapterRows={adapterRows} />;
 }

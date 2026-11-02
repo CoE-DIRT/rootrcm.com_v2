@@ -29,13 +29,17 @@ export function PortalDashboard() {
       </h1>
       <p className="muted mt-2 max-w-3xl text-sm">
         {org?.name ?? orgId}. {portalLabels.synthetic[locale]}{' '}
-        {persona === 'operations-lead'
+        {persona === 'root-rcm-specialist'
           ? es
-            ? 'La vista de líder solo cambia esta etiqueta. No abre trabajo de otro inquilino.'
-            : 'The lead view only changes this label. It does not open another tenant’s work.'
-          : es
-            ? 'La vista de administración es la misma cola sintética.'
-            : 'The admin view is the same synthetic queue.'}
+            ? 'La vista de especialista ROOT solo cambia esta etiqueta. No abre trabajo de otro inquilino.'
+            : 'The ROOT specialist view only changes this label. It does not open another tenant’s work.'
+          : persona === 'practice-physician'
+            ? es
+              ? 'La vista de médico es la misma cola sintética con énfasis clínico de demostración.'
+              : 'The physician view is the same synthetic queue with a demonstration clinical emphasis.'
+            : es
+              ? 'La vista de administración es la misma cola sintética.'
+              : 'The admin view is the same synthetic queue.'}
       </p>
       <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
         {cards.map((card) => (

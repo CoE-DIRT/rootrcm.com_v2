@@ -3,7 +3,7 @@ import { previewOrgs } from '@/content/preview-fixtures';
 
 export const portalOrganizations = previewOrgs;
 
-export type PortalPersona = 'practice-admin' | 'operations-lead';
+export type PortalPersona = 'practice-physician' | 'practice-admin' | 'root-rcm-specialist';
 
 export const portalNav = [
   { href: '/portal', key: 'dashboard' },
@@ -21,8 +21,9 @@ export const portalLabels = {
   credentialing: { en: 'Credentialing roster', es: 'Plantilla de acreditación' },
   dirt: { en: 'DIRT intelligence', es: 'Inteligencia DIRT' },
   settings: { en: 'Practice settings', es: 'Ajustes de la práctica' },
-  personaAdmin: { en: 'Practice admin', es: 'Administración de la práctica' },
-  personaLead: { en: 'ROOT operations lead', es: 'Líder de operaciones ROOT' },
+  personaAdmin: { en: 'Practice Administrator', es: 'Administrador de la práctica' },
+  personaPhysician: { en: 'Practice Physician/Owner', es: 'Médico / propietario de la práctica' },
+  personaSpecialist: { en: 'ROOT RCM Specialist', es: 'Especialista RCM de ROOT' },
   personaNote: {
     en: 'Demo control only. Switching personas does not grant access and does not bypass server authorization.',
     es: 'Solo un control de demostración. Cambiar de persona no otorga acceso ni omite la autorización del servidor.',

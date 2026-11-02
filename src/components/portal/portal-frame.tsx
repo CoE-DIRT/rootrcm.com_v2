@@ -8,8 +8,13 @@ import {
   portalLabels,
   portalNav,
   portalOrganizations,
-  type PortalPersona,
 } from '@/content/portal-demo';
+import {
+  rbacPersonaLabel,
+  type PortalRbacPersona,
+} from '@/features/portal/settings/types';
+
+export type PortalPersona = PortalRbacPersona;
 
 type PortalDemo = {
   locale: Locale;
@@ -47,7 +52,7 @@ export function PortalFrame({ locale, children }: { locale: Locale; children: Re
               <Link
                 key={item.href}
                 href={localizedPath(locale, item.href)}
-                className="min-h-11 rounded-xl px-3 py-2 text-sm font-semibold hover:bg-[var(--surface-2)]"
+                className="min-h-11 rounded-xl px-3 py-2 text-sm font-semibold hover:bg-[var(--surface-2)] focus-visible:outline-offset-2"
               >
                 {portalLabels[item.key][locale]}
               </Link>
@@ -61,7 +66,11 @@ export function PortalFrame({ locale, children }: { locale: Locale; children: Re
           <div className="flex flex-wrap items-end gap-3 border-b border-[var(--border)] bg-[var(--surface)] px-4 py-3">
             <label className="field min-w-52">
               <span>{portalLabels.orgLabel[locale]}</span>
-              <select value={org?.id} onChange={(event) => setOrgId(event.target.value)} aria-label={portalLabels.orgLabel[locale]}>
+              <select
+                value={org?.id}
+                onChange={(event) => setOrgId(event.target.value)}
+                aria-label={portalLabels.orgLabel[locale]}
+              >
                 {portalOrganizations.map((item) => (
                   <option key={item.id} value={item.id}>
                     {item.name}
@@ -76,8 +85,11 @@ export function PortalFrame({ locale, children }: { locale: Locale; children: Re
                 onChange={(event) => setPersona(event.target.value as PortalPersona)}
                 aria-label={portalLabels.personaLabel[locale]}
               >
-                <option value="practice-admin">{portalLabels.personaAdmin[locale]}</option>
-                <option value="operations-lead">{portalLabels.personaLead[locale]}</option>
+                {(Object.keys(rbacPersonaLabel) as PortalPersona[]).map((key) => (
+                  <option key={key} value={key}>
+                    {rbacPersonaLabel[key][locale]}
+                  </option>
+                ))}
               </select>
             </label>
             <p className="muted max-w-xl text-xs">{portalLabels.personaNote[locale]}</p>
