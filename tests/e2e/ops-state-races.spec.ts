@@ -221,22 +221,21 @@ test('reset during an in-flight denial keeps the restored demo on screen', async
   });
   await claim.getByTestId('deny-claim').click();
   await expect.poll(() => held !== null).toBe(true);
+  const resetButton = dashboard.getByTestId('reset-demo');
+  await expect(resetButton).toBeDisabled();
+  await held!.continue();
+  await expect(claim).toHaveAttribute('data-status', /den/i);
+  await expect(resetButton).toBeEnabled();
   const reset = page.waitForResponse((response) => {
     return response.url().includes('/api/v1/ops/actions') && (response.request().postData() ?? '').includes('"reset"');
   });
-  await dashboard.getByTestId('reset-demo').click();
+  await resetButton.click();
   expect((await reset).ok()).toBeTruthy();
   await expect(claim).toHaveAttribute('data-status', 'payer_processing');
-  await held!.fulfill({
-    status: 200,
-    contentType: 'application/json',
-    body: JSON.stringify({
-      data: { claims: [{ id: 'clm-bv-1001', status: 'denied', payerId: 'payer-healthfirst' }] },
-      error: null,
-    }),
-  });
-  await flushPaint(page);
-  await expect(claim).toHaveAttribute('data-status', 'payer_processing');
+  await page.reload();
+  const reloaded = await readyDashboard(page);
+  await reloaded.getByRole('tab', { name: 'Revenue cycle' }).click();
+  await expect(reloaded.locator('[data-claim-id="clm-bv-1001"]')).toHaveAttribute('data-status', 'payer_processing');
 });
 
 test('two tabs share one preview session and a reload shows the mutation', async ({ browser }) => {
