@@ -10,6 +10,17 @@ test('cookie parser rejects duplicate, malformed and unrelated cookies', () => {
   assert.equal(sessionSecret('root_v2_session=forged'), undefined);
   assert.equal(sessionSecret('root_v2_auth=synthetic'), 'synthetic');
 });
+test('Appwrite nested memberships load without trusting revoked assignments', () => {
+  const rows = [
+    { data: { userId: 'synthetic-admin', orgId: 'root_internal', role: 'ROOT_SUPERADMIN', status: 'active' } },
+    { data: { userId: 'synthetic-admin', orgId: 'old-tenant', role: 'ROOT_SUPERADMIN', status: 'revoked' } },
+    { data: { userId: 'another-user', orgId: 'foreign', role: 'ROOT_SUPERADMIN' } },
+  ];
+  assert.deepEqual(canonicalMemberships(rows, 'synthetic-admin'), [
+    { orgId: 'root_internal', role: 'ROOT_SUPERADMIN' },
+  ]);
+});
+
 test('canonical membership rejects email grants, unknown roles and other users', () => {
   assert.deepEqual(canonicalMemberships([
     { userId: 'other', orgId: 'org', role: 'ROOT_SUPERADMIN' },
