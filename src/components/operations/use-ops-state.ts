@@ -111,7 +111,10 @@ export function useOpsState(orgId: string, persona: OpsPersona) {
         );
         throw err;
       } finally {
-        if (generation === generationRef.current) setPending(false);
+        if (generation === generationRef.current) {
+          setPending(false);
+          setLoading(false);
+        }
       }
     },
     [orgId, persona, previewStatus],
