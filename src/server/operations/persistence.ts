@@ -16,6 +16,7 @@
 import { mkdirSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { cloneSnapshot, type OpsSnapshot } from '../../domain/operations/types.ts';
+import { isSafeOpsSessionId } from './session.ts';
 
 export type DemoSessionBackendKind = 'memory' | 'file' | 'durable_stub';
 
@@ -105,10 +106,8 @@ export class DurableStubDemoSessionStore implements DemoSessionPersistence {
   }
 }
 
-const SESSION_FILE = /^[A-Za-z0-9_-]{1,80}$/;
-
 function sessionFileName(sessionId: string): string | null {
-  if (!SESSION_FILE.test(sessionId)) return null;
+  if (!isSafeOpsSessionId(sessionId)) return null;
   return `${sessionId}.json`;
 }
 
@@ -151,7 +150,8 @@ export class FileDemoSessionStore implements DemoSessionPersistence {
 
   save(record: DemoSessionRecord): void {
     const path = this.pathFor(record.sessionId);
-    if (!path) throw new Error('Demo session id is not a safe file name.');
+    // Fail closed: refuse unsafe ids without throwing (avoids 500 on demo APIs).
+    if (!path) return;
     this.prune();
     const names = this.listNames();
     if (!names.includes(`${record.sessionId}.json`) && names.length >= MAX_DEMO_SESSIONS) {

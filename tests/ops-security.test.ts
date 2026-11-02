@@ -1,16 +1,22 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { SEED_IDS } from '../src/domain/operations/seed.ts';
 import {
   DurableStubDemoSessionStore,
+  FileDemoSessionStore,
   getDemoSessionBackend,
   resetDemoSessionPersistence,
 } from '../src/server/operations/persistence.ts';
 import { authorizeOpsPreview } from '../src/server/operations/policy.ts';
 import {
   OPS_ACTION_LIMIT,
+  OPS_SID_COOKIE,
   isPreviewPrefetch,
+  isSafeOpsSessionId,
+  readOpsSessionFromRequest,
   signOpsCapability,
   verifyOpsCapability,
   type OpsSessionContext,
@@ -42,6 +48,67 @@ test('missing or tampered capability cookie fails closed to client', async () =>
   const signature = await signOpsCapability('sid-a', 'operator');
   assert.equal(await verifyOpsCapability('sid-a', `operator.${signature}`), 'operator');
   assert.equal(await verifyOpsCapability('sid-b', `operator.${signature}`), 'client');
+});
+
+test('malformed percent-encoding in the cookie jar does not throw and fails closed to client', async () => {
+  const request = new Request('http://localhost/api/v1/ops/state', {
+    headers: {
+      cookie: `other=bad%zz; ${OPS_SID_COOKIE}=ok-sid; root_ops_cap=operator.deadbeef; junk=a%`,
+    },
+  });
+  let session: OpsSessionContext | undefined;
+  await assert.doesNotReject(async () => {
+    session = await readOpsSessionFromRequest(request);
+  });
+  assert.ok(session);
+  assert.equal(session.capability, 'client');
+  assert.equal(isSafeOpsSessionId(session.id), true);
+  assert.equal(session.id, 'ok-sid');
+});
+
+test('unsafe ops sid is replaced with a safe client session id', async () => {
+  const request = new Request('http://localhost/api/v1/ops/state', {
+    headers: {
+      cookie: `${OPS_SID_COOKIE}=../escape; root_ops_cap=operator.deadbeef`,
+    },
+  });
+  const session = await readOpsSessionFromRequest(request);
+  assert.equal(session.capability, 'client');
+  assert.equal(isSafeOpsSessionId(session.id), true);
+  assert.notEqual(session.id, '../escape');
+});
+
+test('file demo session save refuses an unsafe sid without throwing', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'root-v2-ops-sid-'));
+  const previousBackend = process.env.ROOT_DEMO_SESSION_BACKEND;
+  const previousDir = process.env.ROOT_DEMO_SESSION_DIR;
+  try {
+    process.env.ROOT_DEMO_SESSION_BACKEND = 'file';
+    process.env.ROOT_DEMO_SESSION_DIR = dir;
+    const store = new FileDemoSessionStore(dir);
+    const snapshot = resetOpsStore({ id: 'safe-seed', capability: 'client' });
+    assert.doesNotThrow(() =>
+      store.save({
+        sessionId: '../escape',
+        snapshot,
+        expiresAt: Date.now() + 60_000,
+        actionTimes: [],
+      }),
+    );
+    assert.equal(store.load('../escape'), null);
+
+    assert.doesNotThrow(() =>
+      resetOpsStore({ id: 'sid/with/slash', capability: 'client' }),
+    );
+    assert.equal(getDemoSessionBackend().load('sid/with/slash'), null);
+  } finally {
+    if (previousBackend === undefined) delete process.env.ROOT_DEMO_SESSION_BACKEND;
+    else process.env.ROOT_DEMO_SESSION_BACKEND = previousBackend;
+    if (previousDir === undefined) delete process.env.ROOT_DEMO_SESSION_DIR;
+    else process.env.ROOT_DEMO_SESSION_DIR = previousDir;
+    rmSync(dir, { recursive: true, force: true });
+    resetDemoSessionPersistence();
+  }
 });
 
 test('omitted policy capability cannot select staff operator membership', () => {

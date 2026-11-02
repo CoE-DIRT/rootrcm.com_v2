@@ -79,19 +79,39 @@ export function shouldReplacePreviewCapability(current: OpsCapability, next: Ops
   return !(current === 'operator' && next === 'client');
 }
 
+/** Matches FileDemoSessionStore file names. UUID and preview sids stay within this set. */
+export function isSafeOpsSessionId(sessionId: string): boolean {
+  return /^[A-Za-z0-9_-]{1,80}$/.test(sessionId);
+}
+
+function decodeCookieValue(raw: string): string | null {
+  try {
+    return decodeURIComponent(raw);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Parse demo ops cookies. Malformed percent-encoding must not throw — skip the
+ * bad pair and fail closed to a fresh safe sid + client capability.
+ */
 export async function readOpsSessionFromRequest(request: Request): Promise<OpsSessionContext> {
   const cookie = request.headers.get('cookie') ?? '';
-  const parts = Object.fromEntries(
-    cookie
-      .split(';')
-      .map((entry) => entry.trim())
-      .filter(Boolean)
-      .map((entry) => {
-        const idx = entry.indexOf('=');
-        return [entry.slice(0, idx), decodeURIComponent(entry.slice(idx + 1))];
-      }),
-  );
-  const sid = parts[OPS_SID_COOKIE] || crypto.randomUUID();
+  const parts: Record<string, string> = {};
+  for (const entry of cookie.split(';')) {
+    const trimmed = entry.trim();
+    if (!trimmed) continue;
+    const idx = trimmed.indexOf('=');
+    if (idx <= 0) continue;
+    const name = trimmed.slice(0, idx).trim();
+    if (!name) continue;
+    const decoded = decodeCookieValue(trimmed.slice(idx + 1));
+    if (decoded === null) continue;
+    parts[name] = decoded;
+  }
+  const rawSid = parts[OPS_SID_COOKIE];
+  const sid = rawSid && isSafeOpsSessionId(rawSid) ? rawSid : crypto.randomUUID();
   const capability = await verifyOpsCapability(sid, parts[OPS_CAP_COOKIE]);
   return { id: sid, capability };
 }

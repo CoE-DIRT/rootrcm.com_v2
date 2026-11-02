@@ -69,7 +69,10 @@ test('file demo sessions survive a new store, isolate practices, expire, cap, an
     capped.save({ sessionId: 'cap-new', snapshot, expiresAt: future + 10_000, actionTimes: [] });
     assert.equal(capped.load('cap-0'), null);
     assert.ok(capped.load('cap-new'));
-    assert.throws(() => capped.save({ sessionId: '../escape', snapshot, expiresAt: future, actionTimes: [] }));
+    assert.doesNotThrow(() =>
+      capped.save({ sessionId: '../escape', snapshot, expiresAt: future, actionTimes: [] }),
+    );
+    assert.equal(capped.load('../escape'), null);
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
