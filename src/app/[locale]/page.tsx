@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { HomeJourney } from '@/components/commercial/journey-sections';
 import { PageHero } from '@/components/site/page-hero';
 import { BandList, TileGrid } from '@/components/site/tile-grid';
@@ -68,12 +67,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       </div>
       <BandList items={t.home.bands} />
       <HomeJourney locale={locale} />
-      <p className="muted mt-8 text-sm">
-        {t.adaptersOff}{' '}
-        <Link href={localizedPath(locale, '/preview/client')} className="underline">
-          {t.preview}
-        </Link>
-      </p>
     </main>
   );
 }

@@ -70,8 +70,8 @@ const en = {
     ],
     bands: [
       'Discover → Assess → Scope → Onboard → Connect → Execute → Monitor → Optimize',
-      'Technology & integration compatibility · status must be verified',
-      'Customer voices & proof · editorial slots pending verification',
+      'Built around the technology your practice already uses',
+      'Accountability, transparent workflows and evidence-led decisions',
     ],
     tileHint: 'Explore the scope, evidence and next action.',
   },
@@ -181,7 +181,7 @@ const en = {
     bands: [
       'One canonical pricing catalog',
       'Defined deliverables, dependencies and exclusions',
-      'Checkout and subscriptions are future production flows',
+      'Speak with our team to choose the right engagement',
     ],
   },
   resources: {
@@ -214,7 +214,7 @@ const en = {
   },
   company: {
     title: 'Infrastructure for independent practices to thrive.',
-    body: 'Leadership, careers and partnership pages remain placeholders until biographies, logos and certifications are evidenced.',
+    body: 'A focused revenue operations partner for independent practices, care teams and growing healthcare organizations.',
     sections: [
       {
         title: 'Public website',
@@ -250,7 +250,7 @@ const en = {
   },
   consultation: {
     title: 'Talk with a revenue expert',
-    body: 'Describe concerns without sharing patient information. HubSpot sync is disabled in this environment.',
+    body: 'Tell us about your practice, revenue goals or operational challenges. Please do not share patient information.',
     submit: 'Send business inquiry',
     received: 'Your business inquiry has been received.',
     unavailable: 'Online inquiries are not active yet. No information will be sent or stored.',
@@ -258,7 +258,7 @@ const en = {
   },
   account: {
     title: 'Start without financial commitment',
-    body: 'Email or Google/Microsoft sign-in is planned; onboarding collects business information, not PHI.',
+    body: 'Explore the platform experience and speak with ROOT about establishing your practice workspace.',
     steps: [
       'Create an account',
       'Verify email',
@@ -291,7 +291,7 @@ const en = {
   },
   signIn: {
     title: 'Choose your ROOT workspace.',
-    body: 'Authentication is disabled. Use labeled synthetic previews; they are not a successful login.',
+    body: 'Explore example client and team workspaces. Request your own organization account through the ROOT team.',
     clientPreview: 'Preview client workspace',
     staffPreview: 'Preview staff workspace',
   },
@@ -541,8 +541,8 @@ const es: Messages = {
     ],
     bands: [
       'Descubrir → Evaluar → Definir alcance → Incorporar → Conectar → Ejecutar → Monitorear → Optimizar',
-      'Compatibilidad tecnológica · el estado debe verificarse',
-      'Voces de clientes y pruebas · espacios editoriales pendientes de verificación',
+      'Diseñado alrededor de la tecnología que su práctica ya utiliza',
+      'Responsabilidad, flujos transparentes y decisiones basadas en evidencia',
     ],
     tileHint: 'Explore el alcance, la evidencia y la siguiente acción.',
   },
@@ -652,7 +652,7 @@ const es: Messages = {
     bands: [
       'Un catálogo canónico de precios',
       'Entregables, dependencias y exclusiones definidos',
-      'Checkout y suscripciones son flujos futuros de producción',
+      'Consulte con nuestro equipo para elegir el servicio adecuado',
     ],
   },
   resources: {
@@ -685,7 +685,7 @@ const es: Messages = {
   },
   company: {
     title: 'Infraestructura para que las prácticas independientes prosperen.',
-    body: 'Liderazgo, empleo y alianzas permanecen como marcadores de posición hasta evidenciar biografías, logotipos y certificaciones.',
+    body: 'Un socio especializado en operaciones de ingresos para prácticas independientes y organizaciones sanitarias en crecimiento.',
     sections: [
       {
         title: 'Sitio público',
@@ -721,7 +721,7 @@ const es: Messages = {
   },
   consultation: {
     title: 'Hable con un experto en ingresos',
-    body: 'Describa preocupaciones sin compartir información de pacientes. La sincronización con HubSpot está desactivada en este entorno.',
+    body: 'Cuéntenos sobre su práctica, objetivos de ingresos y retos operativos. No comparta información de pacientes.',
     submit: 'Enviar consulta empresarial',
     received: 'Se ha recibido su consulta empresarial.',
     unavailable:
@@ -730,7 +730,7 @@ const es: Messages = {
   },
   account: {
     title: 'Empiece sin compromiso financiero',
-    body: 'El inicio de sesión con correo o Google/Microsoft está planificado; el alta recoge información empresarial, no PHI.',
+    body: 'Explore la experiencia de la plataforma y consulte con ROOT para establecer el espacio de su práctica.',
     steps: [
       'Crear una cuenta',
       'Verificar correo',
@@ -763,7 +763,7 @@ const es: Messages = {
   },
   signIn: {
     title: 'Elija su espacio ROOT.',
-    body: 'La autenticación está desactivada. Use vistas sintéticas etiquetadas; no son un inicio de sesión exitoso.',
+    body: 'Explore espacios de ejemplo para clientes y equipos. Solicite a ROOT una cuenta para su organización.',
     clientPreview: 'Vista previa del cliente',
     staffPreview: 'Vista previa del personal',
   },
