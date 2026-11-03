@@ -2,11 +2,15 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { isPreviewPrefetch } from '@/server/operations/session';
 import { bindPreviewCookies } from '@/server/operations/session-http';
+import { canonicalAuthRedirect } from '@/server/auth/live-config';
 
 const locales = new Set(['en', 'es']);
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  // Host-only auth cookies must never be split between preview and canonical hosts.
+  const canonical = canonicalAuthRedirect(request.nextUrl);
+  if (canonical) return NextResponse.redirect(canonical);
   if (
     pathname.startsWith('/api') ||
     pathname.startsWith('/_next') ||

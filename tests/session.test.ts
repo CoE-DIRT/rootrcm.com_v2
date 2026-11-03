@@ -1,20 +1,20 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { getAuthContext, principalFromCookieHeader } from '../src/server/auth/session.ts';
+import { canonicalMemberships, getAuthContext, principalFromCookieHeader, sessionSecret } from '../src/server/auth/session.ts';
 import { requireMembership } from '../src/server/auth/policy.ts';
 
-test('unverified cookies never become a principal', () => {
+test('unverified cookies never become a principal', async () => {
   delete process.env.ROOT_ENABLE_AUTH;
   assert.equal(principalFromCookieHeader('root_v2_session=anything'), null);
-  const ctx = getAuthContext('root_v2_session=anything');
+  const ctx = await getAuthContext('root_v2_session=anything');
   assert.equal(ctx.session, null);
   assert.equal(ctx.memberships.length, 0);
 });
 
-test('auth flag on still does not trust cookies without Appwrite validation', () => {
+test('auth flag on still does not trust cookies without Appwrite validation', async () => {
   process.env.ROOT_ENABLE_AUTH = 'true';
-  const ctx = getAuthContext('root_v2_session=forged');
+  const ctx = await getAuthContext('root_v2_session=forged');
   assert.equal(ctx.session, null);
   const decision = requireMembership(ctx, 'sample-solo', 'organization.read');
   assert.equal(decision.allow, false);
@@ -22,9 +22,42 @@ test('auth flag on still does not trust cookies without Appwrite validation', ()
   delete process.env.ROOT_ENABLE_AUTH;
 });
 
-test('org route uses requireOrgMembership and stays fail-closed while auth is off', () => {
+test('org route uses requireOrgMembership and stays fail-closed while auth is off', async () => {
   const source = readFileSync('src/app/api/v1/orgs/[orgId]/route.ts', 'utf8');
   assert.match(source, /requireOrgMembership/);
   assert.match(source, /organization\.read/);
   assert.match(source, /getAuthContext/);
+});
+
+test('TablesDB nested and flat active membership rows resolve to canonical roles', () => {
+  const user = 'verified-user';
+  const rows = [
+    { data: { userId: user, orgId: 'root_internal', role: 'ROOT_SUPERADMIN', status: 'active', revokedAt: null } },
+    { userId: user, orgId: 'client_two', role: 'CLIENT_ADMIN', status: 'active', revokedAt: null },
+    { data: { userId: user, orgId: 'revoked', role: 'ROOT_SUPERADMIN', status: 'revoked', revokedAt: '2026-11-02T00:00:00Z' } },
+    { data: { userId: 'another-user', orgId: 'unrelated', role: 'ROOT_SUPERADMIN', status: 'active', revokedAt: null } },
+  ];
+  assert.deepEqual(canonicalMemberships(rows, user), [
+    { orgId: 'root_internal', role: 'ROOT_SUPERADMIN' },
+    { orgId: 'client_two', role: 'CLIENT_ADMIN' },
+  ]);
+});
+
+test('valid encoded Appwrite session cookie keeps padding without granting trust', () => {
+  assert.equal(sessionSecret('root_v2_auth=abc.def%3D'), 'abc.def=');
+  assert.equal(sessionSecret('root_v2_auth=abc%2Fdef%2Bghi'), 'abc/def+ghi');
+  assert.equal(sessionSecret('root_v2_auth=abc%3Bunsafe'), undefined);
+  assert.equal(sessionSecret('root_v2_auth=one; root_v2_auth=two'), undefined);
+});
+
+test('inactive or revoked internal admin memberships never grant access in either row shape', () => {
+  for (const fields of [
+    { status: 'inactive', revokedAt: null },
+    { status: 'active', revokedAt: '2026-11-03T00:00:00Z' },
+    { revokedAt: null },
+  ]) {
+    const row = { userId: 'synthetic-user', orgId: 'root_internal', role: 'ROOT_SUPERADMIN', ...fields };
+    assert.deepEqual(canonicalMemberships([row], 'synthetic-user'), []);
+    assert.deepEqual(canonicalMemberships([{ data: row }], 'synthetic-user'), []);
+  }
 });
