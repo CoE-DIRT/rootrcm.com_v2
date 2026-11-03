@@ -37,15 +37,17 @@ export function assertLiveAuthConfigured(): string {
   return process.env.APPWRITE_AUTH_API_KEY as string;
 }
 
-export function canonicalAuthRedirect(url: URL): URL | null {
+export function canonicalAuthRedirect(url: URL, requestHost?: string | null): URL | null {
   if (process.env.ROOT_AUTH_ENVIRONMENT !== 'production' || !liveAuthEnabled() ||
       !/^\/(en|es)\/(sign-in|dashboard)(\/|$)/.test(url.pathname)) return null;
   const canonical = new URL(authConfig()!.origin);
-  // Appwrite terminates TLS before forwarding to Next.js. nextUrl can report
-  // http://rootrcm.com even when the visitor is already on https://rootrcm.com.
-  // Comparing URL.origin would redirect that same public hostname forever.
-  // Host/port identify the canonical site; the edge owns HTTPS enforcement.
-  if (url.hostname.toLowerCase() === canonical.hostname.toLowerCase() &&
-      url.port === canonical.port) return null;
+  // Appwrite's edge proxy can reconstruct nextUrl using an INTERNAL hostname.
+  // Its incoming Host header retains the browser's public hostname. Prefer
+  // that host for GET-only canonical routing; otherwise fall back to nextUrl.
+  // Login POSTs still independently require the exact trusted HTTPS Origin.
+  const observedHost = requestHost && requestHost.trim()
+    ? requestHost.trim().toLowerCase()
+    : url.host.toLowerCase();
+  if (observedHost === canonical.host.toLowerCase()) return null;
   return new URL(url.pathname + url.search, canonical.origin);
 }
