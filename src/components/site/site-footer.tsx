@@ -1,8 +1,9 @@
 import Link from 'next/link';
-import { ArrowUpRight, MapPin, Phone, Mail, MessageCircle } from 'lucide-react';
+import { ArrowUpRight, MapPin, Phone, MessageCircle } from 'lucide-react';
 import type { Locale } from '@/i18n/locales';
 import { localizedPath } from '@/lib/paths';
 import { SiteBrand } from './site-brand';
+import { EmailContactLink } from './email-contact-link';
 import { NewsletterRequest } from './newsletter-request';
 
 type FooterLink = { href: string; en: string; es: string };
@@ -102,7 +103,7 @@ export function SiteFooter({ locale }: { locale: Locale }) {
             <p className="muted mt-1 flex items-start gap-2 text-xs"><MapPin className="mt-0.5 size-3.5 shrink-0" aria-hidden="true"/>2803 Philadelphia Pike, Suite B #1864, Claymont, DE 19703, USA</p>
           </div>
           <div className="flex flex-wrap gap-x-5 gap-y-3 font-semibold">
-            <a href="mailto:info@rootrcm.com" className="inline-flex items-center gap-2 hover:text-[var(--cyan)]"><Mail className="size-4" aria-hidden="true"/>info@rootrcm.com</a>
+            <EmailContactLink locale={locale}/>
             <a href="tel:+13024965648" className="inline-flex items-center gap-2 hover:text-[var(--cyan)]"><Phone className="size-4" aria-hidden="true"/>+1 (302) 496-5648</a>
           </div>
         </div>
