@@ -15,11 +15,11 @@ test('canonical membership rejects email grants, unknown roles and other users',
     { userId: 'other', orgId: 'org', role: 'ROOT_SUPERADMIN' },
     { userId: 'synthetic', orgId: 'org', role: 'admin' },
     { email: 'admin@example.invalid', orgId: 'org', role: 'ROOT_SUPERADMIN' },
-    { userId: 'synthetic', orgId: 'org', role: 'CLIENT_MEMBER' },
+    { userId: 'synthetic', orgId: 'org', role: 'CLIENT_MEMBER', status: 'active', revokedAt: null },
   ], 'synthetic'), [{ orgId: 'org', role: 'CLIENT_MEMBER' }]);
   assert.throws(() => canonicalMemberships([
-    { userId: 'synthetic', orgId: 'org', role: 'CLIENT_MEMBER' },
-    { userId: 'synthetic', orgId: 'org', role: 'ROOT_SUPERADMIN' },
+    { userId: 'synthetic', orgId: 'org', role: 'CLIENT_MEMBER', status: 'active', revokedAt: null },
+    { userId: 'synthetic', orgId: 'org', role: 'ROOT_SUPERADMIN', status: 'active', revokedAt: null },
   ], 'synthetic'));
 });
 test('login limiter bounds attempts and expires', () => {
@@ -45,7 +45,7 @@ test('verified identity loads only server memberships; provider failures deny ac
       }
       assert.match(String(input), /tables\/memberships\/rows/);
       assert.equal(headers['X-Appwrite-Session'], undefined);
-      return Response.json({ total: 1, rows: [{ userId: 'synthetic', orgId: 'org', role: 'CLIENT_MEMBER' }] });
+      return Response.json({ total: 1, rows: [{ data: { userId: 'synthetic', orgId: 'org', role: 'CLIENT_MEMBER', status: 'active', revokedAt: null } }] });
     };
     assert.equal((await getAuthContext('root_v2_auth=synthetic')).memberships[0].role, 'CLIENT_MEMBER');
     assert.equal(calls, 2);
@@ -174,7 +174,7 @@ test('signup and verification/recovery contracts in EN/ES preserve least privile
     let rows: unknown[] | undefined = undefined;
     globalThis.fetch = async url => String(url).endsWith('/account')
       ? Response.json({ $id: 'synthetic-user', email: 'client@example.invalid', status: true, emailVerification: true })
-      : Response.json({ total: rows?.length ?? 1, rows: rows ?? [{ userId: 'synthetic-user', orgId: 'tenant-a', role }] });
+      : Response.json({ total: rows?.length ?? 1, rows: rows ?? [{ data: { userId: 'synthetic-user', orgId: 'tenant-a', role, status: 'active', revokedAt: null } }] });
     let context = await getAuthContext('root_v2_auth=synthetic-session');
     assert.equal(requireMembership(context, 'tenant-a', 'organization.read').allow, true);
     assert.equal(requireMembership(context, 'tenant-a', 'root_admin.manage').allow, false);
