@@ -266,6 +266,10 @@ test('production config is explicit, canonical, project-pinned and keeps CSRF/se
       // Appwrite forwards HTTPS visitors with an internal HTTP URL. That is not
       // a foreign host and must never redirect to itself indefinitely.
       assert.equal(canonicalAuthRedirect(new URL(`http://rootrcm.com${path}`)), null);
+      // Appwrite's internal nextUrl host can differ from the public Host header.
+      assert.equal(canonicalAuthRedirect(new URL(`http://edge-internal.invalid${path}`), 'rootrcm.com'), null);
+      assert.equal(canonicalAuthRedirect(new URL(`http://edge-internal.invalid/${locale}/sign-in?utm_source=chatgpt.com`), 'rootrcm.com'), null);
+      assert.equal(canonicalAuthRedirect(new URL(`http://edge-internal.invalid${path}`), 'rootrcm-com-v2.appwrite.network')?.href, `${valid.ROOT_AUTH_ORIGIN}${path}`);
       assert.equal(canonicalAuthRedirect(new URL(`https://www.rootrcm.com${path}`))?.href, `${valid.ROOT_AUTH_ORIGIN}${path}`);
       assert.equal(canonicalAuthRedirect(new URL(`http://preview.example.invalid${path}`))?.href, `${valid.ROOT_AUTH_ORIGIN}${path}`);
       assert.equal(canonicalAuthRedirect(new URL(`http://rootrcm.com/${locale}/sign-in?utm_source=chatgpt.com`)), null);
