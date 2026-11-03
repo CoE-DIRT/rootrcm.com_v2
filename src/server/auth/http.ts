@@ -6,8 +6,8 @@ import { cleanEmail, validPassword } from './session-guards.ts';
 import { sessionSecret } from './session.ts';
 import { authRequest, AuthError } from './transport.ts';
 
-function reply(status: number, ok = false, verificationSent?: boolean) {
-  return NextResponse.json({ ok, ...(verificationSent === undefined ? {} : { verificationSent }) }, { status, headers: { 'Cache-Control': 'no-store', 'Referrer-Policy': 'no-referrer' } });
+function reply(status: number, ok = false, verificationSent?: boolean, verified?: boolean) {
+  return NextResponse.json({ ok, ...(verificationSent === undefined ? {} : { verificationSent }), ...(verified === undefined ? {} : { verified }) }, { status, headers: { 'Cache-Control': 'no-store', 'Referrer-Policy': 'no-referrer' } });
 }
 export async function handleAuth(request: Request, action: string) {
   if (!liveAuthEnabled()) return reply(503);
@@ -48,6 +48,12 @@ export async function handleAuth(request: Request, action: string) {
       if (action === 'signup') await authRequest('/account', 'POST', { userId: randomUUID(), email, password: body.password });
       const session = await authRequest<{ secret: string; expire: string }>('/account/sessions/email', 'POST', { email, password: body.password }, undefined, true);
       if (!session.secret || !Number.isFinite(Date.parse(session.expire))) return reply(502);
+      let verified: boolean | undefined;
+      if (action === 'login') {
+        const user = await authRequest<{ emailVerification: boolean; status: boolean }>('/account', 'GET', undefined, session.secret);
+        if (!user.status || typeof user.emailVerification !== 'boolean') return reply(400);
+        verified = user.emailVerification;
+      }
       let verificationSent: boolean | undefined;
       if (action === 'signup') {
         verificationSent = false;
@@ -56,7 +62,7 @@ export async function handleAuth(request: Request, action: string) {
           verificationSent = true;
         } catch { /* Preserve the created account/session so verification can be retried. */ }
       }
-      const response = reply(200, true, verificationSent);
+      const response = reply(200, true, verificationSent, verified);
       response.cookies.set(ROOT_AUTH_COOKIE, session.secret, { httpOnly: true, secure: origin.protocol === 'https:', sameSite: 'strict', path: '/', expires: new Date(session.expire) });
       return response;
     }
