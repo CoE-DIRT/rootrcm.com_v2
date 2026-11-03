@@ -49,3 +49,15 @@ test('valid encoded Appwrite session cookie keeps padding without granting trust
   assert.equal(sessionSecret('root_v2_auth=abc%3Bunsafe'), undefined);
   assert.equal(sessionSecret('root_v2_auth=one; root_v2_auth=two'), undefined);
 });
+
+test('inactive or revoked internal admin memberships never grant access in either row shape', () => {
+  for (const fields of [
+    { status: 'inactive', revokedAt: null },
+    { status: 'active', revokedAt: '2026-11-03T00:00:00Z' },
+    { revokedAt: null },
+  ]) {
+    const row = { userId: 'synthetic-user', orgId: 'root_internal', role: 'ROOT_SUPERADMIN', ...fields };
+    assert.deepEqual(canonicalMemberships([row], 'synthetic-user'), []);
+    assert.deepEqual(canonicalMemberships([{ data: row }], 'synthetic-user'), []);
+  }
+});

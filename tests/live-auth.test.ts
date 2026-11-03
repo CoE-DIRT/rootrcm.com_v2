@@ -193,7 +193,7 @@ test('signup and verification/recovery contracts in EN/ES preserve least privile
 });
 
 test('staging configuration rejects missing, public-only, mismatched and production targets before network', async () => {
-  const { liveAuthEnabled, stagingAuthConfig } = await import('../src/server/auth/live-config.ts');
+  const { liveAuthEnabled, authConfig } = await import('../src/server/auth/live-config.ts');
   const names = ['APPWRITE_AUTH_PROJECT_ID', 'ROOT_AUTH_ENVIRONMENT', 'NEXT_PUBLIC_APPWRITE_PROJECT_ID', 'ROOT_ENABLE_AUTH', 'ROOT_ENABLE_LIVE_AUTH', 'APPWRITE_AUTH_API_KEY', 'ROOT_AUTH_ORIGIN', 'APPWRITE_DATABASE_ID'];
   const previous = names.map(name => process.env[name]);
   const originalFetch = globalThis.fetch;
@@ -205,7 +205,7 @@ test('staging configuration rejects missing, public-only, mismatched and product
       { APPWRITE_AUTH_PROJECT_ID: '', NEXT_PUBLIC_APPWRITE_PROJECT_ID: 'synthetic-staging' },
       { APPWRITE_AUTH_PROJECT_ID: 'bad/project' },
       { NEXT_PUBLIC_APPWRITE_PROJECT_ID: 'different-project' },
-      { ROOT_AUTH_ENVIRONMENT: '' }, { ROOT_AUTH_ENVIRONMENT: 'production' },
+      { ROOT_AUTH_ENVIRONMENT: '' }, { ROOT_AUTH_ENVIRONMENT: 'invalid' },
       { ROOT_AUTH_ORIGIN: '' }, { ROOT_AUTH_ORIGIN: 'https://rootrcm.com' },
       { ROOT_AUTH_ORIGIN: 'https://www.rootrcm.com' },
       { ROOT_AUTH_ORIGIN: 'https://staging.example.invalid/' },
@@ -220,7 +220,7 @@ test('staging configuration rejects missing, public-only, mismatched and product
       await assert.rejects(authRequest('/account'), /live_auth_not_configured/);
     }
     Object.assign(process.env, valid);
-    assert.deepEqual(stagingAuthConfig(), { projectId: 'synthetic-staging', origin: valid.ROOT_AUTH_ORIGIN });
+    assert.deepEqual(authConfig(), { projectId: 'synthetic-staging', origin: valid.ROOT_AUTH_ORIGIN });
     globalThis.fetch = async (_url, init) => {
       assert.equal((init?.headers as Record<string, string>)['X-Appwrite-Project'], 'synthetic-staging');
       return Response.json({});
@@ -242,6 +242,62 @@ test('staging configuration rejects missing, public-only, mismatched and product
     assert.equal(signup.status, 200);
     assert.match(signup.headers.get('set-cookie')!, /Secure/);
     assert.doesNotMatch(signup.headers.get('set-cookie')!, /Domain=/i);
+  } finally {
+    globalThis.fetch = originalFetch;
+    names.forEach((name, i) => { if (previous[i] === undefined) delete process.env[name]; else process.env[name] = previous[i]; });
+  }
+});
+
+test('production config is explicit, canonical, project-pinned and keeps CSRF/session boundaries', async () => {
+  const { authConfig, liveAuthEnabled, canonicalAuthRedirect } = await import('../src/server/auth/live-config.ts');
+  const { handleAuth } = await import('../src/server/auth/http.ts');
+  const names = ['ROOT_AUTH_ENVIRONMENT','APPWRITE_AUTH_PROJECT_ID','APPWRITE_DATABASE_ID','ROOT_AUTH_ORIGIN','APPWRITE_AUTH_API_KEY','ROOT_ENABLE_AUTH','ROOT_ENABLE_LIVE_AUTH','NEXT_PUBLIC_APPWRITE_PROJECT_ID'];
+  const previous = names.map(name => process.env[name]);
+  const originalFetch = globalThis.fetch;
+  const valid = { ROOT_AUTH_ENVIRONMENT: 'production', APPWRITE_AUTH_PROJECT_ID: '6ae878f400268114a480', APPWRITE_DATABASE_ID: 'synthetic', ROOT_AUTH_ORIGIN: 'https://rootrcm.com', APPWRITE_AUTH_API_KEY: 'synthetic-key', ROOT_ENABLE_AUTH: 'true', ROOT_ENABLE_LIVE_AUTH: 'true', NEXT_PUBLIC_APPWRITE_PROJECT_ID: '' };
+  try {
+    Object.assign(process.env, valid);
+    assert.equal(liveAuthEnabled(), true);
+    assert.equal(authConfig()!.origin, valid.ROOT_AUTH_ORIGIN);
+    for (const locale of ['en', 'es']) {
+      const path = `/${locale}/dashboard/admin?orgId=root_internal`;
+      assert.equal(canonicalAuthRedirect(new URL(`https://preview.example.invalid${path}`))?.href, `${valid.ROOT_AUTH_ORIGIN}${path}`);
+      assert.equal(canonicalAuthRedirect(new URL(`${valid.ROOT_AUTH_ORIGIN}${path}`)), null);
+    }
+    assert.equal(canonicalAuthRedirect(new URL('https://preview.example.invalid/en/consultation')), null);
+    assert.equal(canonicalAuthRedirect(new URL('https://preview.example.invalid/api/v1/auth/login')), null);
+    for (const patch of [
+      { APPWRITE_AUTH_PROJECT_ID: 'another-project' }, { APPWRITE_AUTH_PROJECT_ID: '' },
+      { NEXT_PUBLIC_APPWRITE_PROJECT_ID: 'another-project' },
+      { APPWRITE_DATABASE_ID: 'bad/database' }, { ROOT_AUTH_ENVIRONMENT: '' },
+      { ROOT_AUTH_ORIGIN: 'http://rootrcm.com' }, { ROOT_AUTH_ORIGIN: 'https://localhost' },
+      { ROOT_AUTH_ORIGIN: 'https://rootrcm.com/' }, { ROOT_AUTH_ORIGIN: 'https://rootrcm.com?test=1' },
+      { ROOT_AUTH_ORIGIN: 'https://user@rootrcm.com' }, { ROOT_AUTH_ORIGIN: 'https://ROOTRCM.com' },
+      { ROOT_ENABLE_AUTH: 'false' }, { ROOT_ENABLE_LIVE_AUTH: 'false' },
+    ]) {
+      Object.assign(process.env, valid, patch);
+      assert.equal(liveAuthEnabled(), false, JSON.stringify(patch));
+    }
+    Object.assign(process.env, valid);
+    const request = (origin: string, cookie = '') => new Request(`${valid.ROOT_AUTH_ORIGIN}/api/v1/auth/login`, {
+      method: 'POST', headers: { origin, 'content-type': 'application/json', cookie },
+      body: JSON.stringify({ email: 'synthetic@example.invalid', password: 'synthetic-password' }),
+    });
+    globalThis.fetch = async () => { throw new Error('foreign_origin_must_not_call_provider'); };
+    assert.equal((await handleAuth(request('https://preview.example.invalid'), 'login')).status, 403);
+    assert.equal((await handleAuth(request('https://www.rootrcm.com'), 'login')).status, 403);
+    globalThis.fetch = async url => String(url).endsWith('/account')
+      ? Response.json({ status: true, emailVerification: true })
+      : Response.json({ secret: 'synthetic-session', expire: '2099-01-01T00:00:00.000Z' });
+    const login = await handleAuth(request(valid.ROOT_AUTH_ORIGIN), 'login');
+    assert.equal(login.status, 200);
+    const cookie = login.headers.get('set-cookie')!;
+    for (const attribute of ['Secure','HttpOnly','SameSite=strict','Path=/']) assert.ok(cookie.includes(attribute));
+    assert.doesNotMatch(cookie, /Domain=/i);
+    assert.deepEqual(await login.json(), { ok: true, verified: true });
+    globalThis.fetch = async () => new Response(null, { status: 204 });
+    const logout = await handleAuth(request(valid.ROOT_AUTH_ORIGIN, 'root_v2_auth=synthetic-session'), 'logout');
+    assert.match(logout.headers.get('set-cookie')!, /Max-Age=0/);
   } finally {
     globalThis.fetch = originalFetch;
     names.forEach((name, i) => { if (previous[i] === undefined) delete process.env[name]; else process.env[name] = previous[i]; });

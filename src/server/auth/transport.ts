@@ -1,4 +1,4 @@
-import { assertLiveAuthConfigured, ROOT_AUTH_ENDPOINT, stagingAuthConfig } from './live-config.ts';
+import { assertLiveAuthConfigured, ROOT_AUTH_ENDPOINT, authConfig } from './live-config.ts';
 
 export class AuthError extends Error {
   status: number;
@@ -10,7 +10,7 @@ export async function authRequest<T>(path: string, method = 'GET', body?: unknow
   const key = assertLiveAuthConfigured();
   const response = await fetch(`${ROOT_AUTH_ENDPOINT}${path}`, {
     method, cache: 'no-store', redirect: 'error', signal: AbortSignal.timeout(10000),
-    headers: { 'content-type': 'application/json', 'X-Appwrite-Project': stagingAuthConfig()!.projectId,
+    headers: { 'content-type': 'application/json', 'X-Appwrite-Project': authConfig()!.projectId,
       ...(session ? { 'X-Appwrite-Session': session } : {}),
       ...(admin ? { 'X-Appwrite-Key': key } : {}) },
     ...(body === undefined ? {} : { body: JSON.stringify(body) }),
