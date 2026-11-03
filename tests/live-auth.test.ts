@@ -263,6 +263,13 @@ test('production config is explicit, canonical, project-pinned and keeps CSRF/se
       const path = `/${locale}/dashboard/admin?orgId=root_internal`;
       assert.equal(canonicalAuthRedirect(new URL(`https://preview.example.invalid${path}`))?.href, `${valid.ROOT_AUTH_ORIGIN}${path}`);
       assert.equal(canonicalAuthRedirect(new URL(`${valid.ROOT_AUTH_ORIGIN}${path}`)), null);
+      // Appwrite forwards HTTPS visitors with an internal HTTP URL. That is not
+      // a foreign host and must never redirect to itself indefinitely.
+      assert.equal(canonicalAuthRedirect(new URL(`http://rootrcm.com${path}`)), null);
+      assert.equal(canonicalAuthRedirect(new URL(`https://www.rootrcm.com${path}`))?.href, `${valid.ROOT_AUTH_ORIGIN}${path}`);
+      assert.equal(canonicalAuthRedirect(new URL(`http://preview.example.invalid${path}`))?.href, `${valid.ROOT_AUTH_ORIGIN}${path}`);
+      assert.equal(canonicalAuthRedirect(new URL(`http://rootrcm.com/${locale}/sign-in?utm_source=chatgpt.com`)), null);
+      assert.equal(canonicalAuthRedirect(new URL(`https://preview.example.invalid/${locale}/sign-in?utm_source=chatgpt.com`))?.href, `${valid.ROOT_AUTH_ORIGIN}/${locale}/sign-in?utm_source=chatgpt.com`);
     }
     assert.equal(canonicalAuthRedirect(new URL('https://preview.example.invalid/en/consultation')), null);
     assert.equal(canonicalAuthRedirect(new URL('https://preview.example.invalid/api/v1/auth/login')), null);

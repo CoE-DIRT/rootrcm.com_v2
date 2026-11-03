@@ -40,6 +40,12 @@ export function assertLiveAuthConfigured(): string {
 export function canonicalAuthRedirect(url: URL): URL | null {
   if (process.env.ROOT_AUTH_ENVIRONMENT !== 'production' || !liveAuthEnabled() ||
       !/^\/(en|es)\/(sign-in|dashboard)(\/|$)/.test(url.pathname)) return null;
-  const canonical = authConfig()!;
-  return url.origin === canonical.origin ? null : new URL(url.pathname + url.search, canonical.origin);
+  const canonical = new URL(authConfig()!.origin);
+  // Appwrite terminates TLS before forwarding to Next.js. nextUrl can report
+  // http://rootrcm.com even when the visitor is already on https://rootrcm.com.
+  // Comparing URL.origin would redirect that same public hostname forever.
+  // Host/port identify the canonical site; the edge owns HTTPS enforcement.
+  if (url.hostname.toLowerCase() === canonical.hostname.toLowerCase() &&
+      url.port === canonical.port) return null;
+  return new URL(url.pathname + url.search, canonical.origin);
 }
