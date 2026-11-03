@@ -9,7 +9,7 @@ const locales = new Set(['en', 'es']);
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   // Host-only auth cookies must never be split between preview and canonical hosts.
-  const canonical = canonicalAuthRedirect(request.nextUrl);
+  const canonical = canonicalAuthRedirect(request.nextUrl, request.headers.get('host'));
   if (canonical) return NextResponse.redirect(canonical);
   if (
     pathname.startsWith('/api') ||
