@@ -3,7 +3,7 @@ on:
   push:
     branches: [main]
   pull_request:
-    branches: [main]
+    branches: [main, 'feat/**', 'fix/**']
   schedule:
     - cron: '17 4 * * 1'
 permissions:
