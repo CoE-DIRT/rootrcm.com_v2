@@ -10,12 +10,14 @@ $ErrorActionPreference = 'Stop'
 $endpoint = 'https://nyc.cloud.appwrite.io/v1'; $project = '6ae878f400268114a480'; $db = 'root_v2_core'
 # Columns written by src/server/leads/capture.ts + outbox-worker.ts
 $expected = [ordered]@{
-  lead_submissions = 'idempotencyKey dedupKey name email organization message concern locale status consentVersion consentAt correlationId ipHash createdAt'
-  consent_records  = 'subjectEmail purpose version leadId grantedAt ipHash correlationId'
-  crm_sync_jobs    = 'leadId target status attempts nextAttemptAt lastError createdAt'
-  audit_events     = 'action actorUserId resourceId result correlationId at'
+  lead_submissions = 'idempotencyKey dedupKey source status capturedAt contactId companyId sourceRef landingPath consentGiven'
+  consent_records  = 'subjectType subjectId consentType granted recordedAt policyVersion source'
+  crm_sync_jobs    = 'idempotencyKey provider operation objectType status localId externalId attempts nextAttemptAt lastAttemptAt lastErrorCode createdAt'
+  audit_events     = 'eventId action occurredAt actorUserId targetType targetId result requestId'
+  crm_contacts     = 'lifecycleStage leadStatus firstName lastName email emailNormalized companyId'
+  crm_companies    = 'name lifecycleStage status'
 }
-$info = 'business_inquiries','crm_contacts','crm_companies','crm_deals'
+$info = 'business_inquiries','crm_deals'
 $secret = Read-Host 'Read-only Appwrite API key (hidden)' -AsSecureString
 $key = [System.Net.NetworkCredential]::new('', $secret).Password
 $h = @{ 'X-Appwrite-Key' = $key; 'X-Appwrite-Project' = $project }

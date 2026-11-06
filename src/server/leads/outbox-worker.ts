@@ -1,13 +1,18 @@
-import type { LeadRow, LeadStore } from './lead-store.ts';
+import type { LeadStore } from './lead-store.ts';
 import { LEAD_TABLES } from './lead-config.ts';
 
-export type JobOutcome = { ok: true } | { ok: false; error: string; permanent?: boolean };
+export type JobOutcome = { ok: true; externalId?: string } | { ok: false; error: string; permanent?: boolean };
 
-/** A transport per target. A target without an enabled transport is never attempted. */
-export type JobTransport = (job: { id: string; leadId: string; attempts: number }) => Promise<JobOutcome>;
-export type JobTransports = Partial<Record<'hubspot' | 'notify', JobTransport>>;
+/**
+ * A transport per provider. It MUST be idempotent on `idempotencyKey`: the Appwrite store has no
+ * compare-and-set, so two workers can occasionally claim one job. A provider with no enabled
+ * transport is never attempted and consumes no attempts.
+ */
+export type JobTransport = (job: { id: string; idempotencyKey: string; localId: string; operation: string; attempts: number }) => Promise<JobOutcome>;
+export type JobTransports = Partial<Record<'hubspot' | 'internal', JobTransport>>;
 
 export const MAX_JOB_ATTEMPTS = 6;
+export const LEASE_MS = 5 * 60_000;
 const BASE_DELAY_MS = 60_000;
 const MAX_DELAY_MS = 6 * 3_600_000;
 
@@ -15,12 +20,11 @@ export function nextDelayMs(attempt: number): number {
   return Math.min(MAX_DELAY_MS, BASE_DELAY_MS * 2 ** Math.max(0, attempt - 1));
 }
 
-export type DrainSummary = { delivered: number; retried: number; dead: number; skipped: number };
+export type DrainSummary = { delivered: number; retried: number; dead: number; skipped: number; contended: number };
 
 /**
- * Drain due outbox jobs with exponential backoff. Jobs whose target has no enabled
- * transport are left untouched (no attempt consumed), so enabling HubSpot later
- * delivers the backlog instead of losing it. Errors are stored as short codes only.
+ * Drain due jobs: lease → transport → delivered | retry (exponential backoff) | dead.
+ * Expired leases (crashed worker) become due again. Error codes are stored short (lastErrorCode).
  */
 export async function drainOutbox(
   store: LeadStore,
@@ -28,38 +32,47 @@ export async function drainOutbox(
   options: { now?: number; limit?: number } = {},
 ): Promise<DrainSummary> {
   const now = options.now ?? Date.now();
-  const summary: DrainSummary = { delivered: 0, retried: 0, dead: 0, skipped: 0 };
-  const jobs = await store.dueJobs(new Date(now).toISOString(), options.limit ?? 25);
+  const nowIso = new Date(now).toISOString();
+  const summary: DrainSummary = { delivered: 0, retried: 0, dead: 0, skipped: 0, contended: 0 };
+  const jobs = await store.dueJobs(nowIso, options.limit ?? 25);
   for (const job of jobs) {
-    const target = String(job.data.target) as 'hubspot' | 'notify';
-    const transport = transports[target];
+    const provider = String(job.data.provider) as 'hubspot' | 'internal';
+    const transport = transports[provider];
     if (!transport) {
       summary.skipped += 1;
       continue;
     }
-    const attempts = Number(job.data.attempts ?? 0) + 1;
+    const claim = await store.claimJob(job.id, nowIso, new Date(now + LEASE_MS).toISOString());
+    if (!claim) {
+      summary.contended += 1;
+      continue;
+    }
     let outcome: JobOutcome;
     try {
-      outcome = await transport({ id: job.id, leadId: String(job.data.leadId), attempts });
+      outcome = await transport({
+        id: job.id,
+        idempotencyKey: String(job.data.idempotencyKey),
+        localId: String(job.data.localId ?? ''),
+        operation: String(job.data.operation),
+        attempts: claim.attempts,
+      });
     } catch {
       outcome = { ok: false, error: 'transport_exception' };
     }
-    const patch: LeadRow = { attempts };
     if (outcome.ok) {
-      Object.assign(patch, { status: 'delivered', lastError: '' });
+      await store.update(LEAD_TABLES.syncJobs, job.id, { status: 'delivered', lastErrorCode: '', externalId: outcome.externalId ?? '' });
       summary.delivered += 1;
-    } else if (outcome.permanent || attempts >= MAX_JOB_ATTEMPTS) {
-      Object.assign(patch, { status: 'dead', lastError: outcome.error.slice(0, 120) });
+    } else if (outcome.permanent || claim.attempts >= MAX_JOB_ATTEMPTS) {
+      await store.update(LEAD_TABLES.syncJobs, job.id, { status: 'dead', lastErrorCode: outcome.error.slice(0, 64) });
       summary.dead += 1;
     } else {
-      Object.assign(patch, {
+      await store.update(LEAD_TABLES.syncJobs, job.id, {
         status: 'retry',
-        lastError: outcome.error.slice(0, 120),
-        nextAttemptAt: new Date(now + nextDelayMs(attempts)).toISOString(),
+        lastErrorCode: outcome.error.slice(0, 64),
+        nextAttemptAt: new Date(now + nextDelayMs(claim.attempts)).toISOString(),
       });
       summary.retried += 1;
     }
-    await store.update(LEAD_TABLES.syncJobs, job.id, patch);
   }
   return summary;
 }
