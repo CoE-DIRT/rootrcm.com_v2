@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 // Browser plugin not available; use the repository Playwright runner.
 for (const locale of ['en', 'es']) {
   test(`${locale}: missing or forged session redirects protected routes to localized sign-in`, async ({ page, context }) => {
-    for (const route of ['/dashboard', '/dashboard/admin?orgId=root_internal', '/dashboard/client?orgId=unrelated']) {
+    for (const route of ['/dashboard', '/dashboard/admin?orgId=root_internal', '/dashboard/staff?orgId=root_internal', '/dashboard/client?orgId=unrelated']) {
       await page.goto(`/${locale}${route}`);
       await expect(page).toHaveURL(new RegExp(`/${locale}/sign-in$`));
       await expect(page.locator('form input[name="email"]')).toBeVisible();

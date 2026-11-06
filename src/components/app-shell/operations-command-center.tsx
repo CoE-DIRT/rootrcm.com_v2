@@ -23,12 +23,11 @@ import { RecordDrawer } from '@/components/operations/record-drawer';
 import { usePreviewSession } from '@/components/operations/preview-session-binder';
 import { useOpsState } from '@/components/operations/use-ops-state';
 import {
-  OPS_DEMO_ORG_ID, formatMetric, localize,
+  OPS_DEMO_ORG_ID, formatMetric, localize, type MemberDashboardSelector,
   type OpsApplication, type OpsClaim, type OpsHistoryEntry, type OpsPersona, type OpsState,
 } from '@/lib/ops-client';
 import { compareValues, matchesQuery, uniqueSorted, type OpsSortDir, type OpsSortKey } from '@/lib/ops-query';
 import { canAdvanceCredentialingStatus } from '@/domain/operations/types';
-import { Button } from '@/components/ui/Button';
 
 type Tab = 'overview' | 'revenue' | 'credentialing' | 'practice';
 
@@ -154,11 +153,11 @@ function CredentialTimeline({
   return (
     <article data-testid="credentialing-card" data-application-id={item.id} className={card} aria-label={`${item.providerAlias[locale]} — ${item.payer}`}>
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <Button variant="ghost" align="start" fullWidth type="button" onClick={onOpen}>
+        <button type="button" className="min-h-[48px] min-w-0 flex-1 rounded-xl text-left" onClick={onOpen}>
           <p className="break-words text-xs font-bold tracking-wider text-[var(--cyan)]">{item.id}</p>
           <h3 className="mt-1 break-words text-lg font-extrabold">{item.providerAlias[locale]}</h3>
           <p className={`break-words text-sm ${subtle}`}>{item.payer} · {item.applicationType[locale]}</p>
-        </Button>
+        </button>
         <DataTag text={t.synthetic} />
       </div>
       <div className="mt-5 flex items-center justify-between gap-3">
@@ -195,15 +194,15 @@ function CredentialTimeline({
         </p>
       )}
       {canOperate && onAdvance ? (
-        <Button variant="secondary"
+        <button
           type="button"
           data-testid="advance-credentialing"
-         
+          className={`${button} mt-4`}
           disabled={pending}
           onClick={onAdvance}
         >
           {t.advanceCredentialing}
-        </Button>
+        </button>
       ) : null}
     </article>
   );
@@ -245,11 +244,14 @@ export function OperationsCommandCenter({
   initialTab = 'overview',
   role = 'client',
   orgId = OPS_DEMO_ORG_ID,
+  member,
 }: {
   locale: Locale;
   initialTab?: Tab;
   role?: OpsPersona;
   orgId?: string;
+  /** Verified-member mode: read-only synthetic sample from /api/v1/dashboard/state. */
+  member?: MemberDashboardSelector;
 }) {
   const [activeTab, setActiveTab] = useState<Tab>(initialTab);
   const [search, setSearch] = useState('');
@@ -261,8 +263,8 @@ export function OperationsCommandCenter({
   const [activePersona, setActivePersona] = useState<OpsPersona>(role);
   const t = workspaceDemoText[locale];
   const preview = usePreviewSession();
-  const { state, loading, error, pending, refresh, runAction } = useOpsState(activeOrgId, activePersona);
-  const canOperate = role === 'staff';
+  const { state, loading, error, errorCode, pending, refresh, runAction } = useOpsState(activeOrgId, activePersona, member);
+  const canOperate = role === 'staff' && !member;
 
   const applications = useMemo(
     () => state?.applications ?? EMPTY_APPLICATIONS,
@@ -339,8 +341,11 @@ export function OperationsCommandCenter({
           <h2 className="mt-3 text-2xl font-black tracking-tight md:text-3xl">{t.title}</h2>
           <p className={`mt-2 max-w-2xl text-sm ${subtle}`}>{t.description}</p>
           <p className="mt-4 flex items-center gap-2 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] px-3 py-2 text-xs font-semibold text-[var(--warning)]">
-            <ShieldCheck className="size-4 shrink-0" aria-hidden="true" />{t.simulation}
+            <ShieldCheck className="size-4 shrink-0" aria-hidden="true" />{member ? t.memberSample : t.simulation}
           </p>
+          {member ? (
+            <button type="button" className={`${button} mt-3`} data-testid="ops-refresh" disabled={loading} onClick={() => void refresh()}>{t.refreshNow}</button>
+          ) : null}
         </div>
       </header>
 
@@ -350,18 +355,22 @@ export function OperationsCommandCenter({
       {error ? (
         <div data-testid="ops-error" className="rounded-xl border border-[var(--danger)] bg-[var(--surface)] p-4" role="alert">
           <p className="font-bold text-[var(--danger)]">{state ? t.actionError : t.loadError}</p>
-          <p className="mt-2 break-words text-sm">{error}</p>
-          <Button variant="secondary" type="button" onClick={() => void refresh()}>{t.retry}</Button>
+          <p className="mt-2 break-words text-sm">{member && (errorCode === 'unauthenticated' || errorCode === 'not_a_member') ? t.sessionExpired : error}</p>
+          {member && (errorCode === 'unauthenticated' || errorCode === 'not_a_member') ? (
+            <Link className={`${button} mt-3`} href={localizedPath(locale, '/sign-in')}>{t.signInAgain}</Link>
+          ) : (
+            <button type="button" className={`${button} mt-3`} onClick={() => void refresh()}>{t.retry}</button>
+          )}
         </div>
       ) : null}
 
       <div role="tablist" aria-label={t.title} className="flex gap-2 overflow-x-auto rounded-[18px] border border-[var(--border)] bg-[var(--surface)] p-2" style={{ scrollbarWidth: 'thin' }}>
         {tabs.map(({ id, icon: Icon }) => (
-          <Button variant="secondary" key={id} type="button" role="tab" id={`rcm-tab-${id}`} aria-controls="rcm-panel" aria-selected={activeTab === id}
-           
+          <button key={id} type="button" role="tab" id={`rcm-tab-${id}`} aria-controls="rcm-panel" aria-selected={activeTab === id}
+            className={`${button} shrink-0 ${activeTab === id ? 'border-[var(--cyan)] bg-[var(--surface-2)] text-[var(--cyan)]' : 'text-[var(--muted)]'}`}
             onClick={() => setActiveTab(id)}>
             <Icon className="size-4" aria-hidden="true" />{t[id]}
-          </Button>
+          </button>
         ))}
       </div>
 
@@ -379,7 +388,7 @@ export function OperationsCommandCenter({
               <section className="space-y-4" aria-label={t.enrollmentStatus}>
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div><p className="text-xs font-bold uppercase tracking-wide text-[var(--cyan)]">{t.enrollmentStatus}</p><h3 className="mt-1 text-xl font-extrabold">{t.details}</h3></div>
-                  <Link className={button} href={localizedPath(locale, '/preview/credentialing')}>{t.viewCredentialing}<ArrowUpRight className="size-4" aria-hidden="true" /></Link>
+                  {member ? null : <Link className={button} href={localizedPath(locale, '/preview/credentialing')}>{t.viewCredentialing}<ArrowUpRight className="size-4" aria-hidden="true" /></Link>}
                 </div>
                 {activeTab === 'credentialing' ? (
                   <ListControls
