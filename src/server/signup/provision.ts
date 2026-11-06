@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import type { AuthContext } from '../auth/policy.ts';
-import type { RowWriter } from './row-store.ts';
+import type { Row, RowWriter } from './row-store.ts';
 import type { SignupProfile } from './profile.ts';
 
 export const SIGNUP_TERMS_VERSION = 'free-signup.v1';
@@ -35,6 +35,12 @@ export const workspaceIds = (userId: string) => {
   };
 };
 
+/** An ACTIVE owner row for this user/org means the workspace is live; anything else is inactive. */
+function membershipOutcome(row: Row | null, userId: string, orgId: string): ProvisionResult {
+  const active = !!row && row.userId === userId && row.orgId === orgId && row.role === 'CLIENT_OWNER' && row.status === 'active' && !row.revokedAt;
+  return active ? { ok: true, orgId, created: false } : { ok: false, reason: 'membership_inactive' };
+}
+
 /**
  * Provision a FREE workspace for a VERIFIED signed-in user (getAuthContext already requires a verified email).
  * One deterministic workspace per user. Order: organization, company, contact, consents, audit, and the
@@ -61,15 +67,26 @@ export async function provisionFreeWorkspace(
   }
   const at = new Date(now).toISOString();
   try {
-    await writer.create('organizations', id.orgId, {
+    // Settle the membership row FIRST. If it already exists the workspace is complete (or revoked) and this request
+    // must not touch any data row, so a stale or duplicate request cannot rewrite a finished signup.
+    const prior = await writer.read('memberships', id.membership);
+    if (prior) return membershipOutcome(prior, userId, id.orgId);
+
+    // Identity rows are written as one consistent set from THIS submission. They are not yet reachable by any
+    // membership, so a retry with corrected details reconciles (create, else update) instead of keeping a
+    // mixture of the earlier and later submissions.
+    const put = async (table: string, rowId: string, data: Row) => {
+      if ((await writer.create(table, rowId, data)) === 'exists') await writer.update(table, rowId, data);
+    };
+    await put('organizations', id.orgId, {
       legalName: profile.practiceName, displayName: profile.practiceName,
       businessType: SIGNUP_VALUES.businessType, status: SIGNUP_VALUES.orgStatus,
       ownerUserId: userId, source: SIGNUP_VALUES.orgSource, createdAt: at,
     });
-    await writer.create('crm_companies', id.company, {
+    await put('crm_companies', id.company, {
       name: profile.practiceName, lifecycleStage: SIGNUP_VALUES.lifecycleStage, status: SIGNUP_VALUES.companyStatus,
     });
-    await writer.create('crm_contacts', id.contact, {
+    await put('crm_contacts', id.contact, {
       firstName: profile.firstName, lastName: profile.lastName, email, emailNormalized: email.toLowerCase(),
       phone: profile.phone, companyId: id.company,
       lifecycleStage: SIGNUP_VALUES.lifecycleStage, leadStatus: SIGNUP_VALUES.leadStatus,
@@ -88,9 +105,7 @@ export async function provisionFreeWorkspace(
     if (membership === 'exists') {
       // Lost a race with a concurrent request, or the row is revoked. Read it: an ACTIVE owner row for this user means
       // the workspace is live (report success, write nothing more, never touch consent); anything else is inactive.
-      const row = await writer.read('memberships', id.membership);
-      const active = row && row.userId === userId && row.orgId === id.orgId && row.role === 'CLIENT_OWNER' && row.status === 'active' && !row.revokedAt;
-      return active ? { ok: true, orgId: id.orgId, created: false } : { ok: false, reason: 'membership_inactive' };
+      return membershipOutcome(await writer.read('memberships', id.membership), userId, id.orgId);
     }
     // Only the request that actually CREATED the membership records the marketing choice, so a concurrent or stale
     // request can never overwrite it. Absence of a granted row always means no marketing consent (fail-safe).

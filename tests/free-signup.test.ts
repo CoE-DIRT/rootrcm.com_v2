@@ -235,3 +235,28 @@ test('marketing write failing after the membership still completes signup and is
   assert.equal(w.all('memberships').length, 1);
   assert.equal(w.all('consent_records').filter((c) => c.consentType === 'marketing_email').length, 0, 'absence = no marketing consent');
 });
+
+test('retry with corrected details reconciles org, company and contact to ONE consistent submission', async () => {
+  for (const failAt of [1, 2, 3]) { // after org / company / contact writes... (call N fails; earlier rows persist)
+    const w = new MemoryRowWriter();
+    w.failOnCalls = new Set([failAt + 1]);
+    assert.equal((await provisionFreeWorkspace(user, profile({ practiceName: 'Old Practice', firstName: 'Old', phone: '5550001111' }), w, NOW)).ok, false);
+    w.failOnCalls = new Set();
+    const fixed = profile({ practiceName: 'Corrected Practice', firstName: 'New', phone: '5550002222' });
+    assert.equal((await provisionFreeWorkspace(user, fixed, w, NOW)).ok, true);
+    assert.equal(w.all('organizations')[0].legalName, 'Corrected Practice', `org @${failAt}`);
+    assert.equal(w.all('organizations')[0].displayName, 'Corrected Practice');
+    assert.equal(w.all('crm_companies')[0].name, 'Corrected Practice');
+    assert.equal(w.all('crm_contacts')[0].firstName, 'New');
+    assert.equal(w.all('crm_contacts')[0].phone, '5550002222');
+  }
+});
+
+test('a request after a completed signup does not rewrite any identity row (membership settled first)', async () => {
+  const w = new MemoryRowWriter();
+  await provisionFreeWorkspace(user, profile({ practiceName: 'Final Practice' }), w, NOW);
+  const result = await provisionFreeWorkspace(user, profile({ practiceName: 'Stale Practice' }), w, NOW);
+  assert.deepEqual(result, { ok: true, orgId: workspaceIds('u-100').orgId, created: false });
+  assert.equal(w.all('organizations')[0].legalName, 'Final Practice');
+  assert.equal(w.all('crm_companies')[0].name, 'Final Practice');
+});

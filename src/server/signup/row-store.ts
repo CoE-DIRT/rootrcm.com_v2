@@ -10,6 +10,8 @@ export interface RowWriter {
   create(table: string, rowId: string, data: Row): Promise<CreateResult>;
   /** Read one row by id (null if absent). */
   read(table: string, rowId: string): Promise<Row | null>;
+  /** Overwrite fields of an existing row. Used only for pre-membership identity rows, never for consent. */
+  update(table: string, rowId: string, data: Row): Promise<void>;
 }
 
 export class RowWriteError extends Error {
@@ -61,6 +63,15 @@ export class AppwriteRowWriter implements RowWriter {
     return 'created';
   }
 
+  async update(table: string, rowId: string, data: Row): Promise<void> {
+    const response = await this.fetchImpl(`${this.base(table)}/${encodeURIComponent(rowId)}`, {
+      method: 'PATCH', cache: 'no-store', redirect: 'error', signal: AbortSignal.timeout(8000),
+      headers: { 'content-type': 'application/json', 'X-Appwrite-Project': this.config.projectId, 'X-Appwrite-Key': this.config.apiKey },
+      body: JSON.stringify({ data }),
+    });
+    if (!response.ok) throw new RowWriteError(response.status);
+  }
+
   async read(table: string, rowId: string): Promise<Row | null> {
     const response = await this.fetchImpl(`${this.base(table)}/${encodeURIComponent(rowId)}`, {
       method: 'GET', cache: 'no-store', redirect: 'error', signal: AbortSignal.timeout(8000),
@@ -96,6 +107,15 @@ export class MemoryRowWriter implements RowWriter {
     if (this.rows.has(key)) return 'exists';
     this.rows.set(key, { ...data });
     return 'created';
+  }
+
+  async update(table: string, rowId: string, data: Row): Promise<void> {
+    this.calls += 1;
+    if (this.failOnCalls.has(this.calls)) throw new RowWriteError(500);
+    if (this.enforceContract && table in LEAD_SCHEMA && contractViolations(table, data).length) throw new RowWriteError(400);
+    const key = `${table}/${rowId}`;
+    if (!this.rows.has(key)) throw new RowWriteError(404);
+    this.rows.set(key, { ...this.rows.get(key), ...data });
   }
 
   async read(table: string, rowId: string): Promise<Row | null> {
