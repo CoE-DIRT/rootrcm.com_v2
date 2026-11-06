@@ -15,6 +15,8 @@ export type Membership = {
 export type AuthContext = {
   session: SessionPrincipal | null;
   memberships: Membership[];
+  /** True when the membership lookup failed or was incomplete: memberships is NOT proof of "none". */
+  membershipsUnavailable?: boolean;
 };
 
 export type PolicyDenialCode =

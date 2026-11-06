@@ -52,10 +52,10 @@ export async function getAuthContext(header?: string | null): Promise<AuthContex
     query.append('queries[]', JSON.stringify({ method: 'equal', attribute: 'userId', values: [principal.userId] }));
     query.append('queries[]', JSON.stringify({ method: 'limit', values: [100] }));
     const data = await authRequest<{ rows: unknown[]; total: number }>(`/tablesdb/${database}/tables/memberships/rows?${query}`, 'GET', undefined, undefined, true);
-    if (data.total > 100) return { session: principal, memberships: [] };
+    if (data.total > 100) return { session: principal, memberships: [], membershipsUnavailable: true };
     return { session: principal, memberships: canonicalMemberships(data.rows, principal.userId) };
   } catch {
     // Fail closed for permissions while retaining independently verified identity.
-    return { session: principal, memberships: [] };
+    return { session: principal, memberships: [], membershipsUnavailable: true };
   }
 }

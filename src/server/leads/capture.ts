@@ -90,8 +90,8 @@ export async function captureLead(value: unknown, store: LeadStore, meta: Captur
   const contactId = `ct_${sha(emailNorm).slice(0, 32)}`;
   const leadId = `ld_${day}`;
   const jobs = [
-    { id: `jb_hs_${day}`, provider: 'hubspot', operation: 'upsert_contact', objectType: 'contact', localId: contactId },
-    { id: `jb_nt_${day}`, provider: 'internal', operation: 'notify_new_lead', objectType: 'lead_submission', localId: leadId },
+    { id: `jb_hs_${day.slice(0, 28)}`, provider: 'hubspot', operation: 'upsert_contact', objectType: 'contact', localId: contactId },
+    { id: `jb_nt_${day.slice(0, 28)}`, provider: 'internal', operation: 'notify_new_lead', objectType: 'lead_submission', localId: leadId },
   ];
 
   try {
