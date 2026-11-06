@@ -3,7 +3,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   OpsClientError,
+  fetchMemberSample,
   fetchOpsState,
+  type MemberDashboardSelector,
   postOpsAction,
   type OpsActionRequest,
   type OpsPersona,
@@ -12,12 +14,22 @@ import {
 import { shouldCommitOpsResult, type OpsCommitIdentity } from './ops-commit';
 import { usePreviewSession } from './preview-session-binder';
 
-export function useOpsState(orgId: string, persona: OpsPersona) {
+export function useOpsState(orgId: string, persona: OpsPersona, member?: MemberDashboardSelector) {
+  const memberKind = member?.kind;
+  const load = useCallback(
+    () => (memberKind ? fetchMemberSample({ kind: memberKind, orgId }) : fetchOpsState(orgId, persona)),
+    [memberKind, orgId, persona],
+  );
   const preview = usePreviewSession();
   const previewStatus = preview?.status ?? 'ready';
   const [state, setState] = useState<OpsState | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setErrorText] = useState<string | null>(null);
+  const [errorCode, setErrorCode] = useState<string | null>(null);
+  const setError = useCallback((value: string | null, code: string | null = null) => {
+    setErrorText(value);
+    setErrorCode(code);
+  }, []);
   const [pending, setPending] = useState(false);
   const generationRef = useRef(0);
   const identityRef = useRef<OpsCommitIdentity>({ orgId, persona });
@@ -36,18 +48,18 @@ export function useOpsState(orgId: string, persona: OpsPersona) {
     const requested: OpsCommitIdentity = { orgId, persona };
     setLoading(true);
     try {
-      const next = await fetchOpsState(orgId, persona);
+      const next = await load();
       if (!shouldCommitOpsResult(generation, generationRef.current, requested, identityRef.current)) return;
       setState(next);
       setError(null);
     } catch (err) {
       if (!shouldCommitOpsResult(generation, generationRef.current, requested, identityRef.current)) return;
       setState(null);
-      setError(err instanceof OpsClientError ? err.message : 'Operations state could not be loaded.');
+      setError(err instanceof OpsClientError ? err.message : 'Operations state could not be loaded.', err instanceof OpsClientError ? err.code : null);
     } finally {
       if (generation === generationRef.current) setLoading(false);
     }
-  }, [orgId, persona, previewStatus]);
+  }, [load, orgId, persona, previewStatus, setError]);
 
   useEffect(() => {
     identityRef.current = { orgId, persona };
@@ -60,7 +72,7 @@ export function useOpsState(orgId: string, persona: OpsPersona) {
     void (async () => {
       await Promise.resolve();
       try {
-        const next = await fetchOpsState(orgId, persona);
+        const next = await load();
         if (!shouldCommitOpsResult(generation, generationRef.current, requested, identityRef.current)) return;
         setState(next);
         setError(null);
@@ -69,18 +81,20 @@ export function useOpsState(orgId: string, persona: OpsPersona) {
         setState(null);
         setError(
           err instanceof OpsClientError ? err.message : 'Operations state could not be loaded.',
+          err instanceof OpsClientError ? err.code : null,
         );
       } finally {
         if (generation === generationRef.current) setLoading(false);
       }
     })();
-  }, [orgId, persona, previewStatus]);
+  }, [load, orgId, persona, previewStatus, setError]);
 
   const runAction = useCallback(
     async (
       action: Omit<OpsActionRequest, 'orgId' | 'persona'> &
         Partial<Pick<OpsActionRequest, 'orgId' | 'persona'>>,
     ) => {
+      if (memberKind) throw new OpsClientError('Member dashboard is read-only.', 405, 'read_only');
       if (previewStatus !== 'ready') {
         throw new OpsClientError('Preview session is not bound.', 409, 'preview_unbound');
       }
@@ -108,6 +122,7 @@ export function useOpsState(orgId: string, persona: OpsPersona) {
         if (!shouldCommitOpsResult(generation, generationRef.current, requested, identityRef.current)) return;
         setError(
           err instanceof OpsClientError ? err.message : 'The operations action could not be completed.',
+          err instanceof OpsClientError ? err.code : null,
         );
         throw err;
       } finally {
@@ -117,9 +132,9 @@ export function useOpsState(orgId: string, persona: OpsPersona) {
         }
       }
     },
-    [orgId, persona, previewStatus],
+    [memberKind, orgId, persona, previewStatus, setError],
   );
 
   const visibleLoading = previewStatus === 'error' ? false : previewStatus === 'binding' ? true : loading;
-  return { state, loading: visibleLoading, error, pending, refresh, runAction };
+  return { state, loading: visibleLoading, error, errorCode, pending, refresh, runAction };
 }
