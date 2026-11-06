@@ -18,7 +18,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
           <div className="flex items-center gap-3">
             <a href="tel:+13024965648" className="hover:text-[var(--cyan)]">+1 (302) 496-5648</a>
             <span aria-hidden="true">·</span>
-            <Link href={localizedPath(locale, '/consultation')} className="font-semibold hover:text-[var(--cyan)]">{locale === 'es' ? 'Contactar a ROOT' : 'Contact ROOT'} ↗</Link>
+            <Link href={localizedPath(locale, '/consultation') + '#book'} className="font-semibold hover:text-[var(--cyan)]">{locale === 'es' ? 'Contactar a ROOT' : 'Contact ROOT'} ↗</Link>
           </div>
         </div>
       </div>
@@ -36,7 +36,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
             </Link>
           </span>
           <span className="hidden lg:inline-flex max-xl:hidden">
-            <Link className="btn-ghost font-bold text-[var(--cyan)]" href={localizedPath(locale, '/consultation')}>
+            <Link className="btn-ghost font-bold text-[var(--cyan)]" href={localizedPath(locale, '/consultation') + '#book'}>
               {t.nav.consultation} →
             </Link>
           </span>

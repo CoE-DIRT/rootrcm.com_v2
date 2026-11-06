@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import { HomeJourney } from '@/components/commercial/journey-sections';
+import { HomeFaq } from '@/components/commercial/home-faq';
+import { MobileContactDock } from '@/components/site/mobile-contact-dock';
 import { PageHero } from '@/components/site/page-hero';
 import { BandList, TileGrid } from '@/components/site/tile-grid';
 import { copy } from '@/content/messages';
@@ -21,7 +23,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const locale = await requireLocale(params);
   const t = copy(locale);
   return (
-    <main id="main" className="page-width pb-16 pt-6">
+    <main id="main" className="page-width pb-28 pt-6 md:pb-16">
       <div className="hidden lg:block">
         <PageHero
           locale={locale}
@@ -29,7 +31,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           title={t.home.titleDesktop}
           body={t.home.bodyDesktop}
           cta={t.home.ctaDesktop}
-          ctaHref={localizedPath(locale, '/consultation')}
+          ctaHref={localizedPath(locale, '/consultation') + '#book'}
           nodeId="4:2"
         />
       </div>
@@ -40,7 +42,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           title={t.home.titleTablet}
           body={t.home.bodyTablet}
           cta={t.home.ctaTablet}
-          ctaHref={localizedPath(locale, '/consultation')}
+          ctaHref={localizedPath(locale, '/consultation') + '#book'}
           nodeId="4:153"
         />
       </div>
@@ -51,7 +53,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           title={t.home.titleMobile}
           body={t.home.bodyMobile}
           cta={t.home.ctaMobile}
-          ctaHref={localizedPath(locale, '/consultation')}
+          ctaHref={localizedPath(locale, '/consultation') + '#book'}
           nodeId="4:126"
         />
       </div>
@@ -67,6 +69,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       </div>
       <BandList items={t.home.bands} />
       <HomeJourney locale={locale} />
+      <div className="mt-20"><HomeFaq locale={locale} /></div>
+      <MobileContactDock locale={locale} />
     </main>
   );
 }
