@@ -176,6 +176,7 @@ export function RootGuide({ locale }: { locale: Locale }) {
           <p className="muted flex items-center gap-1.5 px-4 pb-3 text-[10px] leading-4"><ShieldCheck className="size-3.5 shrink-0" aria-hidden="true"/>{t.privacy}</p>
         </section>
       )}
+      <div className="pointer-events-auto">
       <Button variant="primary"
         type="button"
         ref={launchRef}
@@ -190,6 +191,7 @@ export function RootGuide({ locale }: { locale: Locale }) {
         <span>{t.launch}</span>
         <span className="size-2 rounded-full bg-[#8affce] shadow-[0_0_9px_#8affce]" aria-hidden="true" />
       </Button>
+      </div>
     </aside>
   );
 }
