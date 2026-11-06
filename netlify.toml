@@ -1,0 +1,21 @@
+# ROOT V2: Netlify is a design-preview environment, never the production backend.
+# Canonical production deployment, Auth, TablesDB, Functions and APIs stay on Appwrite.
+# Next.js App Router must be built, not published as raw source/archived HTML.
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "22"
+  ROOT_ENABLE_AUTH = "false"
+  ROOT_ENABLE_LIVE_AUTH = "false"
+  ROOT_ENABLE_CRM = "false"
+  ROOT_ENABLE_PAYMENTS = "false"
+  ROOT_ENABLE_PROSPECTING = "false"
+  ROOT_ENABLE_LIVE_CLAIMS = "false"
+  ROOT_DEMO_SESSION_BACKEND = "memory"
+
+# Never add APPWRITE_AUTH_API_KEY, payment/CRM secrets or real PHI to Netlify.
+# The automatically installed Next.js runtime may provision SSR rendering functions;
+# those are only for preview rendering, not a replacement for Appwrite backend data.
+# Never add SPA catch-all rewrites that shadow Next.js App Router/SSR routes.
