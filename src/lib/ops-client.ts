@@ -572,6 +572,18 @@ export async function fetchOpsState(orgId: string, persona: OpsPersona): Promise
   return normalizeOpsState(envelope.data, orgId, persona);
 }
 
+export const MEMBER_STATE_PATH = '/api/v1/dashboard/state';
+export type MemberDashboardSelector = { kind: 'client' | 'staff' | 'admin'; orgId: string };
+
+/** Read-only synthetic sample for a verified member. Server derives access from the Appwrite session. */
+export async function fetchMemberSample(member: MemberDashboardSelector): Promise<OpsState> {
+  const url = `${MEMBER_STATE_PATH}?kind=${encodeURIComponent(member.kind)}&orgId=${encodeURIComponent(member.orgId)}`;
+  const res = await fetch(url, fetchInit);
+  const envelope = await readEnvelope(res);
+  throwIfFailed(res, envelope, `Dashboard sample could not be loaded (HTTP ${res.status}).`);
+  return normalizeOpsState(envelope.data, member.orgId, member.kind === 'client' ? 'client' : 'staff');
+}
+
 function looksLikeState(value: unknown): boolean {
   if (!isRecord(value)) return false;
   return (
