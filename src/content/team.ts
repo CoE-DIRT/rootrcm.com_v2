@@ -27,7 +27,7 @@ export const teamMembers: readonly TeamMember[] = [
     id: 'kashif',
     name: 'Kashif Ali',
     initials: 'KA',
-    role: { en: 'Co-founder · Senior Operations & Service Delivery Lead', es: 'Cofundador · Responsable sénior de operaciones y prestación de servicios' },
+    role: { en: 'Co-founder · Finance & Business Development', es: 'Cofundador · Finanzas y desarrollo de negocios' },
   },
   {
     id: 'aftab',
