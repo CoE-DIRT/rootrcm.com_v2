@@ -35,7 +35,7 @@ export const workspaceIds = (userId: string) => {
     terms: `cs_terms_${h}`,
     marketing: `cs_mkt_${h}`,
     audit: `au_signup_${h}`,
-    lock: (window: number) => `lk_signup_${h}_${window}`,
+    lock: (window: number) => `lk_${sha(`${userId}|${window}`).slice(0,24)}`,
   };
 };
 
