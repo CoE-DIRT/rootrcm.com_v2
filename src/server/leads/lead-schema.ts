@@ -24,7 +24,7 @@ export const LEAD_SCHEMA: Record<string, TableContract> = {
   },
   crm_contacts: {
     required: ['lifecycleStage', 'leadStatus'],
-    optional: ['firstName', 'lastName', 'email', 'emailNormalized', 'companyId'],
+    optional: ['firstName', 'lastName', 'email', 'emailNormalized', 'phone', 'companyId'],
   },
   crm_companies: {
     required: ['name', 'lifecycleStage', 'status'],

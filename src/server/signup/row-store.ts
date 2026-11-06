@@ -57,13 +57,18 @@ export class AppwriteRowWriter implements RowWriter {
   }
 }
 
+import { contractViolations, LEAD_SCHEMA } from '../leads/lead-schema.ts';
+
 export class MemoryRowWriter implements RowWriter {
+  /** Enforce the verified live column contract for the tables it covers (organizations/memberships are not in it). */
+  enforceContract = true;
   readonly rows = new Map<string, Row>();
   failOnCalls = new Set<number>();
   calls = 0;
   async create(table: string, rowId: string, data: Row): Promise<CreateResult> {
     this.calls += 1;
     if (this.failOnCalls.has(this.calls)) throw new RowWriteError(500);
+    if (this.enforceContract && table in LEAD_SCHEMA && contractViolations(table, data).length) throw new RowWriteError(400);
     const key = `${table}/${rowId}`;
     if (this.rows.has(key)) return 'exists';
     this.rows.set(key, { ...data });

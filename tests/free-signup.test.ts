@@ -175,3 +175,19 @@ test('http: oversized streamed body is cancelled at the limit, before auth or al
     Object.assign(process.env, saved);
   }
 });
+
+test('every CRM/consent/audit row signup writes satisfies the verified live column contract', async () => {
+  const w = new MemoryRowWriter(); // enforceContract = true: unsupported or missing columns throw
+  for (const marketing of [false, true]) {
+    const w2 = new MemoryRowWriter();
+    assert.equal((await provisionFreeWorkspace(user, profile({ marketingConsent: marketing }), w2, NOW)).ok, true);
+  }
+  assert.equal((await provisionFreeWorkspace(user, profile(), w, NOW)).ok, true);
+  const { contractViolations } = await import('../src/server/leads/lead-schema.ts');
+  for (const t of ['crm_companies', 'crm_contacts', 'consent_records', 'audit_events']) {
+    for (const row of w.all(t)) assert.deepEqual(contractViolations(t, row), [], t);
+  }
+  // A column outside the contract must now fail the chain closed, proving the test has teeth.
+  const strict = new MemoryRowWriter();
+  await assert.rejects(strict.create('crm_contacts', 'x', { lifecycleStage: 'lead', leadStatus: 'new', ssn: '1' }));
+});
