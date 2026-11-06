@@ -17,6 +17,22 @@ function allow(userId: string, now: number): boolean {
   return true;
 }
 
+/** Incremental read that cancels the stream as soon as the byte limit is exceeded. */
+async function readBounded(request: Request, limit: number): Promise<string | null> {
+  const reader = request.body?.getReader();
+  if (!reader) return '';
+  const chunks: Uint8Array[] = [];
+  let size = 0;
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    size += value.byteLength;
+    if (size > limit) { await reader.cancel(); return null; }
+    chunks.push(value);
+  }
+  return Buffer.concat(chunks).toString('utf8');
+}
+
 function json(status: number, data: unknown, code?: string, extra?: Record<string, unknown>) {
   return new Response(JSON.stringify({ data: code ? null : data, meta: { correlationId: crypto.randomUUID() }, error: code ? { code, ...extra } : null }), {
     status, headers: { 'content-type': 'application/json', 'Cache-Control': 'no-store', 'Referrer-Policy': 'no-referrer' },
@@ -32,15 +48,18 @@ export async function handleWorkspaceProvision(request: Request, writer?: RowWri
   const origin = process.env.ROOT_AUTH_ORIGIN;
   if (!origin || request.headers.get('origin') !== origin) return json(403, null, 'forbidden_origin');
   if (!request.headers.get('content-type')?.startsWith('application/json')) return json(415, null, 'unsupported_media_type');
-  const text = await request.text();
-  if (new TextEncoder().encode(text).length > MAX_BODY) return json(413, null, 'payload_too_large');
+  if (Number(request.headers.get('content-length') ?? 0) > MAX_BODY) return json(413, null, 'payload_too_large');
+  const read = await readBounded(request, MAX_BODY);
+  if (read === null) return json(413, null, 'payload_too_large');
   let body: unknown;
-  try { body = JSON.parse(text); } catch { return json(400, null, 'invalid_json'); }
+  try { body = JSON.parse(read); } catch { return json(400, null, 'invalid_json'); }
 
   const cookie = request.headers.get('cookie');
   const ctx = await getAuthContext(cookie);
   // Unverified (pending) accounts have no session context: they must complete email verification first.
   if (!ctx.session) return json(401, null, 'unauthenticated_or_unverified');
+  // Membership lookup failure is not 'no memberships': refuse without writing.
+  if (ctx.membershipsUnavailable) return json(503, null, 'signup_unavailable');
   const profile = validateSignupProfile(body);
   if (!profile.ok) return json(422, null, 'validation_failed', { fieldErrors: profile.errors });
   if (!allow(ctx.session.userId, Date.now())) return json(429, null, 'rate_limited');
@@ -51,6 +70,7 @@ export async function handleWorkspaceProvision(request: Request, writer?: RowWri
   const result = await provisionFreeWorkspace(ctx, profile.data, target);
   if (!result.ok) {
     if (result.reason === 'existing_membership') return json(409, null, 'existing_membership');
+    if (result.reason === 'membership_inactive') return json(403, null, 'membership_inactive');
     if (result.reason === 'unauthenticated') return json(401, null, 'unauthenticated_or_unverified');
     return json(503, null, 'signup_unavailable');
   }

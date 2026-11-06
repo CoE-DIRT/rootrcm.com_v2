@@ -18,7 +18,7 @@ export const SIGNUP_VALUES = {
 
 export type ProvisionResult =
   | { ok: true; orgId: string; created: boolean }
-  | { ok: false; reason: 'unauthenticated' | 'existing_membership' | 'store_unavailable' };
+  | { ok: false; reason: 'unauthenticated' | 'existing_membership' | 'membership_inactive' | 'store_unavailable' };
 
 const sha = (v: string) => createHash('sha256').update(v).digest('hex');
 export const workspaceIds = (userId: string) => {
@@ -51,6 +51,8 @@ export async function provisionFreeWorkspace(
   requestId = crypto.randomUUID(),
 ): Promise<ProvisionResult> {
   if (!ctx.session) return { ok: false, reason: 'unauthenticated' };
+  // Unknown membership state (lookup failed) is not proof of 'no membership': write nothing.
+  if (ctx.membershipsUnavailable) return { ok: false, reason: 'store_unavailable' };
   const { userId, email } = ctx.session;
   const id = workspaceIds(userId);
   if (ctx.memberships.length > 0) {
@@ -90,7 +92,10 @@ export async function provisionFreeWorkspace(
     const membership = await writer.create('memberships', id.membership, {
       userId, orgId: id.orgId, role: 'CLIENT_OWNER', status: 'active', grantedAt: at,
     });
-    return { ok: true, orgId: id.orgId, created: membership === 'created' };
+    // A membership row that already exists but is absent from the caller's active memberships is
+    // revoked/inactive: never report provisioning success for it.
+    if (membership === 'exists') return { ok: false, reason: 'membership_inactive' };
+    return { ok: true, orgId: id.orgId, created: true };
   } catch {
     return { ok: false, reason: 'store_unavailable' };
   }

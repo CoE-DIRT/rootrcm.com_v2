@@ -137,3 +137,41 @@ test('route takes no user, org or role from the request', () => {
   assert.doesNotMatch(src, /body\.(userId|orgId|role)|searchParams|params\./);
   assert.match(readFileSync('src/app/api/v1/account/workspace/route.ts', 'utf8'), /handleWorkspaceProvision/);
 });
+
+test('membership lookup failure is not "no memberships": nothing is written', async () => {
+  const w = new MemoryRowWriter();
+  const unknown: AuthContext = { ...user, membershipsUnavailable: true };
+  assert.deepEqual(await provisionFreeWorkspace(unknown, profile(), w, NOW), { ok: false, reason: 'store_unavailable' });
+  assert.equal(w.rows.size, 0);
+  const session = readFileSync('src/server/auth/session.ts', 'utf8');
+  assert.equal((session.match(/membershipsUnavailable: true/g) ?? []).length, 2, 'both lookup failure paths flag the context');
+});
+
+test('a revoked/inactive existing membership is denied, never reported as provisioned', async () => {
+  const w = new MemoryRowWriter();
+  await provisionFreeWorkspace(user, profile(), w, NOW);
+  // Revoked: the row still exists but canonicalMemberships excludes it, so the caller has none.
+  const key = [...w.rows.keys()].find((k) => k.startsWith('memberships/'))!;
+  w.rows.set(key, { ...w.rows.get(key)!, status: 'revoked' });
+  assert.deepEqual(canonicalMemberships(w.all('memberships'), 'u-100'), []);
+  assert.deepEqual(await provisionFreeWorkspace(user, profile(), w, NOW), { ok: false, reason: 'membership_inactive' });
+});
+
+test('http: oversized streamed body is cancelled at the limit, before auth or allocation of the full body', async () => {
+  const saved = { ...process.env };
+  try {
+    Object.assign(process.env, { APPWRITE_AUTH_PROJECT_ID: '6ae878f400268114a480', APPWRITE_DATABASE_ID: 'root_v2_core', ROOT_ENABLE_LIVE_AUTH: 'true',
+      ROOT_ENABLE_SIGNUP_PROVISIONING: 'true', APPWRITE_PROVISION_API_KEY: 'k', ROOT_AUTH_ORIGIN: 'https://rootrcm.com' });
+    let pulled = 0;
+    const chunk = new Uint8Array(1024).fill(120);
+    const stream = new ReadableStream<Uint8Array>({ pull(c) { pulled += 1; if (pulled > 1000) c.close(); else c.enqueue(chunk); } });
+    const request = new Request('https://rootrcm.com/api/v1/account/workspace', {
+      method: 'POST', body: stream, duplex: 'half', headers: { origin: 'https://rootrcm.com', 'content-type': 'application/json' },
+    } as RequestInit);
+    assert.equal((await handleWorkspaceProvision(request, new MemoryRowWriter())).status, 413);
+    assert.ok(pulled < 20, `stream consumed ${pulled} KB`);
+  } finally {
+    for (const k of Object.keys(process.env)) if (!(k in saved)) delete process.env[k];
+    Object.assign(process.env, saved);
+  }
+});
