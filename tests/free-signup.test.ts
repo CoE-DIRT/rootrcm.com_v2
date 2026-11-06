@@ -13,7 +13,7 @@ const input = { firstName: 'Dana', lastName: 'Reyes', phone: '(555) 010-2030', p
 const profile = (extra: Partial<SignupProfile> = {}): SignupProfile => ({ ...(validateSignupProfile(input) as { ok: true; data: SignupProfile }).data, ...extra });
 const user: AuthContext = { session: { userId: 'u-100', email: 'Dana@Clinic.example' }, memberships: [] };
 const NOW = Date.parse('2026-11-06T12:00:00Z');
-const WRITES = 6; // organization, company, contact, terms consent, audit, membership (marketing opt-out)
+const WRITES = 7; // organization, company, contact, terms consent, marketing choice, audit, membership
 
 beforeEach(() => resetSignupRateLimit());
 
@@ -32,21 +32,21 @@ test('profile: required fields, optional specialty/size, separate optional marke
   assert.equal(normalizePhone('abc'), null);
 });
 
-test('provisions org, company, contact, terms consent, audit and CLIENT_OWNER membership (no marketing row by default)', async () => {
+test('provisions org, company, contact, terms consent, explicit marketing opt-out, audit and CLIENT_OWNER membership', async () => {
   const w = new MemoryRowWriter();
   const r = await provisionFreeWorkspace(user, profile(), w, NOW);
   const id = workspaceIds('u-100');
   assert.deepEqual(r, { ok: true, orgId: id.orgId, created: true });
   for (const t of ['organizations', 'crm_companies', 'crm_contacts', 'audit_events', 'memberships']) assert.equal(w.all(t).length, 1, t);
-  assert.deepEqual(w.all('consent_records').map((c) => c.consentType), ['account_terms']);
+  assert.deepEqual(w.all('consent_records').map((c) => [c.consentType, c.granted]).sort(), [['account_terms', true], ['marketing_email', false]]);
   assert.equal(w.all('crm_contacts')[0].emailNormalized, 'dana@clinic.example');
   assert.equal(w.all('organizations')[0].ownerUserId, 'u-100');
 });
 
-test('marketing consent is a separate row only when the user opts in', async () => {
+test('marketing consent is its own row, granted only when the user opts in', async () => {
   const w = new MemoryRowWriter();
   await provisionFreeWorkspace(user, profile({ marketingConsent: true }), w, NOW);
-  assert.deepEqual(w.all('consent_records').map((c) => c.consentType).sort(), ['account_terms', 'marketing_email']);
+  assert.deepEqual(w.all('consent_records').map((c) => [c.consentType, c.granted]).sort(), [['account_terms', true], ['marketing_email', true]]);
 });
 
 test('the written membership is accepted by the real session parser and PDP; free plan only', async () => {
@@ -80,7 +80,7 @@ test('partial failure at every step: 503, no membership yet, retry repairs and t
     w.failOnCalls = new Set();
     const retry = await provisionFreeWorkspace(user, profile(), w, NOW);
     assert.equal(retry.ok, true);
-    for (const t of ['organizations', 'crm_companies', 'crm_contacts', 'consent_records', 'audit_events', 'memberships']) assert.equal(w.all(t).length, 1, `${t} after step ${failAt}`);
+    for (const t of ['organizations', 'crm_companies', 'crm_contacts', 'consent_records', 'audit_events', 'memberships']) assert.equal(w.all(t).length, t === 'consent_records' ? 2 : 1, `${t} after step ${failAt}`);
   }
 });
 
@@ -190,4 +190,17 @@ test('every CRM/consent/audit row signup writes satisfies the verified live colu
   // A column outside the contract must now fail the chain closed, proving the test has teeth.
   const strict = new MemoryRowWriter();
   await assert.rejects(strict.create('crm_contacts', 'x', { lifecycleStage: 'lead', leadStatus: 'new', ssn: '1' }));
+});
+
+test('retry after a partial opted-in attempt reconciles marketing consent to the final submission (both directions)', async () => {
+  for (const [first, second] of [[true, false], [false, true]] as const) {
+    const w = new MemoryRowWriter();
+    w.failOnCalls = new Set([6]); // marketing choice written (call 5), audit (call 6) fails
+    assert.equal((await provisionFreeWorkspace(user, profile({ marketingConsent: first }), w, NOW)).ok, false);
+    w.failOnCalls = new Set();
+    assert.equal((await provisionFreeWorkspace(user, profile({ marketingConsent: second }), w, NOW)).ok, true);
+    const marketing = w.all('consent_records').filter((c) => c.consentType === 'marketing_email');
+    assert.equal(marketing.length, 1);
+    assert.equal(marketing[0].granted, second, `first=${first} second=${second}`);
+  }
 });

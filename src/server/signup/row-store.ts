@@ -6,6 +6,8 @@ export type ProvisionConfig = { endpoint: string; projectId: string; databaseId:
 /** Deterministic-id, idempotent row writer (409 = exists). */
 export interface RowWriter {
   create(table: string, rowId: string, data: Row): Promise<CreateResult>;
+  /** Create, or overwrite the existing row (used only for pre-membership consent reconciliation). */
+  upsert(table: string, rowId: string, data: Row): Promise<void>;
 }
 
 export class RowWriteError extends Error {
@@ -55,6 +57,19 @@ export class AppwriteRowWriter implements RowWriter {
     if (!response.ok) throw new RowWriteError(response.status);
     return 'created';
   }
+
+  async upsert(table: string, rowId: string, data: Row): Promise<void> {
+    if ((await this.create(table, rowId, data)) === 'created') return;
+    const response = await this.fetchImpl(
+      `${this.config.endpoint}/tablesdb/${encodeURIComponent(this.config.databaseId)}/tables/${table}/rows/${encodeURIComponent(rowId)}`,
+      {
+        method: 'PATCH', cache: 'no-store', redirect: 'error', signal: AbortSignal.timeout(8000),
+        headers: { 'content-type': 'application/json', 'X-Appwrite-Project': this.config.projectId, 'X-Appwrite-Key': this.config.apiKey },
+        body: JSON.stringify({ data }),
+      },
+    );
+    if (!response.ok) throw new RowWriteError(response.status);
+  }
 }
 
 import { contractViolations, LEAD_SCHEMA } from '../leads/lead-schema.ts';
@@ -73,6 +88,12 @@ export class MemoryRowWriter implements RowWriter {
     if (this.rows.has(key)) return 'exists';
     this.rows.set(key, { ...data });
     return 'created';
+  }
+  async upsert(table: string, rowId: string, data: Row): Promise<void> {
+    this.calls += 1;
+    if (this.failOnCalls.has(this.calls)) throw new RowWriteError(500);
+    if (this.enforceContract && table in LEAD_SCHEMA && contractViolations(table, data).length) throw new RowWriteError(400);
+    this.rows.set(`${table}/${rowId}`, { ...data });
   }
   all(table: string): Row[] {
     return [...this.rows].filter(([k]) => k.startsWith(`${table}/`)).map(([, v]) => v);

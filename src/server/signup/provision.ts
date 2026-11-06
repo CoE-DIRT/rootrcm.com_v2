@@ -78,13 +78,13 @@ export async function provisionFreeWorkspace(
       subjectType: 'contact', subjectId: id.contact, consentType: 'account_terms', granted: true,
       recordedAt: at, policyVersion: SIGNUP_TERMS_VERSION, source: 'free_signup',
     });
-    // Marketing is a separate optional choice; a row exists only when the user opted in.
-    if (profile.marketingConsent) {
-      await writer.create('consent_records', id.marketing, {
-        subjectType: 'contact', subjectId: id.contact, consentType: 'marketing_email', granted: true,
-        recordedAt: at, policyVersion: SIGNUP_MARKETING_VERSION, source: 'free_signup',
-      });
-    }
+    // Marketing is a separate optional choice, always recorded explicitly (granted true OR false). Upsert so a retry
+    // after a partial attempt reconciles to the CURRENT submission (the account is not complete until the membership
+    // below exists, so no finished signup's consent is ever overwritten).
+    await writer.upsert('consent_records', id.marketing, {
+      subjectType: 'contact', subjectId: id.contact, consentType: 'marketing_email', granted: profile.marketingConsent,
+      recordedAt: at, policyVersion: SIGNUP_MARKETING_VERSION, source: 'free_signup',
+    });
     await writer.create('audit_events', id.audit, {
       eventId: id.audit, action: 'account.free_workspace_provisioned', occurredAt: at,
       actorUserId: userId, orgId: id.orgId, targetType: 'organization', targetId: id.orgId, result: 'allow', requestId,
