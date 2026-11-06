@@ -882,3 +882,86 @@
     transform: none;
   }
 }
+
+/* ROOT public trust, team and booking refinements: use owned licensed imagery. */
+.client-appreciation {
+  --text: #f2f8ff;
+  --muted: #d1e2f0;
+  --surface: #0d2137;
+  --surface-2: #132b45;
+  --cyan: #11e1ee;
+  --border: #34607e;
+  color: var(--text);
+  border: 1px solid #34607e;
+  border-radius: var(--radius-lg);
+  padding: clamp(1.25rem, 2.6vw, 2.75rem);
+  background-image: linear-gradient(110deg, rgb(6 18 37 / 96%), rgb(6 18 37 / 90%)), url('/imagery/photo/analytics-review-1280.webp');
+  background-position: center;
+  background-size: cover;
+}
+.client-appreciation .ui-section-heading { margin-bottom: var(--space-6); }
+.client-appreciation .ui-card { min-height: 0; }
+.client-appreciation__footer {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  margin-top: var(--space-6);
+  color: var(--muted);
+  font-size: var(--fs-sm);
+}
+.client-appreciation__footer svg { flex: none; color: var(--cyan); }
+.team-member-card { height: 100%; }
+.team-member-art {
+  display: grid;
+  place-items: center;
+  min-height: clamp(8rem, 15vw, 10rem);
+  background: radial-gradient(circle at 70% 25%, rgb(17 225 238 / 24%), transparent 45%), linear-gradient(130deg, #061225, #153a53);
+}
+.team-member-monogram {
+  display: grid;
+  place-items: center;
+  width: clamp(4rem, 7vw, 5.5rem);
+  aspect-ratio: 1;
+  border: 1px solid rgb(17 225 238 / 40%);
+  border-radius: 50%;
+  color: #f2f8ff;
+  background: rgb(19 43 69 / 75%);
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+.booking-panel {
+  --text: #f2f8ff;
+  --muted: #cddded;
+  --cyan: #11e1ee;
+  color: var(--text);
+  padding: clamp(1.25rem, 2.5vw, 2.75rem);
+  border: 1px solid #34607e;
+  border-radius: var(--radius-lg);
+  background-image: linear-gradient(110deg, rgb(6 18 37 / 97%), rgb(6 18 37 / 88%)), url('/imagery/photo/revenue-charts-1280.webp');
+  background-size: cover;
+  background-position: center;
+}
+.booking-panel__layout {
+  display: grid;
+  gap: var(--space-6);
+  align-items: center;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 370px), 1fr));
+}
+.booking-panel__intro { display: grid; justify-items: start; gap: var(--space-4); }
+.booking-panel__description { max-width: 43ch; color: var(--muted); line-height: 1.7; }
+.booking-panel__features { display: flex; flex-wrap: wrap; gap: var(--space-3); color: var(--muted); font-size: var(--fs-sm); }
+.booking-panel__features span { display: inline-flex; align-items: center; gap: var(--space-2); }
+.booking-panel__scheduler { border-radius: var(--radius-card); overflow: hidden; background: #fff; color: #0a243e; min-width: 0; }
+.booking-panel__start { display: grid; justify-items: center; gap: var(--space-4); text-align: center; padding: clamp(1.5rem, 3vw, 3rem); }
+.booking-panel__start svg { color: #007a9e; }
+.booking-panel__start h3 { font-size: var(--fs-xl); font-weight: 700; }
+.booking-panel__start .ui-btn[data-variant='link'] { color: #006f91; }
+.booking-panel__frame { display: grid; gap: var(--space-2); padding-bottom: var(--space-3); }
+.booking-panel__frame .ui-btn { justify-self: center; color: #006f91; }
+.booking-panel__loading { padding: var(--space-4); text-align: center; }
+@media (max-width: 767px) {
+  .client-appreciation .proof-grid { grid-template-columns: 1fr; }
+  .client-appreciation .ui-section-heading { margin-bottom: var(--space-4); }
+  .booking-panel__layout { grid-template-columns: 1fr; }
+}

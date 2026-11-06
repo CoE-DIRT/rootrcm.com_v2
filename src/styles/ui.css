@@ -16,7 +16,7 @@
 
 .ui-section {
   position: relative;
-  padding-block: var(--space-section);
+  padding-block: clamp(2.5rem, 1.8rem + 3.3vw, 5.25rem);
 }
 .ui-section[data-spacing='compact'] {
   padding-block: var(--space-10);
@@ -58,7 +58,7 @@
   display: grid;
   gap: var(--space-3);
   max-width: min(100%, 60rem);
-  margin-block-end: var(--space-8);
+  margin-block-end: var(--space-6);
 }
 .ui-section-heading[data-align='center'] {
   margin-inline: auto;
