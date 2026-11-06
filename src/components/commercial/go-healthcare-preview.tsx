@@ -1,10 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Image from 'next/image';
+import { DuotonePhoto } from '@/components/site/media';
 import { ShieldCheck } from 'lucide-react';
 import type { Locale } from '@/i18n/locales';
 import { translateOpsAction } from '@/content/ops-actions';
+import { Button } from '@/components/ui/Button';
 
 type Kind = 'capabilities' | 'eligibility' | 'claims' | 'credentialing';
 type Envelope = {
@@ -100,42 +101,28 @@ export function GoHealthcarePreview({ locale }: { locale: Locale }) {
     <section className="relative mt-10 overflow-hidden rounded-[23px] border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[var(--shadow)] md:p-8" aria-labelledby="go-healthcare-heading" data-testid="go-healthcare-preview">
       <div className="pointer-events-none absolute -right-14 -top-14 size-48 rounded-full bg-[var(--cyan)] opacity-[0.06] blur-3xl" />
       <div className="relative">
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_280px] lg:items-center">
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.6fr)] lg:items-center">
           <div>
             <p className="eyebrow">{t.source}</p>
             <h2 id="go-healthcare-heading" className="mt-2 text-2xl font-extrabold tracking-tight md:text-3xl">{t.heading}</h2>
             <p className="muted mt-3 max-w-2xl text-sm leading-relaxed">{t.body}</p>
           </div>
-          <figure className="relative overflow-hidden rounded-2xl border border-[var(--border)] bg-[#071423] shadow-md">
-            <div className="relative aspect-[16/10] w-full">
-              <picture>
-                <source srcSet="/media/stock/revenue-analytics.avif" type="image/avif" />
-                <Image
-                  src="/media/stock/revenue-analytics.webp"
-                  alt={locale === 'es' ? 'Equipo revisando análisis de ingresos y gráficos en dispositivos digitales. Fotografía editorial; no es personal de ROOT.' : 'Team reviewing revenue analytics on digital screens. Editorial photograph; not ROOT staff.'}
-                  fill
-                  sizes="280px"
-                  className="object-cover object-center opacity-85"
-                />
-              </picture>
-              <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(5,16,33,0.1)_0%,rgba(5,18,35,0.7)_100%)]" />
-              <figcaption className="absolute bottom-2 left-3 right-3 text-[11px] font-semibold text-[#f5fbff]">
-                {locale === 'es' ? 'Fotografía editorial. No es personal de ROOT.' : 'Editorial photograph. Not ROOT staff.'}
-              </figcaption>
-            </div>
-          </figure>
+          <DuotonePhoto
+            name="revenue-charts"
+            alt={locale === 'es' ? 'Una mano sobre un portátil que muestra gráficos de ingresos' : 'A hand on a laptop showing revenue charts'}
+          />
         </div>
         <div className="mt-6 flex flex-wrap items-center gap-2" role="group" aria-label={t.heading}>
           {kinds.map((next) => (
-            <button key={next} type="button" onClick={() => { if (next === kind) return; setLoading(true); setKind(next); }}
-              className={`min-h-11 rounded-xl border px-3 py-2 text-sm font-bold transition focus-visible:outline-offset-2 ${next === kind ? 'border-[var(--cyan)] bg-[var(--surface-2)] text-[var(--cyan)]' : 'border-[var(--border)] text-[var(--muted)] hover:border-[var(--cyan)]'}`}
+            <Button variant="secondary" key={next} type="button" onClick={() => { if (next === kind) return; setLoading(true); setKind(next); }}
+             
               aria-pressed={next === kind}>
               {t[next]}
-            </button>
+            </Button>
           ))}
-          <button type="button" className="ml-auto min-h-11 rounded-xl border border-[var(--border)] px-3 text-sm font-bold hover:border-[var(--cyan)]" onClick={() => { setLoading(true); setGeneration((n) => n + 1); }}>
+          <Button variant="secondary" type="button" onClick={() => { setLoading(true); setGeneration((n) => n + 1); }}>
             {t.refresh}
-          </button>
+          </Button>
         </div>
         <div className="mt-5 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-4" role="status">
           <p className="flex items-center gap-2 text-sm font-bold">

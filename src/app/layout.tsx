@@ -11,6 +11,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.DEPLOY_PRIME_URL || process.env.URL || 'https://exquisite-melomakarona-64bc7e.netlify.app'),
   title: {
     default: 'ROOT | Revenue Operations & Outcomes Technology',
     template: '%s | ROOT',

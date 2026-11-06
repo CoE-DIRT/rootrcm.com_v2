@@ -1,0 +1,7 @@
+# ROOT RCM V3 Public Redirects & SPA Shortcuts
+/login            /en/login            302
+/signup           /en/signup           302
+/forgot-password  /en/forgot-password  302
+/reset-password   /en/reset-password   302
+/contact          /en/contact          302
+/es/diagnostico   /es/diagnostic       301

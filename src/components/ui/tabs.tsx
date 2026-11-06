@@ -1,6 +1,7 @@
 'use client';
 
 import { useId, useState } from 'react';
+import { Button } from './Button';
 
 export function Tabs({
   tabs,
@@ -15,18 +16,17 @@ export function Tabs({
         {tabs.map((tab) => {
           const selected = tab.id === active;
           return (
-            <button
+            <Button
               key={tab.id}
-              type="button"
+              variant="secondary"
               role="tab"
               aria-selected={selected}
               aria-controls={`${baseId}-${tab.id}`}
               id={`${baseId}-tab-${tab.id}`}
-              className={selected ? 'btn-primary' : 'btn-secondary'}
               onClick={() => setActive(tab.id)}
             >
               {tab.label}
-            </button>
+            </Button>
           );
         })}
       </div>

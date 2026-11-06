@@ -3,6 +3,8 @@
 import { useState, type FormEvent } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import type { Locale } from '@/i18n/locales';
+import { Input } from '@/components/ui/Input';
+import { IconButton } from '@/components/ui/IconButton';
 
 /** No backend is activated. This opens the visitor's email client;
  * it never collects or silently persists addresses in ROOT systems.
@@ -20,31 +22,29 @@ export function NewsletterRequest({ locale }: { locale: Locale }) {
   }
 
   return (
-    <form onSubmit={submit} className="mt-5" data-testid="root-newsletter">
-      <label htmlFor="root-news-email" className="block text-xs font-bold">
-        {es ? 'Novedades de operaciones sanitarias' : 'Healthcare operations notes'}
-      </label>
-      <div className="mt-2 flex items-stretch gap-2">
-        <input
+    <form onSubmit={submit} className="ui-newsletter" data-testid="root-newsletter">
+      <div className="ui-newsletter__row">
+        <Input
           id="root-news-email"
           type="email"
+          label={es ? 'Notas de operaciones de ingresos' : 'Revenue operations notes'}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           maxLength={254}
           required
           autoComplete="email"
-          placeholder="you@practice.com"
-          className="min-w-0 flex-1 rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--text)] outline-none focus-visible:outline-[var(--cyan)]"
+          inputMode="email"
+          hint={es ? 'Abre su aplicación de correo; este sitio no guarda direcciones.' : 'Opens your email app; this site does not store addresses.'}
         />
-        <button type="submit" className="flex min-h-12 min-w-12 items-center justify-center rounded-xl bg-[var(--cyan)] text-[var(--on-cyan)] transition hover:brightness-110" aria-label={es ? 'Preparar solicitud de suscripción' : 'Prepare newsletter request'}>
-          <ArrowUpRight className="size-5" aria-hidden="true"/>
-        </button>
+        <span className="ui-newsletter__submit">
+          <IconButton
+            type="submit"
+            variant="primary"
+            aria-label={es ? 'Preparar solicitud de suscripción' : 'Prepare newsletter request'}
+            icon={<ArrowUpRight size={20} strokeWidth={1.75} aria-hidden="true" />}
+          />
+        </span>
       </div>
-      <p className="muted mt-2 text-[11px] leading-5">
-        {es
-          ? 'Abre su aplicación de correo; ninguna dirección se envía ni almacena aquí. No incluya datos de pacientes.'
-          : 'Opens your email app; no address is stored or sent by this site. Do not include patient details.'}
-      </p>
     </form>
   );
 }

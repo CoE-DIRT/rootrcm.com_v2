@@ -1,10 +1,11 @@
-import Link from 'next/link';
 import { SectionHeader } from '@/components/commercial/section-header';
-import { Card } from '@/components/ui/card';
+import { Card } from '@/components/ui/Card';
+import { Section } from '@/components/ui/Section';
 import { copy } from '@/content/messages';
 import { catalogSpecialties, featuredSpecialties, specialtyLabel } from '@/content/specialties';
 import type { Locale } from '@/i18n/locales';
 import { localizedPath } from '@/lib/paths';
+import { Button } from '@/components/ui/Button';
 
 export function SpecialtyGrid({
   locale,
@@ -18,7 +19,7 @@ export function SpecialtyGrid({
   const featured = variant === 'featured';
 
   return (
-    <section className="commercial-section" aria-labelledby="specialties-heading">
+    <Section labelledBy="specialties-heading">
       <SectionHeader
         id="specialties-heading"
         eyebrow={t.commercial.specialtiesEyebrow}
@@ -26,11 +27,11 @@ export function SpecialtyGrid({
         body={featured ? t.commercial.specialtiesBody : t.commercial.specialtiesIndexBody}
         headingLevel={featured ? 2 : 1}
       />
-      <ul className="mt-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+      <ul className="ui-grid" data-min="sm">
         {items.map((specialty) => (
           <li key={specialty.slug} className="min-w-0">
             <Card
-              className={specialty.dedicatedPage ? 'ring-1 ring-[var(--cyan)]' : ''}
+              accent={Boolean(specialty.dedicatedPage)}
               title={specialtyLabel(specialty, locale, featured)}
               body={specialty.summary[locale]}
               kicker={
@@ -42,12 +43,12 @@ export function SpecialtyGrid({
         ))}
       </ul>
       {featured ? (
-        <p className="mt-6">
-          <Link className="btn-secondary" href={localizedPath(locale, '/specialties')}>
+        <p className="cluster section-actions">
+          <Button variant="secondary" href={localizedPath(locale, '/specialties')}>
             {t.commercial.specialtiesCta} →
-          </Link>
+          </Button>
         </p>
       ) : null}
-    </section>
+    </Section>
   );
 }

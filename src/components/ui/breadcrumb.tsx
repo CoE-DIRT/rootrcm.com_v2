@@ -1,16 +1,14 @@
 import Link from 'next/link';
 
-export function Breadcrumb({
-  items,
-}: {
-  items: { href?: string; label: string }[];
-}) {
+export type BreadcrumbProps = { items: { href?: string; label: string }[]; label?: string };
+
+export function Breadcrumb({ items, label = 'Breadcrumb' }: BreadcrumbProps) {
   return (
-    <nav aria-label="Breadcrumb" className="muted text-sm">
-      <ol className="flex flex-wrap gap-2">
+    <nav aria-label={label} className="ui-breadcrumb">
+      <ol>
         {items.map((item, index) => (
-          <li key={`${item.label}-${index}`} className="flex gap-2">
-            {item.href ? <Link href={item.href}>{item.label}</Link> : <span>{item.label}</span>}
+          <li key={`${item.label}-${index}`}>
+            {item.href ? <Link href={item.href}>{item.label}</Link> : <span aria-current="page">{item.label}</span>}
             {index < items.length - 1 ? <span aria-hidden="true">/</span> : null}
           </li>
         ))}

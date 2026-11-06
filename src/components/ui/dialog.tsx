@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { Button } from './Button';
 
 export function Dialog({
   open,
@@ -31,9 +32,9 @@ export function Dialog({
       <h2 className="text-xl font-bold">{title}</h2>
       <div className="mt-4">{children}</div>
       <form method="dialog" className="mt-6">
-        <button className="btn-secondary" type="submit">
+        <Button variant="secondary" type="submit">
           Close
-        </button>
+        </Button>
       </form>
     </dialog>
   );

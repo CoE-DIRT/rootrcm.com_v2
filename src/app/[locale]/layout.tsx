@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
-import { SiteFooter } from '@/components/site/site-footer';
-import { SiteHeader } from '@/components/site/site-header';
+import { Footer } from '@/components/ui/Footer';
+import { Navbar } from '@/components/ui/Navbar';
 import { RootGuide } from '@/components/site/root-guide';
 import { SkipLink } from '@/components/site/skip-link';
+import { MobileConversionDock } from '@/components/site/mobile-dock';
+import { MotionController } from '@/components/site/motion-controller';
 import { copy } from '@/content/messages';
 import { localeStaticParams, requireLocale } from '@/lib/locale';
 import { publicPageMetadata } from '@/lib/metadata';
@@ -16,7 +18,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const locale = await requireLocale(params);
   const t = copy(locale);
-  return publicPageMetadata(locale, t.brandLong, t.home.bodyDesktop);
+  return publicPageMetadata(locale, t.brandLong, t.home.body);
 }
 
 export default async function LocaleLayout({
@@ -30,10 +32,12 @@ export default async function LocaleLayout({
   return (
     <>
       <SkipLink locale={locale} />
-      <SiteHeader locale={locale} />
+      <Navbar locale={locale} />
       {children}
-      <SiteFooter locale={locale} />
+      <Footer locale={locale} />
+      <MobileConversionDock locale={locale} />
       <RootGuide key={locale} locale={locale} />
+      <MotionController />
     </>
   );
 }

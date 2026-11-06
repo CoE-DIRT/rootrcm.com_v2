@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { NyMarket } from '@/components/commercial/ny-market';
 import { Breadcrumb } from '@/components/ui/breadcrumb';
 import { copy } from '@/content/messages';
 import { requireLocale } from '@/lib/locale';
 import { publicPageMetadata } from '@/lib/metadata';
 import { localizedPath } from '@/lib/paths';
+import { Button } from '@/components/ui/Button';
 
 export async function generateMetadata({
   params,
@@ -21,15 +21,15 @@ export default async function NewYorkPage({ params }: { params: Promise<{ locale
   const locale = await requireLocale(params);
   const t = copy(locale);
   return (
-    <main id="main" className="page-width pb-16 pt-6">
+    <main id="main" className="page-width page-body">
       <Breadcrumb
         items={[{ href: localizedPath(locale), label: t.brand }, { label: t.nav.locations }]}
       />
       <NyMarket locale={locale} variant="state" />
       <p className="mt-8">
-        <Link className="btn-secondary" href={localizedPath(locale, '/locations/new-york-city')}>
+        <Button variant="secondary" href={localizedPath(locale, '/locations/new-york-city')}>
           {t.commercial.nycTitle} →
-        </Link>
+        </Button>
       </p>
     </main>
   );

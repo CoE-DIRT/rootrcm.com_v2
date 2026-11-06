@@ -1,7 +1,7 @@
 import { AppShell } from '@/components/app-shell/app-shell';
 import { PreviewSessionBinder } from '@/components/operations/preview-session-binder';
 import { OperationsCommandCenter } from '@/components/app-shell/operations-command-center';
-import { Card } from '@/components/ui/card';
+import { Card } from '@/components/ui/Card';
 import { copy } from '@/content/messages';
 import { staffQueue } from '@/content/preview-fixtures';
 import { requireLocale } from '@/lib/locale';

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { authCopy } from '@/content/auth-messages';
 import type { Locale } from '@/i18n/locales';
+import { Button } from '@/components/ui/Button';
 type Action = 'login' | 'signup' | 'recover' | 'reset' | 'verify' | 'verification' | 'logout';
 type Status = 'idle' | 'pending' | 'success' | 'verificationFailed' | 'verificationRequired' | 'signupSent' | 'verified' | 'verifyFailed' | 'recoverySent' | 'passwordReset' | 'error';
 export function AuthForm({ locale, logout = false }: { locale: Locale; logout?: boolean }) {
@@ -48,7 +49,7 @@ export function AuthForm({ locale, logout = false }: { locale: Locale; logout?: 
     return () => window.clearTimeout(timer);
   }, [locale, router]);
   return <div className="mt-6 space-y-4">
-    {!logout && <><p>{t.business}</p><div className="flex flex-wrap gap-3">{(['login', 'signup', 'recover', 'verification'] as const).map(mode => <button className="btn-secondary" key={mode} type="button" aria-pressed={action === mode} onClick={() => { setAction(mode); setStatus('idle'); }}>{t[mode]}</button>)}</div></>}
+    {!logout && <><p>{t.business}</p><div className="flex flex-wrap gap-3">{(['login', 'signup', 'recover', 'verification'] as const).map(mode => <Button variant="secondary" key={mode} type="button" aria-pressed={action === mode} onClick={() => { setAction(mode); setStatus('idle'); }}>{t[mode]}</Button>)}</div></>}
     <form className="space-y-4" onSubmit={async event => {
       event.preventDefault(); setStatus('pending');
       const form = new FormData(event.currentTarget);
@@ -76,7 +77,7 @@ export function AuthForm({ locale, logout = false }: { locale: Locale; logout?: 
     }}>
       {['login', 'signup', 'recover', 'verification'].includes(action) && <label className="block">{t.email}<input className="block w-full rounded border bg-transparent p-3" name="email" type="email" autoComplete="email" required maxLength={254} /></label>}
       {['login', 'signup', 'reset', 'verification'].includes(action) && <label className="block">{t.password}<input className="block w-full rounded border bg-transparent p-3" name="password" type="password" autoComplete={action === 'login' ? 'current-password' : 'new-password'} minLength={action === 'login' ? 1 : 12} maxLength={256} required /></label>}
-      <button className="btn-primary" disabled={status === 'pending' || action === 'verify'}>{status === 'pending' ? t.pending : t[action]}</button>
+      <Button variant="primary" type="submit" disabled={status === 'pending' || action === 'verify'}>{status === 'pending' ? t.pending : t[action]}</Button>
       <p role="status" aria-live="polite">{status === 'success' ? t.success
         : status === 'verificationFailed' ? t.verificationFailed
         : status === 'signupSent' ? (locale === 'es' ? 'Cuenta creada. Abra el correo de ROOT y pulse el enlace de verificación.' : 'Account created. Open the ROOT email and click the verification link once.')

@@ -7,6 +7,7 @@ import { translateOpsAction } from '@/content/ops-actions';
 import { workspaceDemoText } from '@/content/operations-demo';
 import { localize, type OpsHistoryEntry } from '@/lib/ops-client';
 import { opsButton, opsSubtle } from './ui';
+import { Button } from '@/components/ui/Button';
 
 export function RecordDrawer({
   open,
@@ -66,9 +67,9 @@ export function RecordDrawer({
           </h2>
           <p className={`mt-1 wrap-break-word text-sm ${opsSubtle}`}>{subtitle}</p>
         </div>
-        <button type="button" className={opsButton} onClick={onClose} aria-label={t.closeRecord}>
+        <Button variant="secondary" iconOnly type="button" onClick={onClose} aria-label={t.closeRecord}>
           <X className="size-4" aria-hidden="true" />
-        </button>
+        </Button>
       </div>
       <p className="mt-4 inline-flex items-center gap-1 rounded-full border border-[var(--border)] bg-[var(--surface-2)] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-[var(--muted)]">
         <ShieldCheck className="size-3.5" aria-hidden="true" />

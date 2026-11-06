@@ -19,10 +19,10 @@ function pair(en: string, es: string): CopyPair {
 }
 
 /**
- * Full specialty catalog. V4_SPEC from Demo 6 is retained. Featured ten are
- * first-class homepage cards. Infectious Disease is a dedicated page (not in
- * the prototype — requested for this commercial slice). Copy is administrative
- * RCM, not clinical care. No CPT codes; founder must validate any code set.
+ * Full specialty catalog. The featured ten render on the homepage.
+ * Infectious Disease has its own route (/specialties/infectious-disease).
+ * Content describes billing operations, not clinical care. No CPT codes are
+ * listed; any code set is validated with the practice's billing lead.
  */
 export const specialties: readonly Specialty[] = [
   {
@@ -89,8 +89,8 @@ export const specialties: readonly Specialty[] = [
       'Operaciones administrativas de ingresos para grupos de ID: autorización, vías de infusión y OPAT, higiene de unidades J-code y enrutamiento de beneficio médico frente a de farmacia.',
     ),
     body: pair(
-      'Infectious Disease Revenue Operations — From Authorization to Reimbursement. This page is about claim, benefit and documentation logistics. It is not clinical advice, stewardship guidance or a treatment protocol. Specific CPT and HCPCS codes are omitted until the founder validates the current code set with counsel and a billing lead.',
-      'Operaciones de ingresos en enfermedades infecciosas — de la autorización al reembolso. Esta página trata de logística de reclamos, beneficios y documentación. No es consejo clínico ni un protocolo de tratamiento. Se omiten códigos CPT y HCPCS concretos hasta que el fundador valide el conjunto vigente.',
+      'Infectious Disease Revenue Operations — From Authorization to Reimbursement. This page is about claim, benefit and documentation logistics. It is not clinical advice, stewardship guidance or a treatment protocol. Code-level detail is reviewed with your billing lead during onboarding.',
+      'Operaciones de ingresos en enfermedades infecciosas — de la autorización al reembolso. Esta página trata de logística de reclamos, beneficios y documentación. No es consejo clínico ni un protocolo de tratamiento. El detalle de códigos se revisa con su responsable de facturación durante la incorporación.',
     ),
     focus: {
       en: [
@@ -168,8 +168,8 @@ export const specialties: readonly Specialty[] = [
       'Autorización de procedimientos, higiene de laterality/modificadores e investigación de pólizas antes de la intervención programada.',
     ),
     body: pair(
-      'Pain programs are denied when frequency, laterality or site-of-service rules are missed in the administrative packet. ROOT scopes the checklist and the follow-up owner. We do not publish utilization targets or imply clinical appropriateness. Code-level examples wait for founder validation.',
-      'Los programas de dolor se deniegan cuando faltan frecuencia, laterality o sitio de servicio en el paquete administrativo. ROOT delimita la lista de verificación y el responsable del seguimiento. No publicamos metas de utilización. Los ejemplos a nivel de código esperan validación del fundador.',
+      'Pain programs are denied when frequency, laterality or site-of-service rules are missed in the administrative packet. ROOT scopes the checklist and the follow-up owner. We do not publish utilization targets or imply clinical appropriateness. Code-level detail is reviewed with your billing lead.',
+      'Los programas de dolor se deniegan cuando faltan frecuencia, laterality o sitio de servicio en el paquete administrativo. ROOT delimita la lista de verificación y el responsable del seguimiento. No publicamos metas de utilización. El detalle de códigos se revisa con su responsable de facturación.',
     ),
     focus: {
       en: [
@@ -273,8 +273,8 @@ export const specialties: readonly Specialty[] = [
       'Procedimientos de consulta, diagnósticos y reclamos quirúrgicos con póliza específica: administrativo, no técnica operatoria.',
     ),
     body: pair(
-      'ENT groups combine clinic procedures, audiology and OR days. Denials cluster on bundled office procedures and missing diagnostic authorization. ROOT scopes the policy check and the appeal owner. We do not list CPT examples until they are founder-validated.',
-      'ORL combina procedimientos de consulta, audiología y quirófano. Las denegaciones se agrupan en paquetes de consulta y autorizaciones diagnósticas faltantes. ROOT delimita la revisión de póliza y el responsable de la apelación. No listamos CPT hasta validación del fundador.',
+      'ENT groups combine clinic procedures, audiology and OR days. Denials cluster on bundled office procedures and missing diagnostic authorization. ROOT scopes the policy check and the appeal owner. Code-level detail is reviewed with your billing lead.',
+      'ORL combina procedimientos de consulta, audiología y quirófano. Las denegaciones se agrupan en paquetes de consulta y autorizaciones diagnósticas faltantes. ROOT delimita la revisión de póliza y el responsable de la apelación. El detalle de códigos se revisa con su responsable de facturación.',
     ),
     focus: {
       en: [
@@ -398,8 +398,8 @@ export const specialties: readonly Specialty[] = [
       'Periodos de cirugía global, unidades de inyección, pruebas diagnósticas y documentación de unidades de medicamento.',
     ),
     body: pair(
-      'Ophthalmology denials often sit in drug units, laterality and global-period collisions between clinic lasers and OR days. ROOT treats units and globals as operations data. Drug names and HCPCS examples wait for founder validation.',
-      'Las denegaciones en oftalmología suelen estar en unidades de medicamento, laterality y colisiones de periodo global. ROOT trata unidades y globales como datos operativos. Los ejemplos de HCPCS esperan validación del fundador.',
+      'Ophthalmology denials often sit in drug units, laterality and global-period collisions between clinic lasers and OR days. ROOT treats units and globals as operations data. Code-level detail is reviewed with your billing lead.',
+      'Las denegaciones en oftalmología suelen estar en unidades de medicamento, laterality y colisiones de periodo global. ROOT trata unidades y globales como datos operativos. El detalle de códigos se revisa con su responsable de facturación.',
     ),
     focus: {
       en: [
@@ -515,7 +515,7 @@ export const specialties: readonly Specialty[] = [
       'Procedimientos menores, pases a patología y lenguaje de necesidad médica para destrucciones y escisiones facturadas.',
     ),
     body: pair(
-      'Dermatology claims collide when procedure, pathology and diagnosis pointers are out of sync. ROOT keeps the administrative chain intact. Lesion-count examples wait for founder-validated code sets.',
+      'Dermatology claims collide when procedure, pathology and diagnosis pointers are out of sync. ROOT keeps the administrative chain intact. Code-level detail is reviewed with your billing lead.',
       'Los reclamos de dermatología chocan cuando procedimiento, patología y punteros diagnósticos no coinciden. ROOT mantiene la cadena administrativa. Los ejemplos de recuento de lesiones esperan conjuntos de códigos validados.',
     ),
     focus: {
@@ -540,8 +540,8 @@ export const specialties: readonly Specialty[] = [
       'Programación de endoscopia frente a modificadores de tamizaje/diagnóstico y coordinación de centros.',
     ),
     body: pair(
-      'GI billing turns on whether the case is screening or diagnostic in the administrative record, and who bills the facility. ROOT does not advise on clinical conversion of a screening case. Modifier examples are withheld pending founder validation.',
-      'La facturación de GI depende de si el caso es tamizaje o diagnóstico en el expediente administrativo y de quién factura el centro. ROOT no aconseja la conversión clínica de un tamizaje. Los modificadores se omiten hasta validación del fundador.',
+      'GI billing turns on whether the case is screening or diagnostic in the administrative record, and who bills the facility. ROOT does not advise on clinical conversion of a screening case. Code-level detail is reviewed with your billing lead.',
+      'La facturación de GI depende de si el caso es tamizaje o diagnóstico en el expediente administrativo y de quién factura el centro. ROOT no aconseja la conversión clínica de un tamizaje. El detalle de códigos se revisa con su responsable de facturación.',
     ),
     focus: {
       en: ['Screening vs diagnostic flags', 'Facility coordination', 'Anesthesia add-on ownership'],
@@ -586,8 +586,8 @@ export const specialties: readonly Specialty[] = [
       'Componentes técnicos y profesionales, documentación de contraste y flujos de autorización.',
     ),
     body: pair(
-      'Imaging claims split across TC/PC and fail when authorization does not match the study actually billed. ROOT tracks that match. Contrast and study-type codes are not listed until founder-validated.',
-      'Los reclamos de imagen se parten en TC/PC y fallan cuando la autorización no coincide con el estudio facturado. ROOT sigue esa coincidencia. Los códigos de contraste no se listan hasta validación del fundador.',
+      'Imaging claims split across TC/PC and fail when authorization does not match the study actually billed. ROOT tracks that match. Code-level detail is reviewed with your billing lead.',
+      'Los reclamos de imagen se parten en TC/PC y fallan cuando la autorización no coincide con el estudio facturado. ROOT sigue esa coincidencia. El detalle de códigos se revisa con su responsable de facturación.',
     ),
     focus: {
       en: ['TC/PC ownership', 'Auth-to-study matching', 'Contrast documentation in the packet'],

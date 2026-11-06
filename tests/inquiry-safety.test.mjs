@@ -29,7 +29,7 @@ test('client cannot submit or claim success without durable acceptance', () => {
 });
 
 test('English and Spanish clearly disclose that inquiries are not being sent', () => {
-  assert.match(messages, /Online inquiries are not active yet/);
-  assert.match(messages, /Las consultas en línea aún no están activas/);
+  assert.match(messages, /Online inquiries are not open yet/);
+  assert.match(messages, /Las consultas en línea aún no están abiertas/);
   assert.doesNotMatch(messages, /Inquiry stored locally as a receipt/);
 });

@@ -6,11 +6,11 @@ test('EN and ES copy live in one messages module', () => {
   const src = fs.readFileSync('src/content/messages.ts', 'utf8');
   assert.match(src, /const en =/);
   assert.match(src, /const es: Messages/);
-  assert.match(src, /Handing Over the Keys/);
-  assert.match(src, /Entregar las llaves/);
+  assert.match(src, /Take control of your revenue/);
+  assert.match(src, /Tome el control de sus ingresos/);
   assert.match(src, /Talk with a revenue expert/);
   assert.match(src, /Hable con un experto en ingresos/);
-  assert.match(src, /tabletTiles/);
+  assert.match(src, /samePoints/);
   assert.match(src, /concernOptions/);
   assert.match(src, /Practice owners: control/);
   assert.match(src, /Dueños: control/);

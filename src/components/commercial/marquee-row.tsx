@@ -4,6 +4,7 @@ import { useId, useState } from 'react';
 import { copy } from '@/content/messages';
 import { platformRows, platformsInRow, type Platform, type PlatformRow } from '@/content/ecosystem';
 import type { Locale } from '@/i18n/locales';
+import { Button } from '@/components/ui/Button';
 
 function Tile({ platform }: { platform: Platform }) {
   const initials = platform.name
@@ -35,19 +36,12 @@ export function MarqueeRow({ row, locale }: { row: PlatformRow; locale: Locale }
     <div className="marquee-row">
       <div className="marquee-controls">
         <p className="eyebrow">{label}</p>
-        <button
-          type="button"
-          id={pauseId}
-          className="btn-ghost marquee-pause"
-          aria-pressed={paused}
-          onClick={() => setPaused((value) => !value)}
-        >
+        <Button id={pauseId} variant="ghost" size="sm" aria-pressed={paused} onClick={() => setPaused((value) => !value)}>
           {paused ? t.commercial.marqueePlay : t.commercial.marqueePause}
-        </button>
+        </Button>
       </div>
       <div
         className="marquee-viewport"
-        tabIndex={0}
         aria-hidden="true"
         data-marquee=""
         data-row={row}
