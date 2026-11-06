@@ -17,3 +17,6 @@ test-results/
 .vercel/
 tsconfig.tsbuildinfo
 *.tsbuildinfo
+
+# Local Netlify folder
+.netlify
