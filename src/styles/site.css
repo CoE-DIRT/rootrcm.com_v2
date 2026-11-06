@@ -889,6 +889,7 @@
   --muted: #d1e2f0;
   --surface: #0d2137;
   --surface-2: #132b45;
+  --surface-glass: rgb(19 43 69 / 85%);
   --cyan: #11e1ee;
   --border: #34607e;
   color: var(--text);
@@ -933,6 +934,9 @@
 .booking-panel {
   --text: #f2f8ff;
   --muted: #cddded;
+  --surface: #0d2137;
+  --surface-2: #132b45;
+  --border: #34607e;
   --cyan: #11e1ee;
   color: var(--text);
   padding: clamp(1.25rem, 2.5vw, 2.75rem);
