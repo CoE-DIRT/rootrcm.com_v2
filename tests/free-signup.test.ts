@@ -19,6 +19,20 @@ const provisions = (w: MemoryRowWriter) => w.all('audit_events').filter((e) => e
 
 beforeEach(() => resetSignupRateLimit());
 
+test('provisioning lock row IDs meet Appwrite limits and vary by user/window', async () => {
+  const w = new MemoryRowWriter();
+  const window = Math.floor(NOW / 60_000);
+  const first = workspaceIds('u-100').lock(window);
+  const second = workspaceIds('u-100').lock(window + 1);
+  const other = workspaceIds('u-200').lock(window);
+  for (const rowId of [first, second, other]) assert.match(rowId, /^[A-Za-z0-9][A-Za-z0-9._-]{0,35}$/);
+  assert.equal(new Set([first, second, other]).size, 3);
+  await assert.rejects(
+    w.create('audit_events', `lk_signup_${'a'.repeat(24)}_12345678`, {}),
+    { message: 'row_write_error', status: 400 },
+  );
+});
+
 test('profile: required fields, optional specialty/size, separate optional marketing consent', () => {
   const ok = validateSignupProfile(input);
   assert.equal(ok.ok, true);
