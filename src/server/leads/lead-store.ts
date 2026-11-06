@@ -49,6 +49,8 @@ export class MemoryLeadStore implements LeadStore {
 
   async create(table: LeadRowTable, rowId: string, data: LeadRow): Promise<CreateResult> {
     this.tick();
+    // Appwrite custom row ids: max 36 chars, [A-Za-z0-9._-], not starting with a special character.
+    if (this.enforceContract && !/^[A-Za-z0-9][A-Za-z0-9._-]{0,35}$/.test(rowId)) throw new LeadStoreError(400);
     if (this.enforceContract) {
       const violations = contractViolations(table, data);
       if (violations.length) throw new LeadStoreError(400);
