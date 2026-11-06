@@ -33,6 +33,11 @@ test('provisioning lock row IDs meet Appwrite limits and vary by user/window', a
   );
 });
 
+test('practice name obeys Appwrite displayName column size', () => {
+  assert.equal(validateSignupProfile({ ...input, practiceName: 'A'.repeat(160) }).ok, true);
+  assert.equal(validateSignupProfile({ ...input, practiceName: 'A'.repeat(161) }).ok, false);
+});
+
 test('profile: required fields, optional specialty/size, separate optional marketing consent', () => {
   const ok = validateSignupProfile(input);
   assert.equal(ok.ok, true);

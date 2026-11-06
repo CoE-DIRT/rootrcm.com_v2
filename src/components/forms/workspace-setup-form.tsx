@@ -83,7 +83,7 @@ export function WorkspaceSetupForm({ locale }: { locale: Locale }) {
       <Input id="ws-first" name="firstName" label={t.first} autoComplete="given-name" required maxLength={60} />
       <Input id="ws-last" name="lastName" label={t.last} autoComplete="family-name" required maxLength={60} />
       <Input id="ws-phone" name="phone" type="tel" label={t.phone} autoComplete="tel" inputMode="tel" required maxLength={24} />
-      <Input id="ws-practice" name="practiceName" label={t.practice} autoComplete="organization" required maxLength={200} />
+      <Input id="ws-practice" name="practiceName" label={t.practice} autoComplete="organization" required maxLength={160} />
       <Input id="ws-specialty" name="specialty" label={t.specialty} maxLength={80} />
       <Select id="ws-size" name="practiceSize" label={t.size} defaultValue="">
         <option value="">{t.sizePick}</option>
