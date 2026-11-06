@@ -53,6 +53,7 @@ export class AppwriteRowWriter implements RowWriter {
   }
 
   async create(table: string, rowId: string, data: Row): Promise<CreateResult> {
+    if (!validId(rowId)) throw new RowWriteError(400);
     const response = await this.fetchImpl(this.base(table), {
       method: 'POST', cache: 'no-store', redirect: 'error', signal: AbortSignal.timeout(8000),
       headers: { 'content-type': 'application/json', 'X-Appwrite-Project': this.config.projectId, 'X-Appwrite-Key': this.config.apiKey },
@@ -99,6 +100,7 @@ export class MemoryRowWriter implements RowWriter {
   beforeCreate?: (table: string) => Promise<void>;
 
   async create(table: string, rowId: string, data: Row): Promise<CreateResult> {
+    if (!validId(rowId)) throw new RowWriteError(400);
     if (this.beforeCreate) await this.beforeCreate(table);
     this.calls += 1;
     if (this.failOnCalls.has(this.calls)) throw new RowWriteError(500);
