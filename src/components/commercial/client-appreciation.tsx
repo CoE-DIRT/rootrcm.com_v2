@@ -28,8 +28,8 @@ export function ClientAppreciation({ locale }: { locale: Locale }) {
           eyebrow={es ? 'Lo que nuestros clientes valoran' : 'What clients appreciate'}
           title={es ? 'Confianza construida con trabajo constante.' : 'Trust built through consistent work.'}
           body={es
-            ? 'Temas recurrentes de la experiencia profesional en gestión de ingresos, resumidos sin nombres ni citas individuales.'
-            : 'Recurring themes from professional revenue-cycle client work, summarized without names or individual quotations.'}
+            ? 'Comunicación clara, atención a los detalles y dedicación constante al éxito operativo de cada consulta.'
+            : 'Clear communication, attention to detail and dependable follow-through across revenue-cycle engagements.'}
         />
         <div className="proof-grid">
           {themes.map(({ Icon, title, body }) => (
