@@ -158,7 +158,7 @@ test('leadership records keep approved full titles without biographies or invent
     [
       ['khurram', 'Khurram Zaffar Siddiqui', 'KS', 'Chief Commercial Officer (CCO)', 'Director comercial (CCO)'],
       ['aliah', 'Aliah Siddiqui', 'AS', 'Director of Strategy & Planning', 'Directora de estrategia y planificación'],
-      ['kashif', 'Kashif Ali', 'KA', 'Co-founder · Senior Operations & Service Delivery Lead', 'Cofundador · Responsable sénior de operaciones y prestación de servicios'],
+      ['kashif', 'Kashif Ali', 'KA', 'Co-founder · Finance & Business Development', 'Cofundador · Finanzas y desarrollo de negocios'],
       ['aftab', 'Aftab Shaukat', 'AS', 'Co-founder · Principal, Client Solutions & Service Delivery', 'Cofundador · Director de soluciones al cliente y prestación de servicios'],
     ],
   );
