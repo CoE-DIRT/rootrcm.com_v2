@@ -37,10 +37,10 @@ test.describe('ROOT V3 Public Transformation', () => {
     await page.goto('/en/consultation');
     const section = page.locator('#book');
     await expect(section).toBeVisible();
-    await expect(section.getByRole('link', { name: /Direct Calendly link/i })).toHaveAttribute('href', 'https://calendly.com/rootrcm-info/30min');
+    await expect(section.getByRole('link', { name: /Open calendar/i })).toHaveAttribute('href', 'https://calendly.com/rootrcm-info/30min');
     await expect(section.locator('a[href="tel:+13024965648"]')).toBeVisible();
     await expect(section.locator('iframe')).toHaveCount(0);
-    await section.getByRole('button', { name: 'Show available times' }).click();
+    await section.getByRole('button', { name: 'View available times' }).click();
     await expect(section.locator('iframe')).toHaveAttribute('src', /calendly\.com\/rootrcm-info\/30min/);
   });
 

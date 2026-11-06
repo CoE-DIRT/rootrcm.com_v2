@@ -36,7 +36,7 @@ test.describe('commercial specialty and location routes', () => {
     await noHorizontalOverflow(page);
   });
 
-  test('/en/company shows typed leadership with Aliah and portrait placeholders', async ({ page }) => {
+  test('/en/company shows accurate leadership titles without placeholders', async ({ page }) => {
     await page.goto('/en/company', { waitUntil: 'domcontentloaded' });
     await expect(page.getByRole('heading', { name: 'Khurram Zaffar Siddiqui' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Aliah Siddiqui' })).toBeVisible();
@@ -44,7 +44,8 @@ test.describe('commercial specialty and location routes', () => {
     await expect(page.getByRole('heading', { name: 'Aftab Shaukat' })).toBeVisible();
     await expect(page.getByText('Chief Commercial Officer (CCO)')).toBeVisible();
     await expect(page.getByText('Director of Strategy & Planning')).toBeVisible();
-    await expect(page.getByText('Approved portrait pending').first()).toBeVisible();
+    await expect(page.getByText('Co-founder · Senior Operations & Service Delivery Lead')).toBeVisible();
+    await expect(page.getByText(/portrait pending/i)).toHaveCount(0);
     await expect(page.getByText('Aliya Siddiqui')).toHaveCount(0);
     await noHorizontalOverflow(page);
   });
@@ -53,7 +54,8 @@ test.describe('commercial specialty and location routes', () => {
     await page.goto('/es/company', { waitUntil: 'domcontentloaded' });
     await expect(page.getByRole('heading', { name: 'Aliah Siddiqui' })).toBeVisible();
     await expect(page.getByText('Directora de estrategia y planificación')).toBeVisible();
-    await expect(page.getByText('Retrato aprobado pendiente').first()).toBeVisible();
+    await expect(page.getByText('Cofundador · Responsable sénior de operaciones y prestación de servicios')).toBeVisible();
+    await expect(page.getByText(/retrato.*pendiente/i)).toHaveCount(0);
   });
 
   test('/en/specialties does not overflow at 2560px', async ({ page }) => {

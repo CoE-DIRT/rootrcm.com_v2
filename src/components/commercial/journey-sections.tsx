@@ -3,7 +3,7 @@ import { CommercialNextActions } from '@/components/commercial/next-actions';
 import { EcosystemMarquees } from '@/components/commercial/ecosystem-marquees';
 import { PayerStrip } from '@/components/commercial/payer-strip';
 import { PracticeFaqSection } from '@/components/commercial/faq-section';
-import { ProofPlaceholders } from '@/components/commercial/proof-placeholders';
+import { ClientAppreciation } from '@/components/commercial/client-appreciation';
 import { SpecialtyGrid } from '@/components/commercial/specialty-grid';
 import { DuotonePhoto, Illustration } from '@/components/site/media';
 import { Button } from '@/components/ui/Button';
@@ -130,7 +130,7 @@ export function HomeJourney({ locale }: { locale: Locale }) {
         <PayerStrip locale={locale} />
       </Section>
 
-      <ProofPlaceholders locale={locale} />
+      <ClientAppreciation locale={locale} />
 
       {/* Pricing */}
       <Section labelledBy="pricing-teaser-heading">

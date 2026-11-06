@@ -27,13 +27,13 @@ export const teamMembers: readonly TeamMember[] = [
     id: 'kashif',
     name: 'Kashif Ali',
     initials: 'KA',
-    role: { en: 'Co-founder', es: 'Cofundador' },
+    role: { en: 'Co-founder · Senior Operations & Service Delivery Lead', es: 'Cofundador · Responsable sénior de operaciones y prestación de servicios' },
   },
   {
     id: 'aftab',
     name: 'Aftab Shaukat',
     initials: 'AS',
-    role: { en: 'Co-founder', es: 'Cofundador' },
+    role: { en: 'Co-founder · Principal, Client Solutions & Service Delivery', es: 'Cofundador · Director de soluciones al cliente y prestación de servicios' },
   },
 ];
 
@@ -42,16 +42,12 @@ export const teamCopy = {
     eyebrow: 'The people responsible',
     title: 'Leadership built around accountability.',
     body: 'Meet the leadership roles guiding ROOT’s operating philosophy and client experience.',
-    portraitPending: 'Approved portrait pending',
-    note: 'Individual biographies and credentials are published only after review and approval.',
     cardKicker: 'Leadership',
   },
   es: {
     eyebrow: 'Las personas responsables',
     title: 'Dirección basada en la responsabilidad.',
     body: 'Conozca las funciones directivas que guían la filosofía operativa y la experiencia del cliente de ROOT.',
-    portraitPending: 'Retrato aprobado pendiente',
-    note: 'Las biografías y credenciales individuales se publican tras su revisión y aprobación.',
     cardKicker: 'Dirección',
   },
 } as const;

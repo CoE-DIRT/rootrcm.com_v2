@@ -152,14 +152,14 @@ test('credibility slots default to unpublished empty states', () => {
   }
 });
 
-test('leadership records keep Aliah and Demo 6 roles without biographies', () => {
+test('leadership records keep approved full titles without biographies or invented quotes', () => {
   assert.deepEqual(
     teamMembers.map((member) => [member.id, member.name, member.initials, member.role.en, member.role.es]),
     [
       ['khurram', 'Khurram Zaffar Siddiqui', 'KS', 'Chief Commercial Officer (CCO)', 'Director comercial (CCO)'],
       ['aliah', 'Aliah Siddiqui', 'AS', 'Director of Strategy & Planning', 'Directora de estrategia y planificación'],
-      ['kashif', 'Kashif Ali', 'KA', 'Co-founder', 'Cofundador'],
-      ['aftab', 'Aftab Shaukat', 'AS', 'Co-founder', 'Cofundador'],
+      ['kashif', 'Kashif Ali', 'KA', 'Co-founder · Senior Operations & Service Delivery Lead', 'Cofundador · Responsable sénior de operaciones y prestación de servicios'],
+      ['aftab', 'Aftab Shaukat', 'AS', 'Co-founder · Principal, Client Solutions & Service Delivery', 'Cofundador · Director de soluciones al cliente y prestación de servicios'],
     ],
   );
   assert.equal(teamMembers.some((member) => member.name.includes('Aliya')), false);
