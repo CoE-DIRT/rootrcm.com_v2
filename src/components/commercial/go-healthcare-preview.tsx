@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { ShieldCheck } from 'lucide-react';
 import type { Locale } from '@/i18n/locales';
 import { translateOpsAction } from '@/content/ops-actions';
@@ -99,9 +100,31 @@ export function GoHealthcarePreview({ locale }: { locale: Locale }) {
     <section className="relative mt-10 overflow-hidden rounded-[23px] border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[var(--shadow)] md:p-8" aria-labelledby="go-healthcare-heading" data-testid="go-healthcare-preview">
       <div className="pointer-events-none absolute -right-14 -top-14 size-48 rounded-full bg-[var(--cyan)] opacity-[0.06] blur-3xl" />
       <div className="relative">
-        <p className="eyebrow">{t.source}</p>
-        <h2 id="go-healthcare-heading" className="mt-2 text-2xl font-extrabold tracking-tight md:text-3xl">{t.heading}</h2>
-        <p className="muted mt-3 max-w-3xl text-sm">{t.body}</p>
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_280px] lg:items-center">
+          <div>
+            <p className="eyebrow">{t.source}</p>
+            <h2 id="go-healthcare-heading" className="mt-2 text-2xl font-extrabold tracking-tight md:text-3xl">{t.heading}</h2>
+            <p className="muted mt-3 max-w-2xl text-sm leading-relaxed">{t.body}</p>
+          </div>
+          <figure className="relative overflow-hidden rounded-2xl border border-[var(--border)] bg-[#071423] shadow-md">
+            <div className="relative aspect-[16/10] w-full">
+              <picture>
+                <source srcSet="/media/stock/revenue-analytics.avif" type="image/avif" />
+                <Image
+                  src="/media/stock/revenue-analytics.webp"
+                  alt={locale === 'es' ? 'Equipo revisando análisis de ingresos y gráficos en dispositivos digitales. Fotografía editorial; no es personal de ROOT.' : 'Team reviewing revenue analytics on digital screens. Editorial photograph; not ROOT staff.'}
+                  fill
+                  sizes="280px"
+                  className="object-cover object-center opacity-85"
+                />
+              </picture>
+              <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(5,16,33,0.1)_0%,rgba(5,18,35,0.7)_100%)]" />
+              <figcaption className="absolute bottom-2 left-3 right-3 text-[11px] font-semibold text-[#f5fbff]">
+                {locale === 'es' ? 'Fotografía editorial. No es personal de ROOT.' : 'Editorial photograph. Not ROOT staff.'}
+              </figcaption>
+            </div>
+          </figure>
+        </div>
         <div className="mt-6 flex flex-wrap items-center gap-2" role="group" aria-label={t.heading}>
           {kinds.map((next) => (
             <button key={next} type="button" onClick={() => { if (next === kind) return; setLoading(true); setKind(next); }}

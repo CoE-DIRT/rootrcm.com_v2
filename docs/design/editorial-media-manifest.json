@@ -63,8 +63,8 @@
     },
     {
       "id": "infectious-disease-hospital",
-      "status": "downloaded-not-mounted",
-      "placement": "Held for the infectious disease page. Not mounted in this slice.",
+      "status": "mounted",
+      "placement": "InfectiousDiseasePage (/specialties/infectious-disease)",
       "sourceUrl": "https://www.pexels.com/photo/medical-professionals-walking-in-a-hallway-9574339/",
       "photographer": "Tima Miroshnichenko",
       "sourceDate": "2021-09-16",
@@ -92,8 +92,8 @@
     },
     {
       "id": "revenue-analytics",
-      "status": "downloaded-not-mounted",
-      "placement": "Held for the Go healthcare preview. Not mounted in this slice.",
+      "status": "mounted",
+      "placement": "GoHealthcarePreview (/technology)",
       "sourceUrl": "https://www.pexels.com/photo/people-looking-at-graphs-on-a-laptop-and-a-digital-tablet-6930432/",
       "photographer": "Mikhail Nilov",
       "sourceDate": "2021-02-23",
