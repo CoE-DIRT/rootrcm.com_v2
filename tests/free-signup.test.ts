@@ -13,7 +13,7 @@ const input = { firstName: 'Dana', lastName: 'Reyes', phone: '(555) 010-2030', p
 const profile = (extra: Partial<SignupProfile> = {}): SignupProfile => ({ ...(validateSignupProfile(input) as { ok: true; data: SignupProfile }).data, ...extra });
 const user: AuthContext = { session: { userId: 'u-100', email: 'Dana@Clinic.example' }, memberships: [] };
 const NOW = Date.parse('2026-11-06T12:00:00Z');
-const WRITES = 7; // organization, company, contact, terms consent, marketing choice, audit, membership
+const WRITES = 6; // organization, company, contact, terms consent, audit, membership (marketing choice follows the membership)
 
 beforeEach(() => resetSignupRateLimit());
 
@@ -36,7 +36,7 @@ test('provisions org, company, contact, terms consent, explicit marketing opt-ou
   const w = new MemoryRowWriter();
   const r = await provisionFreeWorkspace(user, profile(), w, NOW);
   const id = workspaceIds('u-100');
-  assert.deepEqual(r, { ok: true, orgId: id.orgId, created: true });
+  assert.deepEqual(r, { ok: true, orgId: id.orgId, created: true, marketingRecorded: true });
   for (const t of ['organizations', 'crm_companies', 'crm_contacts', 'audit_events', 'memberships']) assert.equal(w.all(t).length, 1, t);
   assert.deepEqual(w.all('consent_records').map((c) => [c.consentType, c.granted]).sort(), [['account_terms', true], ['marketing_email', false]]);
   assert.equal(w.all('crm_contacts')[0].emailNormalized, 'dana@clinic.example');
@@ -191,16 +191,47 @@ test('every CRM/consent/audit row signup writes satisfies the verified live colu
   const strict = new MemoryRowWriter();
   await assert.rejects(strict.create('crm_contacts', 'x', { lifecycleStage: 'lead', leadStatus: 'new', ssn: '1' }));
 });
-
-test('retry after a partial opted-in attempt reconciles marketing consent to the final submission (both directions)', async () => {
+test('marketing choice is written only after the membership exists; a retry reflects the final submission (both directions)', async () => {
   for (const [first, second] of [[true, false], [false, true]] as const) {
     const w = new MemoryRowWriter();
-    w.failOnCalls = new Set([6]); // marketing choice written (call 5), audit (call 6) fails
+    w.failOnCalls = new Set([5]); // audit fails before the membership
     assert.equal((await provisionFreeWorkspace(user, profile({ marketingConsent: first }), w, NOW)).ok, false);
+    assert.equal(w.all('consent_records').filter((c) => c.consentType === 'marketing_email').length, 0, 'nothing written before completion');
     w.failOnCalls = new Set();
     assert.equal((await provisionFreeWorkspace(user, profile({ marketingConsent: second }), w, NOW)).ok, true);
     const marketing = w.all('consent_records').filter((c) => c.consentType === 'marketing_email');
-    assert.equal(marketing.length, 1);
-    assert.equal(marketing[0].granted, second, `first=${first} second=${second}`);
+    assert.deepEqual(marketing.map((c) => c.granted), [second]);
   }
+});
+
+test('concurrent first-time requests: exactly one creates, the other succeeds without 403 or touching consent', async () => {
+  const w = new MemoryRowWriter();
+  let tick = 0;
+  w.beforeCreate = async () => { tick += 1; await new Promise((r) => setTimeout(r, tick % 2)); }; // force interleaving
+  const [a, b] = await Promise.all([
+    provisionFreeWorkspace(user, profile({ marketingConsent: true }), w, NOW),
+    provisionFreeWorkspace(user, profile({ marketingConsent: false }), w, NOW),
+  ]);
+  assert.equal(a.ok && b.ok, true, JSON.stringify([a, b]));
+  assert.equal([a, b].filter((r) => r.ok && r.created).length, 1);
+  const winner = [a, b].findIndex((r) => r.ok && r.created);
+  const marketing = w.all('consent_records').filter((c) => c.consentType === 'marketing_email');
+  assert.deepEqual(marketing.map((c) => c.granted), [winner === 0]);
+});
+
+test('a stale older request cannot overwrite consent after another request completed signup', async () => {
+  const w = new MemoryRowWriter();
+  assert.equal((await provisionFreeWorkspace(user, profile({ marketingConsent: false }), w, NOW)).ok, true);
+  const stale = await provisionFreeWorkspace(user, profile({ marketingConsent: true }), w, NOW); // empty-membership snapshot
+  assert.deepEqual(stale, { ok: true, orgId: workspaceIds('u-100').orgId, created: false });
+  assert.deepEqual(w.all('consent_records').filter((c) => c.consentType === 'marketing_email').map((c) => c.granted), [false]);
+});
+
+test('marketing write failing after the membership still completes signup and is reported honestly', async () => {
+  const w = new MemoryRowWriter();
+  w.failOnCalls = new Set([7]);
+  const r = await provisionFreeWorkspace(user, profile({ marketingConsent: true }), w, NOW);
+  assert.deepEqual(r, { ok: true, orgId: workspaceIds('u-100').orgId, created: true, marketingRecorded: false });
+  assert.equal(w.all('memberships').length, 1);
+  assert.equal(w.all('consent_records').filter((c) => c.consentType === 'marketing_email').length, 0, 'absence = no marketing consent');
 });

@@ -7,7 +7,7 @@ the client calls `POST /api/v1/account/workspace` with `firstName, lastName, pho
 Identity is the verified session only; no body field selects a user, org or role. Unverified/pending users get 401 until they verify.
 
 Writes (deterministic ids, idempotent, membership LAST so a retry repairs partial chains): `organizations` → `crm_companies` → `crm_contacts` (phone) →
-`consent_records` (`account_terms`; `marketing_email` always recorded explicitly (granted true or false), separate, optional, never implied; reconciled to the final submission on retry) → `audit_events` → `memberships` (`CLIENT_OWNER`).
+`consent_records` (`account_terms`; `marketing_email` recorded explicitly (granted true or false) ONLY by the request that created the membership (so concurrent or stale requests cannot overwrite it); separate, optional, never implied; if that write fails the response reports marketingRecorded:false) → `audit_events` → `memberships` (`CLIENT_OWNER`).
 Specialty/practice size/locale go to the Appwrite account prefs (best-effort). No `entitlements` row: FREE = basic workspace + consultation from the catalog; paid access only from server grants.
 A user already in another org (e.g. staff) gets 409; one workspace per user; same practice name for two users = two tenants.
 

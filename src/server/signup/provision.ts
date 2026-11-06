@@ -17,7 +17,7 @@ export const SIGNUP_VALUES = {
 } as const;
 
 export type ProvisionResult =
-  | { ok: true; orgId: string; created: boolean }
+  | { ok: true; orgId: string; created: boolean; marketingRecorded?: boolean }
   | { ok: false; reason: 'unauthenticated' | 'existing_membership' | 'membership_inactive' | 'store_unavailable' };
 
 const sha = (v: string) => createHash('sha256').update(v).digest('hex');
@@ -78,13 +78,6 @@ export async function provisionFreeWorkspace(
       subjectType: 'contact', subjectId: id.contact, consentType: 'account_terms', granted: true,
       recordedAt: at, policyVersion: SIGNUP_TERMS_VERSION, source: 'free_signup',
     });
-    // Marketing is a separate optional choice, always recorded explicitly (granted true OR false). Upsert so a retry
-    // after a partial attempt reconciles to the CURRENT submission (the account is not complete until the membership
-    // below exists, so no finished signup's consent is ever overwritten).
-    await writer.upsert('consent_records', id.marketing, {
-      subjectType: 'contact', subjectId: id.contact, consentType: 'marketing_email', granted: profile.marketingConsent,
-      recordedAt: at, policyVersion: SIGNUP_MARKETING_VERSION, source: 'free_signup',
-    });
     await writer.create('audit_events', id.audit, {
       eventId: id.audit, action: 'account.free_workspace_provisioned', occurredAt: at,
       actorUserId: userId, orgId: id.orgId, targetType: 'organization', targetId: id.orgId, result: 'allow', requestId,
@@ -92,10 +85,23 @@ export async function provisionFreeWorkspace(
     const membership = await writer.create('memberships', id.membership, {
       userId, orgId: id.orgId, role: 'CLIENT_OWNER', status: 'active', grantedAt: at,
     });
-    // A membership row that already exists but is absent from the caller's active memberships is
-    // revoked/inactive: never report provisioning success for it.
-    if (membership === 'exists') return { ok: false, reason: 'membership_inactive' };
-    return { ok: true, orgId: id.orgId, created: true };
+    if (membership === 'exists') {
+      // Lost a race with a concurrent request, or the row is revoked. Read it: an ACTIVE owner row for this user means
+      // the workspace is live (report success, write nothing more, never touch consent); anything else is inactive.
+      const row = await writer.read('memberships', id.membership);
+      const active = row && row.userId === userId && row.orgId === id.orgId && row.role === 'CLIENT_OWNER' && row.status === 'active' && !row.revokedAt;
+      return active ? { ok: true, orgId: id.orgId, created: false } : { ok: false, reason: 'membership_inactive' };
+    }
+    // Only the request that actually CREATED the membership records the marketing choice, so a concurrent or stale
+    // request can never overwrite it. Absence of a granted row always means no marketing consent (fail-safe).
+    let marketingRecorded = true;
+    try {
+      await writer.create('consent_records', id.marketing, {
+        subjectType: 'contact', subjectId: id.contact, consentType: 'marketing_email', granted: profile.marketingConsent,
+        recordedAt: at, policyVersion: SIGNUP_MARKETING_VERSION, source: 'free_signup',
+      });
+    } catch { marketingRecorded = false; }
+    return { ok: true, orgId: id.orgId, created: true, marketingRecorded };
   } catch {
     return { ok: false, reason: 'store_unavailable' };
   }

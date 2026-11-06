@@ -83,5 +83,5 @@ export async function handleWorkspaceProvision(request: Request, writer?: RowWri
       await authRequest('/account/prefs', 'PATCH', { prefs: { specialty: profile.data.specialty ?? '', practiceSize: profile.data.practiceSize ?? '', locale: profile.data.locale } }, secret);
     } catch { /* retryable later; workspace already exists */ }
   }
-  return json(result.created ? 201 : 200, { orgId: result.orgId, plan: 'free', features: ['basic_workspace', 'consultation'], created: result.created });
+  return json(result.created ? 201 : 200, { orgId: result.orgId, plan: 'free', features: ['basic_workspace', 'consultation'], created: result.created, ...(result.created ? { marketingRecorded: result.marketingRecorded !== false } : {}) });
 }
