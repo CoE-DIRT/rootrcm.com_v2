@@ -53,7 +53,7 @@ export function SiteFooter({ locale }: { locale: Locale }) {
             <p className="muted mt-3 max-w-xl">{es ? 'Conserve sus sistemas. Comprenda sus ingresos. Dé a cada paso un responsable.' : 'Keep your systems. Understand your revenue. Give every next step a clear owner.'}</p>
           </div>
           <div className="flex flex-wrap gap-3">
-            <Link href={localizedPath(locale, '/consultation')} className="btn-primary btn-lg">
+            <Link href={localizedPath(locale, '/consultation') + '#book'} className="btn-primary btn-lg">
               {es ? 'Hable con ROOT' : 'Talk with ROOT'} <ArrowUpRight className="size-4" aria-hidden="true"/>
             </Link>
             <Link href={localizedPath(locale, '/services')} className="btn-secondary btn-lg">
