@@ -39,7 +39,8 @@ export function validateSignupProfile(input: unknown): { ok: true; data: SignupP
   const firstName = text(r.firstName, 1, 60);
   const lastName = text(r.lastName, 1, 60);
   const phone = normalizePhone(r.phone);
-  const practiceName = text(r.practiceName, 2, 200);
+  // organizations.displayName is varchar(160) in the verified Appwrite schema.
+  const practiceName = text(r.practiceName, 2, 160);
   if (!firstName) errors.firstName = 'invalid';
   if (!lastName) errors.lastName = 'invalid';
   if (!phone) errors.phone = 'invalid';
