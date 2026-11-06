@@ -54,7 +54,8 @@ test.describe('commercial specialty and location routes', () => {
     await page.goto('/es/company', { waitUntil: 'domcontentloaded' });
     await expect(page.getByRole('heading', { name: 'Aliah Siddiqui' })).toBeVisible();
     await expect(page.getByText('Directora de estrategia y planificación')).toBeVisible();
-    await expect(page.getByText('Retrato aprobado pendiente').first()).toBeVisible();
+    await expect(page.getByText('Cofundador · Responsable sénior de operaciones y prestación de servicios')).toBeVisible();
+    await expect(page.getByText(/retrato.*pendiente/i)).toHaveCount(0);
   });
 
   test('/en/specialties does not overflow at 2560px', async ({ page }) => {
