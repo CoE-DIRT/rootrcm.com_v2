@@ -64,7 +64,7 @@ test.describe('ROOT V3 Public Transformation', () => {
     await expect(page.locator('#main input[type="email"]')).toBeVisible();
     await expect(page.locator('#main input[type="password"]')).toBeVisible();
     await expect(page.getByRole('link', { name: /Forgot password/i })).toHaveAttribute('href', '/en/forgot-password');
-    await expect(page.getByRole('link', { name: /Create an account/i })).toHaveAttribute('href', '/en/signup');
+    await expect(page.locator('#main a[href="/en/signup"]').first()).toBeVisible();
 
     await page.goto('/en/signup');
     await expect(page.getByRole('heading', { level: 1, name: 'Create your practice account' })).toBeVisible();

@@ -129,7 +129,7 @@ export function RootGuide({ locale }: { locale: Locale }) {
   }
 
   return (
-    <aside className="pointer-events-none fixed bottom-[calc(76px+env(safe-area-inset-bottom))] right-3 md:bottom-6 z-40 flex max-h-[calc(100svh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-12px)] max-w-[calc(100vw-24px)] flex-col items-end gap-3 sm:bottom-6 sm:right-6" data-testid="root-guide-dock">
+    <aside className={`pointer-events-none fixed bottom-[calc(76px+env(safe-area-inset-bottom))] right-3 md:bottom-6 ${open ? "z-[60]" : "z-40"} flex max-h-[calc(100svh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-12px)] max-w-[calc(100vw-24px)] flex-col items-end gap-3 sm:bottom-6 sm:right-6`} data-testid="root-guide-dock">
       {open && (
         <section
           id="root-guide-panel"
