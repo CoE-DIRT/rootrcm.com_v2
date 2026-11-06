@@ -69,8 +69,8 @@ test.describe('ROOT V3 Public Transformation', () => {
     await page.goto('/en/signup');
     await expect(page.getByRole('heading', { level: 1, name: 'Create your practice account' })).toBeVisible();
     await expect(page.locator('#main input[type="checkbox"]')).toBeVisible();
-    await expect(page.locator('#main a[href="/en/terms"]')).toBeVisible();
-    await expect(page.locator('#main a[href="/en/privacy"]')).toBeVisible();
+    await expect(page.locator('nav.auth-shell__legal a[href="/en/terms"]')).toBeVisible();
+    await expect(page.locator('nav.auth-shell__legal a[href="/en/privacy"]')).toBeVisible();
 
     await page.goto('/en/forgot-password');
     await expect(page.getByRole('heading', { level: 1, name: 'Forgot your password?' })).toBeVisible();
