@@ -42,7 +42,7 @@ const en = {
     titleTablet: 'More clarity, without changing what works.',
     titleMobile: 'Your practice. Your revenue. Your control.',
     bodyDesktop:
-      'A hybrid MSO for RCM, practice operations and revenue intelligence. Keep control of your clinical workflows while making every next action visible.',
+      'Revenue operations, billing accountability, and connected intelligence for independent practices. Keep control of your clinical workflows while making every next action visible.',
     bodyTablet: 'An operating partner that connects services, technology and accountability.',
     bodyMobile: 'Less guesswork. Clear billing, credentialing and operations with ROOT.',
     ctaDesktop: 'Book a free consultation',
@@ -69,7 +69,7 @@ const en = {
       { title: 'Practice operations', href: '/company' },
     ],
     bands: [
-      'Discover → Assess → Scope → Onboard → Connect → Execute → Monitor → Optimize',
+      'Reveal → Assign → Reconcile',
       'Built around the technology your practice already uses',
       'Accountability, transparent workflows and evidence-led decisions',
     ],
@@ -561,7 +561,7 @@ const es: Messages = {
     titleTablet: 'Más claridad, sin cambiar lo que funciona.',
     titleMobile: 'Su práctica. Sus ingresos. Su control.',
     bodyDesktop:
-      'Un MSO híbrido para RCM, operaciones e inteligencia de ingresos. Conserve sus flujos clínicos y haga visible cada siguiente acción.',
+      'Operaciones de ingresos, facturación responsable e inteligencia conectada para consultorios independientes. Conserve sus flujos clínicos y haga visible cada siguiente acción.',
     bodyTablet: 'Un socio operativo que conecta servicios, tecnología y responsabilidad.',
     bodyMobile:
       'Menos incertidumbre. Facturación, credencialización y operaciones claras con ROOT.',
@@ -589,7 +589,7 @@ const es: Messages = {
       { title: 'Operaciones de la práctica', href: '/company' },
     ],
     bands: [
-      'Descubrir → Evaluar → Definir alcance → Incorporar → Conectar → Ejecutar → Monitorear → Optimizar',
+      'Revelar → Asignar → Conciliar',
       'Diseñado alrededor de la tecnología que su práctica ya utiliza',
       'Responsabilidad, flujos transparentes y decisiones basadas en evidencia',
     ],

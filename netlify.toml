@@ -1,0 +1,32 @@
+[build]
+  publish = ".next"
+
+[[redirects]]
+  from = "/login"
+  to = "/en/login"
+  status = 302
+
+[[redirects]]
+  from = "/signup"
+  to = "/en/signup"
+  status = 302
+
+[[redirects]]
+  from = "/forgot-password"
+  to = "/en/forgot-password"
+  status = 302
+
+[[redirects]]
+  from = "/reset-password"
+  to = "/en/reset-password"
+  status = 302
+
+[[redirects]]
+  from = "/contact"
+  to = "/en/contact"
+  status = 302
+
+[[redirects]]
+  from = "/es/diagnostico"
+  to = "/es/diagnostic"
+  status = 301

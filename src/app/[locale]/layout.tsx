@@ -3,6 +3,7 @@ import { SiteFooter } from '@/components/site/site-footer';
 import { SiteHeader } from '@/components/site/site-header';
 import { RootGuide } from '@/components/site/root-guide';
 import { SkipLink } from '@/components/site/skip-link';
+import { MobileConversionDock } from '@/components/site/mobile-dock';
 import { copy } from '@/content/messages';
 import { localeStaticParams, requireLocale } from '@/lib/locale';
 import { publicPageMetadata } from '@/lib/metadata';
@@ -33,6 +34,7 @@ export default async function LocaleLayout({
       <SiteHeader locale={locale} />
       {children}
       <SiteFooter locale={locale} />
+      <MobileConversionDock locale={locale} />
       <RootGuide key={locale} locale={locale} />
     </>
   );

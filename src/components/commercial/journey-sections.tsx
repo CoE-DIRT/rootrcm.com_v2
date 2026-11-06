@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { CommercialNextActions } from '@/components/commercial/next-actions';
 import { EcosystemMarquees } from '@/components/commercial/ecosystem-marquees';
 import { PayerStrip } from '@/components/commercial/payer-strip';
+import { PracticeFaqSection } from '@/components/commercial/faq-section';
 import { ProofUnpublished } from '@/components/commercial/proof-unpublished';
 import { SectionHeader } from '@/components/commercial/section-header';
 import { SpecialtyGrid } from '@/components/commercial/specialty-grid';
@@ -185,6 +186,8 @@ export function HomeJourney({ locale }: { locale: Locale }) {
           </Link>
         </p>
       </section>
+
+      <PracticeFaqSection locale={locale} />
 
       <section
         className="commercial-section surface p-8 md:p-10"
