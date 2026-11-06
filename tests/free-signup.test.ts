@@ -13,7 +13,9 @@ const input = { firstName: 'Dana', lastName: 'Reyes', phone: '(555) 010-2030', p
 const profile = (extra: Partial<SignupProfile> = {}): SignupProfile => ({ ...(validateSignupProfile(input) as { ok: true; data: SignupProfile }).data, ...extra });
 const user: AuthContext = { session: { userId: 'u-100', email: 'Dana@Clinic.example' }, memberships: [] };
 const NOW = Date.parse('2026-11-06T12:00:00Z');
-const WRITES = 6; // organization, company, contact, terms consent, audit, membership (marketing choice follows the membership)
+const WRITES = 7; // lock, organization, company, contact, terms consent, audit, membership (marketing follows the membership)
+const LATER = NOW + 2 * 60_000; // a later lock window
+const provisions = (w: MemoryRowWriter) => w.all('audit_events').filter((e) => e.action === 'account.free_workspace_provisioned').length;
 
 beforeEach(() => resetSignupRateLimit());
 
@@ -37,7 +39,9 @@ test('provisions org, company, contact, terms consent, explicit marketing opt-ou
   const r = await provisionFreeWorkspace(user, profile(), w, NOW);
   const id = workspaceIds('u-100');
   assert.deepEqual(r, { ok: true, orgId: id.orgId, created: true, marketingRecorded: true });
-  for (const t of ['organizations', 'crm_companies', 'crm_contacts', 'audit_events', 'memberships']) assert.equal(w.all(t).length, 1, t);
+  for (const t of ['organizations', 'crm_companies', 'crm_contacts', 'memberships']) assert.equal(w.all(t).length, 1, t);
+  assert.equal(provisions(w), 1);
+  assert.equal(w.all('audit_events').filter((e) => e.action === 'lock.signup_provision').length, 1);
   assert.deepEqual(w.all('consent_records').map((c) => [c.consentType, c.granted]).sort(), [['account_terms', true], ['marketing_email', false]]);
   assert.equal(w.all('crm_contacts')[0].emailNormalized, 'dana@clinic.example');
   assert.equal(w.all('organizations')[0].ownerUserId, 'u-100');
@@ -78,9 +82,10 @@ test('partial failure at every step: 503, no membership yet, retry repairs and t
     assert.deepEqual(await provisionFreeWorkspace(user, profile(), w, NOW), { ok: false, reason: 'store_unavailable' }, `step ${failAt}`);
     if (failAt <= WRITES) assert.equal(w.all('memberships').length, 0, 'membership is written last');
     w.failOnCalls = new Set();
-    const retry = await provisionFreeWorkspace(user, profile(), w, NOW);
+    const retry = await provisionFreeWorkspace(user, profile(), w, LATER);
     assert.equal(retry.ok, true);
-    for (const t of ['organizations', 'crm_companies', 'crm_contacts', 'consent_records', 'audit_events', 'memberships']) assert.equal(w.all(t).length, t === 'consent_records' ? 2 : 1, `${t} after step ${failAt}`);
+    for (const t of ['organizations', 'crm_companies', 'crm_contacts', 'consent_records', 'memberships']) assert.equal(w.all(t).length, t === 'consent_records' ? 2 : 1, `${t} after step ${failAt}`);
+    assert.equal(provisions(w), 1);
   }
 });
 
@@ -194,17 +199,17 @@ test('every CRM/consent/audit row signup writes satisfies the verified live colu
 test('marketing choice is written only after the membership exists; a retry reflects the final submission (both directions)', async () => {
   for (const [first, second] of [[true, false], [false, true]] as const) {
     const w = new MemoryRowWriter();
-    w.failOnCalls = new Set([5]); // audit fails before the membership
+    w.failOnCalls = new Set([6]); // audit fails before the membership
     assert.equal((await provisionFreeWorkspace(user, profile({ marketingConsent: first }), w, NOW)).ok, false);
     assert.equal(w.all('consent_records').filter((c) => c.consentType === 'marketing_email').length, 0, 'nothing written before completion');
     w.failOnCalls = new Set();
-    assert.equal((await provisionFreeWorkspace(user, profile({ marketingConsent: second }), w, NOW)).ok, true);
+    assert.equal((await provisionFreeWorkspace(user, profile({ marketingConsent: second }), w, LATER)).ok, true);
     const marketing = w.all('consent_records').filter((c) => c.consentType === 'marketing_email');
     assert.deepEqual(marketing.map((c) => c.granted), [second]);
   }
 });
 
-test('concurrent first-time requests: exactly one creates, the other succeeds without 403 or touching consent', async () => {
+test('concurrent first-time requests: one writer holds the lock; the other writes nothing and is told to retry', async () => {
   const w = new MemoryRowWriter();
   let tick = 0;
   w.beforeCreate = async () => { tick += 1; await new Promise((r) => setTimeout(r, tick % 2)); }; // force interleaving
@@ -212,11 +217,12 @@ test('concurrent first-time requests: exactly one creates, the other succeeds wi
     provisionFreeWorkspace(user, profile({ marketingConsent: true }), w, NOW),
     provisionFreeWorkspace(user, profile({ marketingConsent: false }), w, NOW),
   ]);
-  assert.equal(a.ok && b.ok, true, JSON.stringify([a, b]));
-  assert.equal([a, b].filter((r) => r.ok && r.created).length, 1);
-  const winner = [a, b].findIndex((r) => r.ok && r.created);
-  const marketing = w.all('consent_records').filter((c) => c.consentType === 'marketing_email');
-  assert.deepEqual(marketing.map((c) => c.granted), [winner === 0]);
+  const created = [a, b].filter((r) => r.ok && r.created);
+  assert.equal(created.length, 1, JSON.stringify([a, b]));
+  const other = [a, b].find((r) => !(r.ok && r.created))!;
+  assert.ok((other.ok && !other.created) || (!other.ok && other.reason === 'in_progress'), JSON.stringify(other));
+  const winner = a.ok && a.created ? 0 : 1;
+  assert.deepEqual(w.all('consent_records').filter((c) => c.consentType === 'marketing_email').map((c) => c.granted), [winner === 0]);
 });
 
 test('a stale older request cannot overwrite consent after another request completed signup', async () => {
@@ -229,7 +235,7 @@ test('a stale older request cannot overwrite consent after another request compl
 
 test('marketing write failing after the membership still completes signup and is reported honestly', async () => {
   const w = new MemoryRowWriter();
-  w.failOnCalls = new Set([7]);
+  w.failOnCalls = new Set([8]);
   const r = await provisionFreeWorkspace(user, profile({ marketingConsent: true }), w, NOW);
   assert.deepEqual(r, { ok: true, orgId: workspaceIds('u-100').orgId, created: true, marketingRecorded: false });
   assert.equal(w.all('memberships').length, 1);
@@ -239,11 +245,11 @@ test('marketing write failing after the membership still completes signup and is
 test('retry with corrected details reconciles org, company and contact to ONE consistent submission', async () => {
   for (const failAt of [1, 2, 3]) { // after org / company / contact writes... (call N fails; earlier rows persist)
     const w = new MemoryRowWriter();
-    w.failOnCalls = new Set([failAt + 1]);
+    w.failOnCalls = new Set([failAt + 2]); // company / contact / terms write fails; earlier identity rows persist
     assert.equal((await provisionFreeWorkspace(user, profile({ practiceName: 'Old Practice', firstName: 'Old', phone: '5550001111' }), w, NOW)).ok, false);
     w.failOnCalls = new Set();
     const fixed = profile({ practiceName: 'Corrected Practice', firstName: 'New', phone: '5550002222' });
-    assert.equal((await provisionFreeWorkspace(user, fixed, w, NOW)).ok, true);
+    assert.equal((await provisionFreeWorkspace(user, fixed, w, LATER)).ok, true);
     assert.equal(w.all('organizations')[0].legalName, 'Corrected Practice', `org @${failAt}`);
     assert.equal(w.all('organizations')[0].displayName, 'Corrected Practice');
     assert.equal(w.all('crm_companies')[0].name, 'Corrected Practice');
@@ -259,4 +265,37 @@ test('a request after a completed signup does not rewrite any identity row (memb
   assert.deepEqual(result, { ok: true, orgId: workspaceIds('u-100').orgId, created: false });
   assert.equal(w.all('organizations')[0].legalName, 'Final Practice');
   assert.equal(w.all('crm_companies')[0].name, 'Final Practice');
+});
+
+test('in-flight older request cannot rewrite identity rows after the corrected request completes (no interleaved overwrite)', async () => {
+  const w = new MemoryRowWriter();
+  let release!: () => void;
+  const gate = new Promise<void>((r) => { release = r; });
+  let paused = false;
+  w.beforeCreate = async (table) => { if (table === 'crm_companies' && !paused) { paused = true; await gate; } };
+  const older = provisionFreeWorkspace(user, profile({ practiceName: 'Old Practice', firstName: 'Old' }), w, NOW);
+  await new Promise((r) => setTimeout(r, 10)); // older holds the lock and is paused before the company write
+  const corrected = await provisionFreeWorkspace(user, profile({ practiceName: 'Final Practice', firstName: 'New' }), w, NOW);
+  assert.deepEqual(corrected, { ok: false, reason: 'in_progress' }, 'second writer is excluded, writes nothing');
+  assert.equal(w.all('crm_companies').length, 0);
+  release();
+  assert.equal((await older).ok, true);
+  // Everything now comes from ONE submission, and a later request cannot rewrite it.
+  assert.deepEqual([w.all('organizations')[0].legalName, w.all('crm_companies')[0].name, w.all('crm_contacts')[0].firstName], ['Old Practice', 'Old Practice', 'Old']);
+  assert.deepEqual(await provisionFreeWorkspace(user, profile({ practiceName: 'Final Practice' }), w, LATER), { ok: true, orgId: workspaceIds('u-100').orgId, created: false });
+  assert.equal(w.all('crm_companies')[0].name, 'Old Practice');
+});
+
+test('a request that runs past its lock window aborts before the membership and writes nothing further', async () => {
+  const w = new MemoryRowWriter();
+  let now = NOW;
+  const r = await provisionFreeWorkspace(user, profile(), w, NOW, 'req', () => now);
+  assert.equal(r.ok, true);
+  const w2 = new MemoryRowWriter();
+  w2.beforeCreate = async (table) => { if (table === 'crm_contacts') now += 61_000; }; // crosses into the next window mid-chain
+  now = NOW;
+  const crossed = await provisionFreeWorkspace(user, profile(), w2, NOW, 'req2', () => now);
+  assert.deepEqual(crossed, { ok: false, reason: 'store_unavailable' });
+  assert.equal(w2.all('memberships').length, 0);
+  assert.equal(w2.all('consent_records').length, 0);
 });

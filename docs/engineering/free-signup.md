@@ -6,6 +6,8 @@ Flow: existing `POST /api/v1/auth/signup` creates the Appwrite user + sends veri
 the client calls `POST /api/v1/account/workspace` with `firstName, lastName, phone, practiceName, termsAccepted:true` (+ optional `specialty`, `practiceSize`, `marketingConsent`, `locale`).
 Identity is the verified session only; no body field selects a user, org or role. Unverified/pending users get 401 until they verify.
 
+Concurrency: a per-user lock row (audit_events, one per user per 60 s window, create-if-absent) lets one request write at a time; others get 409 `signup_in_progress` (retry after ~60 s). The holder re-checks its window before each write. Appwrite has no transactions/CAS here, so the residual risk is one in-flight write at a window boundary; identity rows are unreachable until the membership exists. Needs `rows.read` and `rows.write` on the key.
+
 Writes (deterministic ids, idempotent, membership LAST so a retry repairs partial chains): `organizations` → `crm_companies` → `crm_contacts` (phone) →
 `consent_records` (`account_terms`; `marketing_email` recorded explicitly (granted true or false) ONLY by the request that created the membership (so concurrent or stale requests cannot overwrite it); separate, optional, never implied; if that write fails the response reports marketingRecorded:false) → `audit_events` → `memberships` (`CLIENT_OWNER`).
 Specialty/practice size/locale go to the Appwrite account prefs (best-effort). No `entitlements` row: FREE = basic workspace + consultation from the catalog; paid access only from server grants.

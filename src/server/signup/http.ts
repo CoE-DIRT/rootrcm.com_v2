@@ -71,6 +71,7 @@ export async function handleWorkspaceProvision(request: Request, writer?: RowWri
   if (!result.ok) {
     if (result.reason === 'existing_membership') return json(409, null, 'existing_membership');
     if (result.reason === 'membership_inactive') return json(403, null, 'membership_inactive');
+    if (result.reason === 'in_progress') return json(409, null, 'signup_in_progress', { retryAfterSeconds: 60 });
     if (result.reason === 'unauthenticated') return json(401, null, 'unauthenticated_or_unverified');
     return json(503, null, 'signup_unavailable');
   }
