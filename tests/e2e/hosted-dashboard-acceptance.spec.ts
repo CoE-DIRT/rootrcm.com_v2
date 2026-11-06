@@ -38,7 +38,7 @@ for (const locale of ['en', 'es'] as const) {
   for (const role of ['ADMIN', 'STAFF', 'CLIENT'] as const) {
     test(`${locale}: ${role} lands on role-matched dashboard, survives refresh, logs out`, async ({ page, context }) => {
       await signIn(page, role, locale);
-      await expect(page).toHaveURL(new RegExp(`/${locale}/dashboard/${landing[role]}\?orgId=`));
+      await expect(page).toHaveURL(url => url.pathname === `/${locale}/dashboard/${landing[role]}` && url.searchParams.has('orgId'));
       await expect(page.getByTestId('ops-ready')).toBeVisible({ timeout: 30_000 });
       await expect(page.getByTestId('rcm-command-center')).toContainText(banner[locale]);
       await expect(page.getByTestId('preview-bind-status')).toHaveCount(0); // never the preview binder
