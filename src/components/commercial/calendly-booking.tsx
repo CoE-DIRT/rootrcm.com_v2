@@ -7,7 +7,16 @@ import type { Locale } from '@/i18n/locales';
 
 export function CalendlyBooking({ locale }: { locale: Locale }) {
   const [frameLoaded, setFrameLoaded] = useState(false);
+  const [calendarUrl, setCalendarUrl] = useState<string | null>(null);
   const es = locale === 'es';
+
+  function showCalendar() {
+    const url = new URL('https://calendly.com/rootrcm-info/30min');
+    url.searchParams.set('embed_domain', window.location.hostname);
+    url.searchParams.set('embed_type', 'Inline');
+    setCalendarUrl(url.toString());
+    setFrameLoaded(false);
+  }
 
   return (
     <section
@@ -70,40 +79,44 @@ export function CalendlyBooking({ locale }: { locale: Locale }) {
             +1 (302) 496-5648
           </Button>
           <span className="muted">
-            {es ? '(Lunes a Viernes, 9am - 6pm EST)' : '(Mon–Fri, 9am – 6pm EST)'}
+            {es ? 'Consulte los horarios disponibles en el calendario.' : 'See available appointment times in the calendar.'}
           </span>
         </div>
       </div>
 
-      {/* Calendly Inline Widget with Fallback */}
-      <div className="relative mt-8 min-h-[640px] w-full overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface-2)]">
-        {!frameLoaded && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 p-6 text-center">
-            <Calendar className="size-8 animate-pulse text-[var(--cyan)]" aria-hidden="true" />
-            <p className="text-sm font-semibold text-[var(--text)]">
-              {es ? 'Cargando calendario de disponibilidad...' : 'Loading available consultation slots...'}
+      {/* Third-party Calendly loads only after an intentional booking action. */}
+      <div className={`relative mt-8 w-full overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface-2)] ${calendarUrl ? 'min-h-[640px]' : 'min-h-[210px]'}`}>
+        {!calendarUrl ? (
+          <div className="flex min-h-[210px] flex-col items-center justify-center gap-4 p-6 text-center">
+            <Calendar className="size-8 text-[var(--cyan)]" aria-hidden="true" />
+            <p className="max-w-lg text-sm font-semibold text-[var(--text)]">
+              {es ? 'Elija cuándo desea hablar. Calendly se cargará solo después de su elección.' : 'Choose when to meet. Calendly loads only after you request available times.'}
             </p>
-            <Button
-              href="https://calendly.com/rootrcm-info/30min"
-              target="_blank"
-              rel="noopener noreferrer"
-              variant="secondary"
-              size="sm"
-              rightIcon={<ArrowUpRight size={16} strokeWidth={1.75} aria-hidden="true" />}
-            >
-              {es ? 'Abrir Calendly en nueva ventana' : 'Open Calendly in a new window'}
+            <Button type="button" variant="primary" size="lg" onClick={showCalendar} aria-controls="root-calendly-frame">
+              {es ? 'Ver horarios disponibles' : 'Show available times'}
             </Button>
           </div>
+        ) : (
+          <>
+            {!frameLoaded && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-center" role="status">
+                <Calendar className="size-8 text-[var(--cyan)]" aria-hidden="true" />
+                <p>{es ? 'Cargando el calendario...' : 'Loading calendar...'}</p>
+              </div>
+            )}
+            <iframe
+              id="root-calendly-frame"
+              src={calendarUrl}
+              width="100%"
+              height="640"
+              title={es ? 'Calendario de reserva de consulta ROOT' : 'ROOT Consultation Booking Calendar'}
+              loading="lazy"
+              referrerPolicy="strict-origin-when-cross-origin"
+              className="relative z-10 w-full border-0"
+              onLoad={() => setFrameLoaded(true)}
+            />
+          </>
         )}
-        <iframe
-          src="https://calendly.com/rootrcm-info/30min?embed_domain=rootrcm.com&embed_type=Inline&hide_landing_page_details=1&hide_gdpr_banner=1"
-          width="100%"
-          height="640"
-          title={es ? 'Calendario de reserva de consulta ROOT' : 'ROOT Consultation Booking Calendar'}
-          loading="lazy"
-          className="relative z-10 w-full border-0"
-          onLoad={() => setFrameLoaded(true)}
-        />
       </div>
 
       {/* Fallback footer bar */}
