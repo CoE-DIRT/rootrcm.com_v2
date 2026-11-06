@@ -55,6 +55,8 @@ test.describe('ROOT V3 Public Transformation', () => {
       'tel:+13024965648'
     );
     const iframe = bookingSection.locator('iframe');
+    await expect(iframe).toHaveCount(0); // No third-party request before user consent.
+    await bookingSection.getByRole('button', { name: /Show available times/i }).click();
     await expect(iframe).toHaveAttribute('src', /calendly\.com\/rootrcm-info\/30min/);
   });
 
