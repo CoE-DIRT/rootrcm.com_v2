@@ -8,6 +8,6 @@ export function publicPageMetadata(locale: Locale, title: string, description: s
     title,
     description,
     applicationName: t.brand,
-    robots: { index: false, follow: false },
+    robots: { index: true, follow: true },
   };
 }

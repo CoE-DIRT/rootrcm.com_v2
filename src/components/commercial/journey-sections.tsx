@@ -41,7 +41,59 @@ export function HomeJourney({ locale }: { locale: Locale }) {
         </p>
       </section>
 
+      <section className="commercial-section" aria-labelledby="bottleneck-heading">
+        <SectionHeader
+          id="bottleneck-heading"
+          eyebrow={t.commercial.bottleneckEyebrow}
+          title={t.commercial.bottleneckTitle}
+          body={t.commercial.bottleneckBody}
+        />
+        <div className="mt-8 grid gap-4 md:grid-cols-3">
+          {t.commercial.bottleneckCards.map((card, idx) => (
+            <Link
+              key={card.title}
+              href={localizedPath(locale, card.href)}
+              className="card-hover surface group flex flex-col justify-between p-6 sm:p-7"
+            >
+              <div>
+                <span className="eyebrow">0{idx + 1}</span>
+                <h3 className="mt-3 text-xl font-bold tracking-tight text-[var(--text)] transition-colors group-hover:text-[var(--cyan)]">
+                  {card.title}
+                </h3>
+                <p className="muted mt-3 text-sm leading-relaxed">{card.body}</p>
+              </div>
+              <span className="mt-6 inline-flex items-center text-xs font-bold text-[var(--cyan)] transition-transform motion-reduce:transform-none group-hover:translate-x-1">
+                {card.cta} →
+              </span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
       <SpecialtyGrid locale={locale} />
+
+      <section className="commercial-section surface p-6 sm:p-10" aria-labelledby="transition-heading">
+        <SectionHeader
+          id="transition-heading"
+          eyebrow={t.commercial.transitionEyebrow}
+          title={t.commercial.transitionTitle}
+          body={t.commercial.transitionBody}
+        />
+        <div className="mt-8 grid gap-4 md:grid-cols-3">
+          {t.commercial.transitionSteps.map((step, idx) => (
+            <div key={step.title} className="surface-2 flex flex-col p-6">
+              <span className="eyebrow">0{idx + 1}</span>
+              <h3 className="mt-2 text-lg font-bold tracking-tight">{step.title}</h3>
+              <p className="muted mt-2 text-sm leading-relaxed">{step.body}</p>
+            </div>
+          ))}
+        </div>
+        <div className="mt-6 flex items-center gap-3 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] px-4 py-3 text-xs text-[var(--muted)]">
+          <span className="inline-block size-2 shrink-0 rounded-full bg-[var(--cyan)]" aria-hidden="true" />
+          <span>{t.commercial.transitionAssurance}</span>
+        </div>
+      </section>
+
       <EcosystemMarquees locale={locale} />
       <PayerStrip locale={locale} />
 
@@ -70,6 +122,38 @@ export function HomeJourney({ locale }: { locale: Locale }) {
               {t.preview} →
             </Link>
           </p>
+        </div>
+      </section>
+
+      <section
+        className="commercial-section group relative isolate overflow-hidden rounded-[24px] border border-[#2b5c7e] bg-[#071c35] shadow-[0_22px_68px_rgba(0,8,25,.2)]"
+        aria-labelledby="philosophy-heading"
+      >
+        <div className="grid items-center lg:grid-cols-2">
+          <div className="relative z-[1] p-8 sm:p-10 md:p-12">
+            <p className="eyebrow !text-[#7ff7ff]">{t.commercial.philosophyEyebrow}</p>
+            <h2 id="philosophy-heading" className="mt-4 text-balance text-2xl font-extrabold tracking-tight text-[#f5fbff] md:text-3xl lg:text-4xl">
+              {t.commercial.philosophyTitle}
+            </h2>
+            <p className="mt-5 text-base leading-7 text-[#d2e6f5]">
+              {t.commercial.philosophyBody}
+            </p>
+            <p className="mt-8">
+              <Link className="btn-primary" href={localizedPath(locale, '/why-root')}>
+                {t.commercial.philosophyCta} →
+              </Link>
+            </p>
+          </div>
+          <div className="relative h-64 min-h-[300px] w-full overflow-hidden border-t border-[#2b5c7e] sm:h-80 lg:h-full lg:border-l lg:border-t-0">
+            <Image
+              src="/brand/story.webp"
+              alt={locale === 'es' ? 'Ilustración original de ROOT para operaciones y continuidad' : 'Original ROOT practice intelligence and continuity visual'}
+              fill
+              sizes="(max-width: 1024px) 100vw, 650px"
+              className="object-cover object-center opacity-85 transition-transform duration-700 motion-reduce:transform-none group-hover:scale-[1.02]"
+            />
+            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(5,18,35,.2)_0%,rgba(5,18,35,.75)_100%)] lg:bg-[linear-gradient(90deg,rgba(5,18,35,.6)_0%,rgba(5,18,35,.15)_100%)]" />
+          </div>
         </div>
       </section>
 

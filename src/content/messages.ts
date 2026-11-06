@@ -465,6 +465,55 @@ const en = {
       'No CPT, HCPCS or ICD examples are listed. Code sets change and must be founder-validated before publication.',
     marqueePause: 'Pause scrolling platforms',
     marqueePlay: 'Resume scrolling platforms',
+    bottleneckEyebrow: 'Where revenue leaks',
+    bottleneckTitle: 'Find your bottleneck. See the next move.',
+    bottleneckBody:
+      'Select an operational concern to explore how ROOT traces stalled revenue, credentialing delays, and system change.',
+    bottleneckCards: [
+      {
+        title: 'Where is my money?',
+        body: 'Trace claims, denials and accountable owners across clearinghouses and payer work queues.',
+        cta: 'Explore claims workspace',
+        href: '/preview/client',
+      },
+      {
+        title: 'Why are enrollments stalled?',
+        body: 'Validate missing documents, CAQH and PECOS requirements, and payer effective dates.',
+        cta: 'Inspect credentialing',
+        href: '/preview/credentialing',
+      },
+      {
+        title: 'Can I keep my software?',
+        body: 'Plan safer operational change around existing EHR/PM systems without forced replacements.',
+        cta: 'View technology model',
+        href: '/technology',
+      },
+    ],
+    transitionEyebrow: 'Frictionless transition with real controls',
+    transitionTitle: 'A safer transition, in three clear moves.',
+    transitionBody:
+      'Activity is not accountability. Technology is not intelligence. Every exception needs an owner, a reason and a documented next action.',
+    transitionSteps: [
+      {
+        title: 'Connect & inventory',
+        body: 'Baseline current billing inventory, payer mix, and clearinghouse queues without workflow disruption.',
+      },
+      {
+        title: 'Assign exception owners',
+        body: 'Every unpaid claim, denial, and credentialing milestone receives a named owner, reason code, and due date.',
+      },
+      {
+        title: 'Transparent collections cadence',
+        body: 'Weekly operational reviews reconcile cash collected against open work queues with verifiable audit trails.',
+      },
+    ],
+    transitionAssurance:
+      'No forced EHR replacement. Data access and downtime require a practice-specific plan.',
+    philosophyEyebrow: 'Why ROOT exists',
+    philosophyTitle: 'Handing Over the Keys Shouldn’t Mean Losing Control.',
+    philosophyBody:
+      'ROOT brings outsourced revenue cycle management, operational intelligence and practice support into one accountable model. We begin with the people, tools and payer dependencies already in your practice—not an unnecessary EHR replacement.',
+    philosophyCta: 'Explore our approach',
   },
 };
 
@@ -940,6 +989,55 @@ const es: Messages = {
       'No se listan ejemplos CPT, HCPCS ni CIE. Los conjuntos de códigos cambian y deben ser validados por el fundador antes de publicarse.',
     marqueePause: 'Pausar plataformas en desplazamiento',
     marqueePlay: 'Reanudar plataformas en desplazamiento',
+    bottleneckEyebrow: 'Dónde se pierden ingresos',
+    bottleneckTitle: 'Encuentre el bloqueo. Vea el siguiente paso.',
+    bottleneckBody:
+      'Seleccione una preocupación operativa para ver cómo ROOT rastrea ingresos detenidos, retrasos de acreditación y cambios de sistemas.',
+    bottleneckCards: [
+      {
+        title: '¿Dónde está mi dinero?',
+        body: 'Rastree reclamos, denegaciones y responsables a través de intermediarios y colas de trabajo.',
+        cta: 'Explorar espacio de reclamos',
+        href: '/preview/client',
+      },
+      {
+        title: '¿Por qué se detiene la inscripción?',
+        body: 'Valide documentos faltantes, requisitos de CAQH y PECOS y fechas de vigencia de pagadores.',
+        cta: 'Examinar acreditación',
+        href: '/preview/credentialing',
+      },
+      {
+        title: '¿Puedo conservar mi software?',
+        body: 'Planifique cambios operativos seguros alrededor de sus sistemas EHR/PM actuales sin reemplazos forzados.',
+        cta: 'Ver modelo de tecnología',
+        href: '/technology',
+      },
+    ],
+    transitionEyebrow: 'Transición sin fricción con controles reales',
+    transitionTitle: 'Una transición más segura en tres pasos.',
+    transitionBody:
+      'La actividad no es responsabilidad. La tecnología no es inteligencia. Cada excepción necesita un responsable, una causa y una acción siguiente documentada.',
+    transitionSteps: [
+      {
+        title: 'Conectar e inventariar',
+        body: 'Establezca la línea base de facturación, combinación de pagadores y colas sin interrumpir el flujo.',
+      },
+      {
+        title: 'Asignar responsables de excepción',
+        body: 'Cada reclamo impago, denegación e hito de acreditación recibe un responsable, código de causa y fecha límite.',
+      },
+      {
+        title: 'Cadencia de cobros transparente',
+        body: 'Revisiones operativas semanales concilian los cobros reales con las colas de trabajo abiertas con pistas de auditoría verificables.',
+      },
+    ],
+    transitionAssurance:
+      'Sin reemplazo forzado de EHR. El acceso a datos y las transiciones requieren un plan específico por práctica.',
+    philosophyEyebrow: 'Por qué existe ROOT',
+    philosophyTitle: 'Delegar las claves no debería significar perder el control.',
+    philosophyBody:
+      'ROOT reúne la gestión del ciclo de ingresos, la inteligencia operativa y el apoyo a la práctica en un modelo responsable. Comenzamos con el equipo, las herramientas y las dependencias de pagadores de su práctica, sin reemplazos innecesarios de EHR.',
+    philosophyCta: 'Conozca nuestro enfoque',
   },
 };
 
