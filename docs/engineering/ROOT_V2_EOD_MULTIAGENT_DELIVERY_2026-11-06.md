@@ -57,3 +57,11 @@
 - Public site, consultation fallback, basic frontend navigation remain intact.
 - CI passes on merged commit; Appwrite deployed SHA matches approved main; canonical host tested.
 - Any unverified item is documented as open; reject a false '100% complete' declaration.
+
+## Confirmed Netlify ↔ GitHub ↔ Appwrite delivery architecture (2026-11-06)
+- **Permanent infrastructure: Appwrite**. Existing Site SSR, Auth, Teams/TablesDB, Storage, Functions, backend integrations, application data and production domain remain unchanged.
+- **Frontend design environment only: Netlify**. A dedicated *preview* project may build Next.js from an isolated UI branch to verify CSS, navigation, component layouts, responsive screenshots and synthetic presentation. It is not an identity or data production system; do not migrate DNS, API routes, database, server secrets or regulated data.
+- **Single source of truth: GitHub**. Claude commits UI work to a scoped branch, Netlify generates an isolated preview from that branch, design review accepts changes, and a reviewed PR merges to `main`. Existing Appwrite GitHub integration then builds/deploys approved `main`, subject to release gates. No direct Netlify-to-Appwrite synchronization or production Git pushes.
+- **Preview safety**: Do not place Appwrite API keys, live session cookies or business contacts in Netlify. UI preview should use deterministic synthetic fixtures and disabled write-capable backend adapters. Only Appwrite-hosted staging/production validates SSR login, cookies, membership, tenant isolation and real workflows.
+- **If a Netlify preview is incompatible with authenticated App Router runtime**, preview the frontend-only component surface instead of trying to move the backend. The Appwrite production-like preview remains the final functional check.
+- **Deployment rule**: A green Netlify preview is design approval, not production approval. Only passing GitHub CI, authorized Appwrite live smoke and explicit reviewed release may count as shipping.
