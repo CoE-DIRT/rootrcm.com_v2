@@ -15,10 +15,13 @@
 10. Do not deploy V2 to rootrcm.com or touch existing V1 without written migration signoff.
 
 ## Agent division
-- **Cursor:** local lead, implementation, tests and refactoring with targeted file context.
-- **OpenCode + metered OpenRouter/DeepSeek:** bounded implementation, fixture/test generation, repetitive mechanical refactors; set account-level spend caps.
-- **Codex:** architectural review, hard debugging, PR security review and high-risk tasks.
-- **Claude:** UX/accessibility/code review and targeted second opinion. No uncontrolled parallel edits in same files.
+- **Claude Code:** primary local implementer, one vertical slice and isolated worktree at a time; use targeted file context, not whole-repository prompts.
+- **Gemini / Google AI Plus:** bounded independent analysis, EN/ES UX comparisons and test-gap suggestions; never receive PHI, secrets or a full-repo duplicate prompt.
+- **ChatGPT + Codex:** release orchestration, architecture and security review, targeted debugging, PR diffs and final GO/NO-GO; avoid simultaneous edits to Claude-owned paths.
+- **GitHub Copilot CLI:** optional narrow fixture/test and mechanical assistance inside Claude-assigned boundaries; do not run uncontrolled autonomous changes.
+- **Netlify:** isolated frontend/UI preview for synthetic fixtures only; Appwrite remains production host and identity/data authority.
+- **Terminal + GitHub:** execute deterministic checks, produce evidence, review CI and merge only through protected main. No uncontrolled parallel edits in same files.
+- **Current EOD plan:** `docs/engineering/ROOT_V2_EOD_MULTIAGENT_DELIVERY_2026-11-06.md`; operations dashboard precedes visual polish and commercial integrations.
 - Each agent uses isolated branch/worktree and posts a concise change summary, tests, risks, files altered and cost estimate.
 
 ## Definition of done
