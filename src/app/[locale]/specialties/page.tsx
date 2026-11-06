@@ -28,7 +28,7 @@ export default async function SpecialtiesIndexPage({
   const locale = await requireLocale(params);
   const t = copy(locale);
   return (
-    <main id="main" className="page-width pb-16 pt-6">
+    <main id="main" className="page-width page-body">
       <Breadcrumb
         items={[{ href: localizedPath(locale), label: t.brand }, { label: t.nav.specialties }]}
       />

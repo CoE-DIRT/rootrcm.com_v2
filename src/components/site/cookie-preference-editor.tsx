@@ -10,6 +10,7 @@ import {
   updateCookiePreferences,
 } from '@/domain/cookie-preferences';
 import type { Locale } from '@/i18n/locales';
+import { Button } from '@/components/ui/Button';
 
 const serverPreferences = necessaryOnlyPreferences('1970-01-01T00:00:00.000Z');
 
@@ -51,9 +52,9 @@ export function CookiePreferenceEditor({ locale }: { locale: Locale }) {
         />
         {t.legal.cookiesMarketing}
       </label>
-      <button type="submit" className="btn-secondary w-fit">
+      <Button variant="secondary" type="submit">
         {t.legal.cookiesSave}
-      </button>
+      </Button>
       {memoryOnly ? <p className="text-sm">{t.legal.cookiesMemory}</p> : null}
     </form>
   );

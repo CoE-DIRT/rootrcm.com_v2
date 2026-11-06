@@ -6,6 +6,7 @@ import { workspaceDemoText } from '@/content/operations-demo';
 import { OPS_DEMO_ORG_ID, formatMetric, formatRatio, type OpsMetrics } from '@/lib/ops-client';
 import { useOpsState } from './use-ops-state';
 import { opsButton, opsCard, opsSubtle } from './ui';
+import { Button } from '@/components/ui/Button';
 
 function MetricCell({
   title,
@@ -43,9 +44,9 @@ export function DirtLedgerPreview({ locale }: { locale: Locale }) {
       <div role="alert" className="rounded-xl border border-[var(--danger)] bg-[var(--surface)] p-4">
         <p className="font-bold text-[var(--danger)]">{t.loadError}</p>
         <p className="mt-2 break-words text-sm">{error}</p>
-        <button type="button" className={`${opsButton} mt-3`} onClick={() => void refresh()}>
+        <Button variant="secondary" type="button" onClick={() => void refresh()}>
           {t.retry}
-        </button>
+        </Button>
       </div>
     );
   }

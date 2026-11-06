@@ -170,7 +170,7 @@ export async function fetchGoHealthcarePreview(
   orgId: string,
   options: GoClientOptions = {},
 ): Promise<GoPreviewResponse> {
-  if (!Object.prototype.hasOwnProperty.call(GO_PATHS, kind)) {
+  if (!Object.hasOwn(GO_PATHS, kind)) {
     return {
       httpStatus: 422,
       payload: { error: 'unknown_capability', mode: 'unavailable', source: 'synthetic' },

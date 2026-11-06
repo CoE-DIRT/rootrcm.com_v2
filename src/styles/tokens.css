@@ -1,0 +1,128 @@
+/*
+ * ROOT design tokens — single source for colour, type, spacing, radius and
+ * control sizing. Every primitive in src/components/ui reads from here.
+ * Spacing and type are fluid (clamp) so layouts scale from 320px to 2560px.
+ */
+:root {
+  /* Brand constants (theme-independent) */
+  --brand-navy: #061225;
+  --brand-cyan: #11e1ee;
+  --brand-ink: #f2f8ff;
+
+  /* Light theme semantic colours */
+  --bg: #f5f9fe;
+  --surface: #ffffff;
+  --surface-2: #edf5fd;
+  --surface-glass: rgb(255 255 255 / 72%);
+  --text: #0a243e;
+  --muted: #4c6680;
+  --cyan: #007a9e;
+  --blue: #1167df;
+  --border: #d5e4f2;
+  --border-accent: rgb(0 122 158 / 28%);
+  --success: #0f7a62;
+  --outcome-paid: #0f7a62;
+  --outcome-resolved: #166534;
+  --warning: #8a5210;
+  --danger: #b42318;
+  --on-cyan: #061225;
+  --shadow: 0 10px 30px rgb(13 33 55 / 8%);
+  --nav-bg: rgb(245 249 254 / 80%);
+  --nav-border: rgb(0 122 158 / 18%);
+  --nav-link: #3d5a75;
+  --nav-link-hover: #061225;
+  --drawer-bg: rgb(245 249 254 / 98%);
+
+  /* Button tokens */
+  --btn-primary-bg: #11e1ee;
+  --btn-primary-fg: #061225;
+  --btn-primary-shadow: 0 8px 24px rgb(17 225 238 / 25%);
+  --btn-danger-bg: #b42318;
+  --btn-danger-fg: #ffffff;
+  --focus-ring: #0891b2;
+
+  /* Type */
+  --font-mono: ui-monospace, 'SFMono-Regular', 'JetBrains Mono', Menlo, Consolas, monospace;
+  --fs-2xs: clamp(0.6875rem, 0.66rem + 0.1vw, 0.75rem);
+  --fs-xs: clamp(0.75rem, 0.72rem + 0.12vw, 0.8125rem);
+  --fs-sm: clamp(0.8125rem, 0.78rem + 0.16vw, 0.9375rem);
+  --fs-md: clamp(0.9375rem, 0.9rem + 0.2vw, 1.0625rem);
+  --fs-lg: clamp(1.0625rem, 0.98rem + 0.4vw, 1.25rem);
+  --fs-xl: clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem);
+  --fs-2xl: clamp(1.5rem, 1.2rem + 1.4vw, 2.375rem);
+  --fs-3xl: clamp(1.875rem, 1.4rem + 2.2vw, 3rem);
+  --fs-display: clamp(2.5rem, 5vw, 4.5rem);
+  --fs-hero-sub: clamp(1rem, 1.4vw, 1.25rem);
+
+  /* Fluid spacing scale */
+  --space-1: clamp(0.25rem, 0.22rem + 0.1vw, 0.3125rem);
+  --space-2: clamp(0.5rem, 0.45rem + 0.2vw, 0.625rem);
+  --space-3: clamp(0.75rem, 0.68rem + 0.3vw, 0.9375rem);
+  --space-4: clamp(1rem, 0.9rem + 0.4vw, 1.25rem);
+  --space-5: clamp(1.25rem, 1.1rem + 0.6vw, 1.625rem);
+  --space-6: clamp(1.5rem, 1.3rem + 0.9vw, 2rem);
+  --space-8: clamp(2rem, 1.6rem + 1.6vw, 3rem);
+  --space-10: clamp(2.5rem, 1.9rem + 2.4vw, 4rem);
+  --space-12: clamp(3rem, 2.2rem + 3.4vw, 5.5rem);
+  --space-section: clamp(3.5rem, 2.4rem + 5vw, 7.5rem);
+
+  /* Radius */
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  --radius-btn: 10px;
+  --radius-md: 12px;
+  --radius-card: 18px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+  --radius-control: 10px;
+  --radius-cta: 10px;
+
+  /* Control sizing (heights, not widths) */
+  --control-sm: 36px;
+  --control-md: 44px;
+  --control-lg: 52px;
+  --tap-min: 44px;
+  --icon-size: 20px;
+  --icon-stroke: 1.75;
+
+  /* Layout */
+  --container-max: min(1440px, 92vw);
+  --container-narrow: min(72ch, 92vw);
+  --nav-h-desktop: 72px;
+  --nav-h-mobile: 64px;
+  --grid-min: min(100%, 320px);
+
+  /* Motion */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 180ms;
+  --dur-med: 240ms;
+  --dur-reveal: 500ms;
+}
+
+:root[data-theme='dark'] {
+  --bg: #061225;
+  --surface: #0d2137;
+  --surface-2: #132b45;
+  --surface-glass: rgb(19 43 69 / 70%);
+  --text: #f2f8ff;
+  --muted: #9bb4ce;
+  --cyan: #11e1ee;
+  --blue: #1680ff;
+  --border: #274562;
+  --border-accent: rgb(17 225 238 / 18%);
+  --success: #52e6bb;
+  --outcome-paid: #34d399;
+  --outcome-resolved: #10b981;
+  --warning: #f8bb73;
+  --danger: #ff8b9e;
+  --on-cyan: #061225;
+  --shadow: 0 12px 40px rgb(0 0 0 / 28%);
+  --nav-bg: rgb(6 18 37 / 72%);
+  --nav-border: rgb(17 225 238 / 15%);
+  --nav-link: #9bb4ce;
+  --nav-link-hover: #f2f8ff;
+  --drawer-bg: rgb(6 18 37 / 98%);
+  --btn-danger-bg: #ff8b9e;
+  --btn-danger-fg: #061225;
+  --focus-ring: #11e1ee;
+}

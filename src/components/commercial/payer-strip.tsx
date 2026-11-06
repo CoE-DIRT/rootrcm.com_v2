@@ -1,9 +1,9 @@
-import Link from 'next/link';
 import { SectionHeader } from '@/components/commercial/section-header';
 import { copy } from '@/content/messages';
 import { nyPayers, type ProgramType } from '@/content/markets/ny-payers';
 import type { Locale } from '@/i18n/locales';
 import { localizedPath } from '@/lib/paths';
+import { Button } from '@/components/ui/Button';
 
 function programLabel(type: ProgramType, locale: Locale) {
   return copy(locale).commercial.programType[type];
@@ -34,9 +34,9 @@ export function PayerStrip({ locale, compact = true }: { locale: Locale; compact
       </ul>
       <p className="muted mt-4 text-sm">{t.commercial.nyNoContract}</p>
       <p className="mt-6">
-        <Link className="btn-secondary" href={localizedPath(locale, '/locations/new-york')}>
+        <Button variant="secondary" href={localizedPath(locale, '/locations/new-york')}>
           {t.commercial.nyCta} →
-        </Link>
+        </Button>
       </p>
     </section>
   );

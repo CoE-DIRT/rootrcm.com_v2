@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import type { Locale } from '@/i18n/locales';
+import { Button } from '@/components/ui/Button';
+import { StatusBanner } from '@/components/ui/status';
 
 export function OAuthButtons({ locale }: { locale: Locale }) {
   const [notice, setNotice] = useState<string | null>(null);
@@ -31,14 +33,10 @@ export function OAuthButtons({ locale }: { locale: Locale }) {
   }
 
   return (
-    <div className="space-y-3">
-      <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
-        <button
-          type="button"
-          onClick={() => handleOAuth('google')}
-          className="btn-secondary flex min-h-[46px] w-full items-center justify-center gap-2.5 text-xs font-semibold"
-        >
-          <svg className="size-4" viewBox="0 0 24 24" aria-hidden="true">
+    <div className="stack">
+      <div className="auth-shell__oauth">
+        <Button variant="secondary" size="lg" fullWidth onClick={() => handleOAuth('google')} leftIcon={
+          <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
             <path
               fill="#4285F4"
               d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.67v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.16z"
@@ -56,41 +54,22 @@ export function OAuthButtons({ locale }: { locale: Locale }) {
               d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.34 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"
             />
           </svg>
-          <span>{es ? 'Continuar con Google' : 'Continue with Google'}</span>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => handleOAuth('microsoft')}
-          className="btn-secondary flex min-h-[46px] w-full items-center justify-center gap-2.5 text-xs font-semibold"
-        >
-          <svg className="size-4" viewBox="0 0 23 23" aria-hidden="true">
+        }>
+          {es ? 'Continuar con Google' : 'Continue with Google'}
+        </Button>
+        <Button variant="secondary" size="lg" fullWidth onClick={() => handleOAuth('microsoft')} leftIcon={
+          <svg width="20" height="20" viewBox="0 0 23 23" aria-hidden="true">
             <path fill="#f35325" d="M1 1h10v10H1z" />
             <path fill="#81bc06" d="M12 1h10v10H12z" />
             <path fill="#05a6f0" d="M1 12h10v10H1z" />
             <path fill="#ffba08" d="M12 12h10v10H12z" />
           </svg>
-          <span>{es ? 'Continuar con Microsoft' : 'Continue with Microsoft'}</span>
-        </button>
+        }>
+          {es ? 'Continuar con Microsoft' : 'Continue with Microsoft'}
+        </Button>
       </div>
-
-      {notice && (
-        <div
-          role="status"
-          className="rounded-lg border border-[var(--border)] bg-[var(--surface-2)] p-3 text-xs leading-relaxed text-[var(--muted)]"
-        >
-          <p>{notice}</p>
-        </div>
-      )}
-
-      <div className="relative my-4 flex items-center justify-center">
-        <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-[var(--border)]" />
-        </div>
-        <span className="relative bg-[var(--surface)] px-3 text-[11px] font-bold uppercase tracking-wider text-[var(--muted)]">
-          {es ? 'o mediante credenciales' : 'or with practice credentials'}
-        </span>
-      </div>
+      {notice ? <StatusBanner tone="warning">{notice}</StatusBanner> : null}
+      <p className="auth-shell__divider">{es ? 'o con correo y contraseña' : 'or with email and password'}</p>
     </div>
   );
 }

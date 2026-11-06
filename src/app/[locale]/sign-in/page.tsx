@@ -1,9 +1,9 @@
 import { AuthForm } from '@/components/forms/auth-form';
-import Link from 'next/link';
 import { MarketingPage } from '@/components/site/marketing-page';
 import { copy } from '@/content/messages';
 import { requireLocale } from '@/lib/locale';
 import { localizedPath } from '@/lib/paths';
+import { Button } from '@/components/ui/Button';
 
 export const metadata = { robots: { index: false, follow: false }, referrer: 'no-referrer' as const };
 
@@ -28,22 +28,22 @@ export default async function SignInPage({ params }: { params: Promise<{ locale:
 
         <div className="flex flex-col gap-6">
           <div className="surface-2 border border-[var(--border)] p-6 sm:p-8">
-            <p className="eyebrow">{locale === 'es' ? 'VISTAS INTERACTIVAS' : 'INTERACTIVE PREVIEWS'}</p>
+            <p className="eyebrow">{locale === 'es' ? 'ESPACIO DE MUESTRA' : 'SAMPLE WORKSPACE'}</p>
             <h2 className="mt-2 text-xl font-bold tracking-tight">
-              {locale === 'es' ? 'Explore los espacios de demostración' : 'Explore simulated workspaces'}
+              {locale === 'es' ? 'Explore los espacios de muestra' : 'Explore the sample workspaces'}
             </h2>
             <p className="muted mt-2 text-sm leading-relaxed">
               {locale === 'es'
-                ? 'Inspeccione la gestión de reclamos, apelaciones y acreditación en entornos con datos sintéticos.'
-                : 'Inspect full-cycle claims, denials, and credentialing workflows with synthetic practice records.'}
+                ? 'Revise la gestión de reclamos, apelaciones y acreditación con datos de práctica ficticios.'
+                : 'Walk through claims, denials and credentialing workflows with fictional practice records.'}
             </p>
             <div className="mt-6 flex flex-col gap-3">
-              <Link className="btn-primary" href={localizedPath(locale, '/preview/client')} prefetch={false}>
+              <Button variant="primary" href={localizedPath(locale, '/preview/client')} prefetch={false}>
                 {t.signIn.clientPreview} →
-              </Link>
-              <Link className="btn-secondary" href={localizedPath(locale, '/preview/staff')} prefetch={false}>
+              </Button>
+              <Button variant="secondary" href={localizedPath(locale, '/preview/staff')} prefetch={false}>
                 {t.signIn.staffPreview} →
-              </Link>
+              </Button>
             </div>
           </div>
 

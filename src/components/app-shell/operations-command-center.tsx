@@ -28,6 +28,7 @@ import {
 } from '@/lib/ops-client';
 import { compareValues, matchesQuery, uniqueSorted, type OpsSortDir, type OpsSortKey } from '@/lib/ops-query';
 import { canAdvanceCredentialingStatus } from '@/domain/operations/types';
+import { Button } from '@/components/ui/Button';
 
 type Tab = 'overview' | 'revenue' | 'credentialing' | 'practice';
 
@@ -153,11 +154,11 @@ function CredentialTimeline({
   return (
     <article data-testid="credentialing-card" data-application-id={item.id} className={card} aria-label={`${item.providerAlias[locale]} — ${item.payer}`}>
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <button type="button" className="min-h-[48px] min-w-0 flex-1 rounded-xl text-left" onClick={onOpen}>
+        <Button variant="ghost" align="start" fullWidth type="button" onClick={onOpen}>
           <p className="break-words text-xs font-bold tracking-wider text-[var(--cyan)]">{item.id}</p>
           <h3 className="mt-1 break-words text-lg font-extrabold">{item.providerAlias[locale]}</h3>
           <p className={`break-words text-sm ${subtle}`}>{item.payer} · {item.applicationType[locale]}</p>
-        </button>
+        </Button>
         <DataTag text={t.synthetic} />
       </div>
       <div className="mt-5 flex items-center justify-between gap-3">
@@ -194,15 +195,15 @@ function CredentialTimeline({
         </p>
       )}
       {canOperate && onAdvance ? (
-        <button
+        <Button variant="secondary"
           type="button"
           data-testid="advance-credentialing"
-          className={`${button} mt-4`}
+         
           disabled={pending}
           onClick={onAdvance}
         >
           {t.advanceCredentialing}
-        </button>
+        </Button>
       ) : null}
     </article>
   );
@@ -350,17 +351,17 @@ export function OperationsCommandCenter({
         <div data-testid="ops-error" className="rounded-xl border border-[var(--danger)] bg-[var(--surface)] p-4" role="alert">
           <p className="font-bold text-[var(--danger)]">{state ? t.actionError : t.loadError}</p>
           <p className="mt-2 break-words text-sm">{error}</p>
-          <button type="button" className={`${button} mt-3`} onClick={() => void refresh()}>{t.retry}</button>
+          <Button variant="secondary" type="button" onClick={() => void refresh()}>{t.retry}</Button>
         </div>
       ) : null}
 
       <div role="tablist" aria-label={t.title} className="flex gap-2 overflow-x-auto rounded-[18px] border border-[var(--border)] bg-[var(--surface)] p-2" style={{ scrollbarWidth: 'thin' }}>
         {tabs.map(({ id, icon: Icon }) => (
-          <button key={id} type="button" role="tab" id={`rcm-tab-${id}`} aria-controls="rcm-panel" aria-selected={activeTab === id}
-            className={`${button} shrink-0 ${activeTab === id ? 'border-[var(--cyan)] bg-[var(--surface-2)] text-[var(--cyan)]' : 'text-[var(--muted)]'}`}
+          <Button variant="secondary" key={id} type="button" role="tab" id={`rcm-tab-${id}`} aria-controls="rcm-panel" aria-selected={activeTab === id}
+           
             onClick={() => setActiveTab(id)}>
             <Icon className="size-4" aria-hidden="true" />{t[id]}
-          </button>
+          </Button>
         ))}
       </div>
 

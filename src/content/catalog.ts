@@ -39,8 +39,8 @@ export const priceCatalog = [
     priceLabel: { en: 'Scoped', es: 'Según alcance' },
     name: { en: 'DIRT Intelligence — scoped', es: 'Inteligencia DIRT — según alcance' },
     summary: {
-      en: 'Revenue intelligence previews use synthetic data until import is authorized.',
-      es: 'Las vistas de inteligencia de ingresos usan datos sintéticos hasta autorizar importaciones.',
+      en: 'The sample workspace uses fictional data; your own data connects only after you authorize it.',
+      es: 'El espacio de muestra usa datos ficticios; sus datos se conectan solo cuando usted lo autoriza.',
     },
     figmaNodeId: '4:110',
   },

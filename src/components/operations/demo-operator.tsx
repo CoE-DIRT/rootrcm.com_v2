@@ -12,6 +12,7 @@ import {
   type OpsPersona,
 } from '@/lib/ops-client';
 import { opsButton, opsCard, opsControl, opsSubtle } from './ui';
+import { Button } from '@/components/ui/Button';
 
 const TERMINAL = new Set(['effective', 'rejected', 'withdrawn']);
 
@@ -130,60 +131,60 @@ export function DemoOperator({
         </label>
       </div>
       <div className="mt-3 flex flex-wrap gap-2">
-        <button
+        <Button variant="secondary"
           type="button"
-          className={opsButton}
+         
           disabled={pending || !selectedApp || applicationTerminal}
           onClick={() => {
             if (selectedApp && !applicationTerminal) onAdvance(selectedApp);
           }}
         >
           {t.operatorAdvance}
-        </button>
-        <button
+        </Button>
+        <Button variant="secondary"
           type="button"
-          className={opsButton}
+         
           disabled={pending || !selectedClaim}
           onClick={() => selectedClaim && onDeny(selectedClaim)}
         >
           {t.operatorDeny}
-        </button>
-        <button
+        </Button>
+        <Button variant="secondary"
           type="button"
           data-testid="advance-timeline"
-          className={opsButton}
+         
           disabled={pending}
           onClick={onAdvanceTimeline}
         >
           {t.advanceTimeline}
-        </button>
-        <button
+        </Button>
+        <Button variant="secondary"
           type="button"
           data-testid="set-persona"
-          className={opsButton}
+         
           onClick={() => onSetPersona(nextPersona)}
         >
           {t.setPersona}: {nextPersona}
-        </button>
-        <button
+        </Button>
+        <Button variant="secondary"
           type="button"
           data-testid="set-tier"
-          className={opsButton}
+         
           disabled={pending}
           onClick={onSetTier}
         >
           {t.setTier}: {tier}
-        </button>
-        <button
+        </Button>
+        <Button variant="secondary"
           type="button"
           data-testid="reset-demo"
-          className={opsButton}
+         
           disabled={pending}
           onClick={onReset}
         >
           <RotateCcw className="size-4" aria-hidden="true" />
           {t.resetDemo}
-        </button>
+        </Button>
       </div>
     </aside>
   );

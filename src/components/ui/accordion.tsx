@@ -1,14 +1,13 @@
-export function Accordion({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
+import type { ReactNode } from 'react';
+
+export type AccordionProps = { title: ReactNode; children: ReactNode; defaultOpen?: boolean };
+
+/** Native <details> disclosure: keyboard and screen-reader support without JS. */
+export function Accordion({ title, children, defaultOpen = false }: AccordionProps) {
   return (
-    <details className="surface p-4">
-      <summary className="cursor-pointer font-bold">{title}</summary>
-      <div className="muted mt-3 text-sm">{children}</div>
+    <details className="ui-accordion" open={defaultOpen || undefined}>
+      <summary>{title}</summary>
+      <div className="ui-accordion__body">{children}</div>
     </details>
   );
 }

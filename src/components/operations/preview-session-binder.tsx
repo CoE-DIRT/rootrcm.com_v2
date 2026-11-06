@@ -10,6 +10,7 @@ import {
   useState,
   type ReactNode,
 } from 'react';
+import { Button } from '@/components/ui/Button';
 
 export type PreviewBindStatus = 'binding' | 'ready' | 'error';
 
@@ -111,14 +112,14 @@ export function PreviewSessionBinder({ path, children }: { path: string; childre
           role="alert"
         >
           <p className="font-bold text-[var(--danger)]">{copy.failed}</p>
-          <button
-            className="mt-3 inline-flex min-h-12 items-center justify-center rounded-xl border border-[var(--border)] px-3 py-2 text-sm font-bold"
+          <Button variant="secondary"
+           
             data-testid="preview-bind-retry"
             onClick={retry}
             type="button"
           >
             {copy.retry}
-          </button>
+          </Button>
         </div>
       ) : null}
       <div data-status={status} data-testid="preview-bind-status" hidden />

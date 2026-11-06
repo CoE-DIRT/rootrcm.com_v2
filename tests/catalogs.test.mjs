@@ -147,7 +147,7 @@ test('NY payer records are sourced, dated, and do not claim contracts or an offi
 test('credibility slots default to unpublished empty states', () => {
   assert.ok(proofSlots.length >= 3);
   for (const slot of proofSlots) {
-    assert.equal(slot.editorialStatus, 'unpublished');
+    assert.equal(slot.publicationStatus, 'unpublished');
     assert.equal(slot.quote, undefined);
   }
 });

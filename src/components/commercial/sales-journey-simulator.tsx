@@ -1,12 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import { ArrowLeft, ArrowRight, Check, ChevronRight, RotateCcw, ShieldCheck } from 'lucide-react';
 import { priceCatalog } from '@/content/catalog';
 import type { Locale } from '@/i18n/locales';
 import { localizedPath } from '@/lib/paths';
 import { commercialNextPath, salesAdapterIntents } from '@/domain/sales-pipeline';
+import { Button } from '@/components/ui/Button';
 import {
   createSalesState, qualificationScore, milestoneDescriptions, milestoneNames,
   salesEntitlements, salesMilestones, salesScenarios, scenarioFor, transitionSales,
@@ -159,26 +159,26 @@ export function SalesJourneySimulator({ locale }: { locale: Locale }) {
           <p className="eyebrow">{l.route}</p>
           <p className="mt-2 font-bold">{milestoneDescriptions[state.milestone][locale]}</p>
           <p className="muted mt-2 text-xs">{l.noClaims}</p>
-          <Link className="btn-secondary mt-4 inline-flex" href={localizedPath(locale, nextPath)}>
+          <Button variant="secondary" href={localizedPath(locale, nextPath)}>
             {l.nextPage}<ArrowRight className="ml-1 size-4" aria-hidden="true" />
-          </Link>
+          </Button>
         </div>
 
         {notice ? <p role="alert" className="mt-3 text-sm font-bold text-[var(--warning)]">{notice}</p> : null}
         <div className="mt-5 flex flex-wrap gap-2">
-          <button className={control} onClick={() => act('back')} disabled={stageIndex === 0}>
+          <Button variant="secondary" onClick={() => act('back')} disabled={stageIndex === 0}>
             <ArrowLeft className="mr-1 inline size-4" aria-hidden="true" />{l.back}
-          </button>
-          <button className={`${control} border-[var(--cyan)] text-[var(--cyan)]`}
+          </Button>
+          <Button variant="secondary"
             data-testid="sales-advance" onClick={() => act('advance')} disabled={stageIndex === salesMilestones.length - 1 || state.blocked}>
             {l.forward}<ArrowRight className="ml-1 inline size-4" aria-hidden="true" />
-          </button>
-          <button className={control} onClick={() => act('toggle_blocker')}>
+          </Button>
+          <Button variant="secondary" onClick={() => act('toggle_blocker')}>
             {state.blocked ? l.resolve : l.inject}
-          </button>
-          <button className={control} onClick={() => act('reset')}>
+          </Button>
+          <Button variant="secondary" onClick={() => act('reset')}>
             <RotateCcw className="mr-1 inline size-4" aria-hidden="true" />{l.reset}
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -234,9 +234,9 @@ export function SalesJourneySimulator({ locale }: { locale: Locale }) {
       {state.milestone === 'active' ? (
         <div className={card}>
           <div className="flex items-center gap-2 font-bold"><ShieldCheck className="size-5 text-[var(--cyan)]" aria-hidden="true" />{l.complete}</div>
-          <Link className="btn-primary mt-4 inline-flex gap-2" href={localizedPath(locale, '/preview/client')}>
+          <Button variant="primary" href={localizedPath(locale, '/preview/client')}>
             {l.workspace}<ArrowRight className="size-4" aria-hidden="true" />
-          </Link>
+          </Button>
           <p className="muted mt-3 text-xs">{l.noClaims}</p>
         </div>
       ) : null}

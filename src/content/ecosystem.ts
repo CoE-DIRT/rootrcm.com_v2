@@ -31,8 +31,8 @@ const enrollment: CopyPair = {
  * credentialing workflow copy. Do not shorten. HubSpot, Apollo, Stripe and Appwrite
  * stay out of these rows — they are ROOT stack, not practice EHR/PM systems.
  *
- * Parsed from reference/demo6 TECH array. Names that were requested but are not
- * vendor listings in the prototype are omitted (see catalogs.test.mjs).
+ * Parsed from the reference/demo6 TECH array. Requested names that were not
+ * vendor listings in that reference are omitted (see catalogs.test.mjs).
  */
 export const platforms: readonly Platform[] = [
   { id: 'advancedmd', name: 'AdvancedMD', row: 'ehr_pm', category: ehrPm, source: 'demo6-tech' },

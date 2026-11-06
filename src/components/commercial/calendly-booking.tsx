@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Calendar, Phone, ArrowUpRight, ShieldCheck, Clock, CheckCircle2 } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
 import type { Locale } from '@/i18n/locales';
 
 export function CalendlyBooking({ locale }: { locale: Locale }) {
@@ -65,13 +66,9 @@ export function CalendlyBooking({ locale }: { locale: Locale }) {
           <span className="font-bold text-[var(--text)]">
             {es ? '¿Prefiere hablar ahora mismo?' : 'Prefer to talk right away?'}
           </span>
-          <a
-            href="tel:+13024965648"
-            className="inline-flex items-center gap-1.5 font-bold text-[var(--cyan)] hover:underline"
-          >
-            <Phone className="size-3.5" aria-hidden="true" />
+          <Button href="tel:+13024965648" variant="link" leftIcon={<Phone size={16} strokeWidth={1.75} aria-hidden="true" />}>
             +1 (302) 496-5648
-          </a>
+          </Button>
           <span className="muted">
             {es ? '(Lunes a Viernes, 9am - 6pm EST)' : '(Mon–Fri, 9am – 6pm EST)'}
           </span>
@@ -86,14 +83,16 @@ export function CalendlyBooking({ locale }: { locale: Locale }) {
             <p className="text-sm font-semibold text-[var(--text)]">
               {es ? 'Cargando calendario de disponibilidad...' : 'Loading available consultation slots...'}
             </p>
-            <a
+            <Button
               href="https://calendly.com/rootrcm-info/30min"
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-secondary mt-2 text-xs"
+              variant="secondary"
+              size="sm"
+              rightIcon={<ArrowUpRight size={16} strokeWidth={1.75} aria-hidden="true" />}
             >
-              {es ? 'Abrir Calendly en nueva ventana' : 'Open Calendly in a new window'} <ArrowUpRight className="size-3.5" aria-hidden="true" />
-            </a>
+              {es ? 'Abrir Calendly en nueva ventana' : 'Open Calendly in a new window'}
+            </Button>
           </div>
         )}
         <iframe
@@ -114,14 +113,9 @@ export function CalendlyBooking({ locale }: { locale: Locale }) {
             ? 'Los datos de la reserva se procesan a través de la infraestructura segura de Calendly.'
             : 'Booking is processed through Calendly’s secure scheduling infrastructure.'}
         </span>
-        <a
-          href="https://calendly.com/rootrcm-info/30min"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1 font-semibold text-[var(--cyan)] hover:underline"
-        >
-          {es ? 'Enlace externo de Calendly' : 'Direct Calendly link'} <ArrowUpRight className="size-3" aria-hidden="true" />
-        </a>
+        <Button href="https://calendly.com/rootrcm-info/30min" target="_blank" rel="noopener noreferrer" variant="link" rightIcon={<ArrowUpRight size={16} strokeWidth={1.75} aria-hidden="true" />}>
+          {es ? 'Enlace externo de Calendly' : 'Direct Calendly link'}
+        </Button>
       </div>
     </section>
   );

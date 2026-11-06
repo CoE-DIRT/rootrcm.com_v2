@@ -1,8 +1,8 @@
-import Link from 'next/link';
 import { priceCatalog, type OfferId } from '@/content/catalog';
 import { copy } from '@/content/messages';
 import type { Locale } from '@/i18n/locales';
 import { localizedPath } from '@/lib/paths';
+import { Button } from '@/components/ui/Button';
 
 export function CommercialNextActions({
   locale,
@@ -18,16 +18,16 @@ export function CommercialNextActions({
       <p className="eyebrow">{t.commercial.journeyCta}</p>
       <p className="muted mt-2 max-w-3xl text-sm">{t.commercial.journeyCtaBody}</p>
       <div className="mt-4 flex flex-wrap gap-3">
-        <Link className="btn-secondary" href={localizedPath(locale, '/preview/sales')}>
+        <Button variant="secondary" size="sm" href={localizedPath(locale, '/preview/sales')}>
           {t.commercial.journeyCta} →
-        </Link>
-        <Link className="btn-secondary" href={localizedPath(locale, '/plans')}>
+        </Button>
+        <Button variant="secondary" size="sm" href={localizedPath(locale, '/plans')}>
           {t.commercial.comparePlans} →
-        </Link>
+        </Button>
         {offer ? (
-          <Link className="btn-secondary" href={localizedPath(locale, offer.href)}>
+          <Button variant="secondary" size="sm" href={localizedPath(locale, offer.href)}>
             {offer.name[locale]} →
-          </Link>
+          </Button>
         ) : null}
       </div>
     </aside>

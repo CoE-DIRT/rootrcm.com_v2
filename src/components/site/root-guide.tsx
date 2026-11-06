@@ -5,6 +5,7 @@ import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { ArrowUpRight, MessageCircle, Send, ShieldCheck, X } from 'lucide-react';
 import type { Locale } from '@/i18n/locales';
 import { localizedPath } from '@/lib/paths';
+import { Button } from '@/components/ui/Button';
 
 type Topic = 'services' | 'integrations' | 'plans' | 'credentialing' | 'denials' | 'contact' | 'general';
 type Message = { id: number; from: 'visitor' | 'root'; text: string };
@@ -128,7 +129,7 @@ export function RootGuide({ locale }: { locale: Locale }) {
   }
 
   return (
-    <aside className="pointer-events-none fixed bottom-[max(12px,env(safe-area-inset-bottom))] right-3 z-[100] flex max-h-[calc(100svh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-12px)] max-w-[calc(100vw-24px)] flex-col items-end gap-3 sm:bottom-6 sm:right-6" data-testid="root-guide-dock">
+    <aside className="pointer-events-none fixed bottom-[calc(76px+env(safe-area-inset-bottom))] right-3 md:bottom-6 z-40 flex max-h-[calc(100svh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-12px)] max-w-[calc(100vw-24px)] flex-col items-end gap-3 sm:bottom-6 sm:right-6" data-testid="root-guide-dock">
       {open && (
         <section
           id="root-guide-panel"
@@ -141,7 +142,7 @@ export function RootGuide({ locale }: { locale: Locale }) {
               <p className="text-base font-extrabold">{t.title}</p>
               <p className="mt-1 text-[11px] text-[#bcd8ea]">{t.scripted}</p>
             </div>
-            <button className="flex size-11 shrink-0 items-center justify-center rounded-xl text-[#f5fbff] transition hover:bg-white/15" data-testid="root-guide-close" onClick={() => { setOpen(false); launchRef.current?.focus(); }} type="button" aria-label={t.close}><X className="size-5" aria-hidden="true"/></button>
+            <Button variant="secondary" iconOnly data-testid="root-guide-close" onClick={() => { setOpen(false); launchRef.current?.focus(); }} type="button" aria-label={t.close}><X className="size-5" aria-hidden="true"/></Button>
           </div>
           <div ref={logRef} role="log" aria-live="polite" aria-label={t.guide} className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto overscroll-contain px-4 py-4 text-sm">
             {messages.map((message) => (
@@ -152,10 +153,10 @@ export function RootGuide({ locale }: { locale: Locale }) {
           </div>
           <div className="flex flex-wrap gap-2 border-t border-[var(--border)] p-3" role="group" aria-label={t.quick}>
             {topics.map((item) => (
-              <button key={item.topic} type="button" onClick={() => respond(item.topic)}
-                className="min-h-9 rounded-full border border-[var(--border)] px-3 py-1.5 text-xs font-bold transition hover:border-[var(--cyan)] hover:text-[var(--cyan)]">
+              <Button variant="secondary" key={item.topic} type="button" onClick={() => respond(item.topic)}
+               >
                 {item[locale]}
-              </button>
+              </Button>
             ))}
           </div>
           {destination && (
@@ -168,18 +169,18 @@ export function RootGuide({ locale }: { locale: Locale }) {
             <input id="root-guide-input" ref={inputRef} type="text" autoComplete="off" maxLength={160} value={input}
               onChange={(event) => setInput(event.target.value)} placeholder={t.hint}
               className="min-w-0 flex-1 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] px-3 py-2 text-sm outline-none focus-visible:outline-[var(--cyan)]"/>
-            <button type="submit" disabled={!input.trim()} className="flex min-h-11 min-w-11 items-center justify-center rounded-xl bg-[var(--cyan)] text-[var(--on-cyan)] disabled:opacity-40" aria-label={t.send}>
+            <Button variant="primary" iconOnly type="submit" disabled={!input.trim()} aria-label={t.send}>
               <Send className="size-4" aria-hidden="true"/>
-            </button>
+            </Button>
           </form>
           <p className="muted flex items-center gap-1.5 px-4 pb-3 text-[10px] leading-4"><ShieldCheck className="size-3.5 shrink-0" aria-hidden="true"/>{t.privacy}</p>
         </section>
       )}
-      <button
+      <Button variant="primary"
         type="button"
         ref={launchRef}
         onClick={() => setOpen((current) => !current)}
-        className="pointer-events-auto flex min-h-12 items-center gap-2.5 rounded-full border border-[#54e8ff]/50 bg-[linear-gradient(120deg,#0756c4,#00aec6)] px-4 py-3 text-sm font-extrabold text-white shadow-[0_13px_40px_rgba(3,58,101,.34)] transition-transform duration-300 hover:-translate-y-1 hover:shadow-[0_18px_45px_rgba(3,58,101,.45)] motion-reduce:transform-none"
+       
         aria-controls="root-guide-panel"
         aria-expanded={open}
         aria-label={open ? t.close : t.open}
@@ -188,7 +189,7 @@ export function RootGuide({ locale }: { locale: Locale }) {
         {open ? <X className="size-5" aria-hidden="true"/> : <MessageCircle className="size-5" aria-hidden="true"/>}
         <span>{t.launch}</span>
         <span className="size-2 rounded-full bg-[#8affce] shadow-[0_0_9px_#8affce]" aria-hidden="true" />
-      </button>
+      </Button>
     </aside>
   );
 }

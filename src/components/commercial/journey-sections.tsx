@@ -1,211 +1,174 @@
-import Link from 'next/link';
-import Image from 'next/image';
+import { ArrowRight, ArrowUpRight, Check } from 'lucide-react';
 import { CommercialNextActions } from '@/components/commercial/next-actions';
 import { EcosystemMarquees } from '@/components/commercial/ecosystem-marquees';
 import { PayerStrip } from '@/components/commercial/payer-strip';
 import { PracticeFaqSection } from '@/components/commercial/faq-section';
-import { ProofUnpublished } from '@/components/commercial/proof-unpublished';
-import { SectionHeader } from '@/components/commercial/section-header';
+import { ProofPlaceholders } from '@/components/commercial/proof-placeholders';
 import { SpecialtyGrid } from '@/components/commercial/specialty-grid';
-import { Card } from '@/components/ui/card';
+import { DuotonePhoto, Illustration } from '@/components/site/media';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Section, SectionHeading } from '@/components/ui/Section';
 import { priceCatalog } from '@/content/catalog';
 import { copy } from '@/content/messages';
 import type { Locale } from '@/i18n/locales';
 import { localizedPath } from '@/lib/paths';
 
+const icon = { size: 20, strokeWidth: 1.75, 'aria-hidden': true } as const;
+
+const bottleneckArt = ['claim-lifecycle', 'credentialing-pipeline', 'revenue-control-room'] as const;
+
 export function HomeJourney({ locale }: { locale: Locale }) {
   const t = copy(locale);
+  const es = locale === 'es';
   return (
-    <div className="mt-16 grid gap-16">
-      <section className="commercial-section" aria-labelledby="services-teaser-heading">
-        <SectionHeader
-          id="services-teaser-heading"
-          eyebrow={t.commercial.servicesEyebrow}
-          title={t.services.title}
-          body={t.services.body}
-        />
-        <ul className="mt-8 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-          {t.services.tiles.slice(0, 6).map((tile) => (
-            <li key={tile.title}>
+    <>
+      {/* Problem → impact: buyer questions */}
+      <Section labelledBy="bottleneck-heading" divider="slice" tone="raised">
+        <SectionHeading id="bottleneck-heading" eyebrow={t.commercial.bottleneckEyebrow} title={t.commercial.bottleneckTitle} body={t.commercial.bottleneckBody} />
+        <ul className="ui-grid">
+          {t.commercial.bottleneckCards.map((card, index) => (
+            <li key={card.title}>
               <Card
-                title={tile.title}
-                body={t.home.tileHint}
-                href={localizedPath(locale, tile.href)}
-              />
+                href={localizedPath(locale, card.href)}
+                title={card.title}
+                body={card.body}
+                headingLevel={3}
+                footer={
+                  <span className="cluster text-[var(--cyan)]">
+                    {card.cta} <ArrowRight {...icon} />
+                  </span>
+                }
+              >
+                <Illustration name={bottleneckArt[index % bottleneckArt.length]} locale={locale} />
+              </Card>
             </li>
           ))}
         </ul>
-        <p className="mt-6">
-          <Link className="btn-secondary" href={localizedPath(locale, '/services')}>
-            {t.commercial.servicesCta} →
-          </Link>
-        </p>
-      </section>
+      </Section>
 
-      <section className="commercial-section" aria-labelledby="bottleneck-heading">
-        <SectionHeader
-          id="bottleneck-heading"
-          eyebrow={t.commercial.bottleneckEyebrow}
-          title={t.commercial.bottleneckTitle}
-          body={t.commercial.bottleneckBody}
-        />
-        <div className="mt-8 grid gap-4 md:grid-cols-3">
-          {t.commercial.bottleneckCards.map((card, idx) => (
-            <Link
-              key={card.title}
-              href={localizedPath(locale, card.href)}
-              className="card-hover surface group flex flex-col justify-between p-6 sm:p-7"
-            >
-              <div>
-                <span className="eyebrow">0{idx + 1}</span>
-                <h3 className="mt-3 text-xl font-bold tracking-tight text-[var(--text)] transition-colors group-hover:text-[var(--cyan)]">
-                  {card.title}
-                </h3>
-                <p className="muted mt-3 text-sm leading-relaxed">{card.body}</p>
-              </div>
-              <span className="mt-6 inline-flex items-center text-xs font-bold text-[var(--cyan)] transition-transform motion-reduce:transform-none group-hover:translate-x-1">
-                {card.cta} →
-              </span>
-            </Link>
-          ))}
+      {/* How it works: Reveal → Assign → Reconcile */}
+      <Section labelledBy="method-heading">
+        <div className="split">
+          <div>
+            <SectionHeading id="method-heading" eyebrow={t.home.methodEyebrow} title={t.home.methodTitle} body={t.home.methodBody} />
+            <ol className="method">
+              {t.home.method.map((step) => (
+                <li key={step.title} className="method__step">
+                  <h3 className="method__title">{step.title}</h3>
+                  <p>{step.body}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+          <Illustration name="exception-queue" locale={locale} />
         </div>
-      </section>
+      </Section>
+
+      {/* Services */}
+      <Section labelledBy="services-teaser-heading" tone="raised">
+        <SectionHeading id="services-teaser-heading" eyebrow={t.home.servicesEyebrow} title={t.home.servicesTitle} body={t.services.body} />
+        <ul className="ui-grid" data-min="sm">
+          {t.services.tiles.slice(0, 6).map((tile) => (
+            <li key={tile.title}>
+              <Card title={tile.title} href={localizedPath(locale, tile.href)} footer={<ArrowUpRight {...icon} className="text-[var(--cyan)]" />} />
+            </li>
+          ))}
+        </ul>
+        <div className="cluster section-actions">
+          <Button href={localizedPath(locale, '/services')} variant="secondary" rightIcon={<ArrowRight {...icon} />}>
+            {t.commercial.servicesCta}
+          </Button>
+        </div>
+      </Section>
 
       <SpecialtyGrid locale={locale} />
 
-      <section className="commercial-section surface p-6 sm:p-10" aria-labelledby="transition-heading">
-        <SectionHeader
-          id="transition-heading"
-          eyebrow={t.commercial.transitionEyebrow}
-          title={t.commercial.transitionTitle}
-          body={t.commercial.transitionBody}
-        />
-        <div className="mt-8 grid gap-4 md:grid-cols-3">
-          {t.commercial.transitionSteps.map((step, idx) => (
-            <div key={step.title} className="surface-2 flex flex-col p-6">
-              <span className="eyebrow">0{idx + 1}</span>
-              <h3 className="mt-2 text-lg font-bold tracking-tight">{step.title}</h3>
-              <p className="muted mt-2 text-sm leading-relaxed">{step.body}</p>
+      {/* Shared visibility */}
+      <Section labelledBy="same-heading" tone="inverse" divider="slice">
+        <div className="split" data-flip="true">
+          <div className="stack">
+            <SectionHeading id="same-heading" eyebrow={t.home.sameEyebrow} title={t.home.sameTitle} body={t.home.sameBody} />
+            <ul className="check-list">
+              {t.home.samePoints.map((point) => (
+                <li key={point}>
+                  <Check {...icon} />
+                  <span>{point}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="cluster section-actions">
+              <Button href={localizedPath(locale, '/preview/client')} variant="primary" prefetch={false} rightIcon={<ArrowRight {...icon} />}>
+                {t.home.secondaryCta}
+              </Button>
             </div>
-          ))}
-        </div>
-        <div className="mt-6 flex items-center gap-3 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] px-4 py-3 text-xs text-[var(--muted)]">
-          <span className="inline-block size-2 shrink-0 rounded-full bg-[var(--cyan)]" aria-hidden="true" />
-          <span>{t.commercial.transitionAssurance}</span>
-        </div>
-      </section>
-
-      <EcosystemMarquees locale={locale} />
-      <PayerStrip locale={locale} />
-
-      <section
-        className="commercial-section group relative isolate min-h-[370px] overflow-hidden rounded-[24px] border border-[#2b5c7e] bg-[#071c35] px-6 py-10 shadow-[0_22px_68px_rgba(0,8,25,.2)] sm:px-10 md:py-14"
-        aria-labelledby="dirt-teaser-heading"
-      >
-        <Image
-          src="/media/root-workflow-network.svg"
-          alt=""
-          aria-hidden="true"
-          fill
-          sizes="(max-width: 768px) 100vw, 1300px"
-          className="pointer-events-none absolute inset-0 object-cover object-right opacity-85 transition-transform duration-700 motion-reduce:transform-none group-hover:scale-[1.02]"
-        />
-        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(5,18,35,.98)_0%,rgba(5,18,35,.95)_43%,rgba(5,18,35,.6)_73%,rgba(5,18,35,.15)_100%)]" />
-        <div className="relative z-[1] max-w-2xl">
-          <p className="eyebrow !text-[#7ff7ff]">{t.commercial.dirtEyebrow}</p>
-          <h2 id="dirt-teaser-heading" className="mt-4 text-balance text-3xl font-extrabold tracking-tight text-[#f5fbff] md:text-4xl">{t.commercial.dirtTitle}</h2>
-          <p className="mt-5 max-w-xl text-base leading-7 text-[#d2e6f5]">{t.commercial.dirtBody}</p>
-          <p className="mt-7 flex flex-wrap gap-3">
-            <Link className="btn-primary shadow-[0_12px_28px_rgba(17,225,238,.15)]" href={localizedPath(locale, '/technology')}>
-              {t.commercial.dirtCta} →
-            </Link>
-            <Link className="inline-flex min-h-12 items-center justify-center rounded-xl border border-white/30 bg-white/10 px-5 py-3 font-bold text-[#f5fbff] backdrop-blur-xl transition hover:bg-white/20 focus-visible:outline-offset-4" href={localizedPath(locale, '/preview/dirt')}>
-              {t.preview} →
-            </Link>
-          </p>
-        </div>
-      </section>
-
-      <section
-        className="commercial-section group relative isolate overflow-hidden rounded-[24px] border border-[#2b5c7e] bg-[#071c35] shadow-[0_22px_68px_rgba(0,8,25,.2)]"
-        aria-labelledby="philosophy-heading"
-      >
-        <div className="grid items-center lg:grid-cols-2">
-          <div className="relative z-[1] p-8 sm:p-10 md:p-12">
-            <p className="eyebrow !text-[#7ff7ff]">{t.commercial.philosophyEyebrow}</p>
-            <h2 id="philosophy-heading" className="mt-4 text-balance text-2xl font-extrabold tracking-tight text-[#f5fbff] md:text-3xl lg:text-4xl">
-              {t.commercial.philosophyTitle}
-            </h2>
-            <p className="mt-5 text-base leading-7 text-[#d2e6f5]">
-              {t.commercial.philosophyBody}
-            </p>
-            <p className="mt-8">
-              <Link className="btn-primary" href={localizedPath(locale, '/why-root')}>
-                {t.commercial.philosophyCta} →
-              </Link>
-            </p>
           </div>
-          <div className="relative h-64 min-h-[300px] w-full overflow-hidden border-t border-[#2b5c7e] sm:h-80 lg:h-full lg:border-l lg:border-t-0">
-            <Image
-              src="/brand/story.webp"
-              alt={locale === 'es' ? 'Ilustración original de ROOT para operaciones y continuidad' : 'Original ROOT practice intelligence and continuity visual'}
-              fill
-              sizes="(max-width: 1024px) 100vw, 650px"
-              className="object-cover object-center opacity-85 transition-transform duration-700 motion-reduce:transform-none group-hover:scale-[1.02]"
-            />
-            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(5,18,35,.2)_0%,rgba(5,18,35,.75)_100%)] lg:bg-[linear-gradient(90deg,rgba(5,18,35,.6)_0%,rgba(5,18,35,.15)_100%)]" />
-          </div>
+          <DuotonePhoto
+            name="analytics-review"
+            alt={es ? 'Manos sobre un portátil junto a gráficos impresos durante una revisión de ingresos' : 'Hands on a laptop beside printed charts during a revenue review'}
+          />
         </div>
-      </section>
+      </Section>
 
-      <ProofUnpublished locale={locale} />
+      {/* Technology & ecosystem */}
+      <Section labelledBy="dirt-teaser-heading">
+        <div className="split">
+          <div className="stack">
+            <SectionHeading id="dirt-teaser-heading" eyebrow={t.commercial.dirtEyebrow} title={t.commercial.dirtTitle} body={t.commercial.dirtBody} />
+            <div className="cluster">
+              <Button href={localizedPath(locale, '/technology')} variant="secondary" rightIcon={<ArrowRight {...icon} />}>
+                {t.commercial.dirtCta}
+              </Button>
+            </div>
+          </div>
+          <Illustration name="payer-mix-dashboard" locale={locale} />
+        </div>
+      </Section>
 
-      <section className="commercial-section" aria-labelledby="pricing-teaser-heading">
-        <SectionHeader
+      <Section labelledBy="ecosystem-heading" spacing="compact">
+        <EcosystemMarquees locale={locale} />
+        <PayerStrip locale={locale} />
+      </Section>
+
+      <ProofPlaceholders locale={locale} />
+
+      {/* Pricing */}
+      <Section labelledBy="pricing-teaser-heading">
+        <SectionHeading
           id="pricing-teaser-heading"
           eyebrow={t.commercial.pricingEyebrow}
-          title={t.plans.title}
+          title={es ? '¿Cuánto cuesta empezar?' : 'What does it cost to start?'}
           body={t.plans.body}
         />
-        <ul className="mt-8 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+        <ul className="ui-grid">
           {priceCatalog.map((offer) => (
             <li key={offer.id}>
-              <Card
-                title={offer.name[locale]}
-                body={offer.summary[locale]}
-                kicker={offer.priceLabel[locale]}
-                href={localizedPath(locale, offer.href)}
-                nodeId={offer.figmaNodeId}
-              />
+              <Card title={offer.name[locale]} body={offer.summary[locale]} kicker={offer.priceLabel[locale]} href={localizedPath(locale, offer.href)} nodeId={offer.figmaNodeId} />
             </li>
           ))}
         </ul>
-        <p className="mt-6">
-          <Link className="btn-secondary" href={localizedPath(locale, '/plans')}>
-            {t.plans.cta} →
-          </Link>
-        </p>
-      </section>
+        <div className="cluster section-actions">
+          <Button href={localizedPath(locale, '/plans')} variant="secondary" rightIcon={<ArrowRight {...icon} />}>
+            {t.plans.cta}
+          </Button>
+        </div>
+      </Section>
 
       <PracticeFaqSection locale={locale} />
 
-      <section
-        className="commercial-section surface p-8 md:p-10"
-        aria-labelledby="conversion-heading"
-      >
-        <SectionHeader
-          id="conversion-heading"
-          eyebrow={t.nav.consultation}
-          title={t.commercial.conversionTitle}
-          body={t.commercial.conversionBody}
-        />
-        <p className="mt-6">
-          <Link className="btn-primary btn-lg" href={localizedPath(locale, '/consultation')}>
-            {t.commercial.conversionCta} →
-          </Link>
-        </p>
+      {/* Conversion */}
+      <Section labelledBy="conversion-heading" tone="raised" divider="wave">
+        <SectionHeading id="conversion-heading" eyebrow={t.nav.consultation} title={t.commercial.conversionTitle} body={t.commercial.conversionBody} />
+        <div className="cluster">
+          <Button href={localizedPath(locale, '/diagnostic')} variant="primary" size="lg" rightIcon={<ArrowRight {...icon} />}>
+            {t.home.primaryCta}
+          </Button>
+          <Button href={localizedPath(locale, '/consultation#book')} variant="secondary" size="lg">
+            {t.commercial.conversionCta}
+          </Button>
+        </div>
         <CommercialNextActions locale={locale} offerId="free-account-consultation" />
-      </section>
-    </div>
+      </Section>
+    </>
   );
 }

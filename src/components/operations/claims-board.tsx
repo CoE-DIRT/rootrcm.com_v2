@@ -8,6 +8,7 @@ import { localize, type OpsClaim } from '@/lib/ops-client';
 import { compareValues, matchesQuery, uniqueSorted, type OpsSortDir, type OpsSortKey } from '@/lib/ops-query';
 import { ListControls } from './list-controls';
 import { opsButton, opsCard, opsSubtle } from './ui';
+import { Button } from '@/components/ui/Button';
 
 export function ClaimsBoard({
   locale,
@@ -105,9 +106,9 @@ export function ClaimsBoard({
               data-status={claim.status}
               className="flex flex-col gap-3 py-3 sm:flex-row sm:items-center sm:justify-between"
             >
-              <button
+              <Button variant="ghost" align="start" fullWidth
                 type="button"
-                className="min-h-[48px] min-w-0 flex-1 rounded-xl px-1 text-left"
+               
                 onClick={() => onOpen(claim)}
               >
                 <p className="wrap-break-word font-bold">{claim.id}</p>
@@ -117,17 +118,17 @@ export function ClaimsBoard({
                 <p className="mt-1 max-w-full wrap-break-word text-xs font-semibold text-[var(--cyan)]">
                   {localize(claim.next, locale)}
                 </p>
-              </button>
+              </Button>
               {canOperate ? (
-                <button
+                <Button variant="secondary"
                   type="button"
                   data-testid="deny-claim"
-                  className={opsButton}
+                 
                   disabled={pending}
                   onClick={() => onDeny(claim.id)}
                 >
                   {t.denyClaim}
-                </button>
+                </Button>
               ) : null}
             </li>
           ))}

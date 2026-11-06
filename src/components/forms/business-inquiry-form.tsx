@@ -3,8 +3,12 @@
 import { useState } from 'react';
 import { copy } from '@/content/messages';
 import type { Locale } from '@/i18n/locales';
-import { Button } from '@/components/ui/button';
-import { SelectField, TextArea, TextInput } from '@/components/ui/form-field';
+import { Button } from '@/components/ui/Button';
+import { Checkbox } from '@/components/ui/Checkbox';
+import { Input, TextArea } from '@/components/ui/Input';
+import { Select } from '@/components/ui/Select';
+import { Card } from '@/components/ui/Card';
+import { Mail, MessageCircle, Phone } from 'lucide-react';
 import { StatusBanner } from '@/components/ui/status';
 import { publicStatusMessage } from '@/lib/public-status';
 import type { FieldErrors } from '@/lib/validation/business-contact';
@@ -69,32 +73,37 @@ export function BusinessInquiryForm({ locale }: { locale: Locale }) {
 
   if (!inquirySubmissionEnabled) {
     return (
-      <section className="surface mt-8 max-w-xl space-y-5 p-6" aria-label={locale === 'es' ? 'Póngase en contacto con ROOT' : 'Contact ROOT'}>
-        <h2 className="text-xl font-extrabold">{locale === 'es' ? 'Hable con nuestro equipo' : 'Speak with the ROOT team'}</h2>
-        <p className="text-sm text-[var(--muted)]">
-          {locale === 'es'
+      <Card
+        as="section"
+        padding="lg"
+        headingLevel={2}
+        title={locale === 'es' ? 'Hable con nuestro equipo' : 'Speak with the ROOT team'}
+        body={
+          locale === 'es'
             ? 'Cuéntenos sobre su práctica y sus objetivos. Puede comunicarse directamente por correo, teléfono o WhatsApp.'
-            : 'Tell us about your practice and goals. Reach our team directly by email, phone or WhatsApp.'}
-        </p>
-        <div className="flex flex-wrap gap-3">
-          <a className="btn-primary" href="mailto:info@rootrcm.com?subject=ROOT%20Practice%20Consultation">
+            : 'Tell us about your practice and goals. Reach our team directly by email, phone or WhatsApp.'
+        }
+        footer={<p className="ui-field__hint">{t.footer.noPhi}</p>}
+        data-testid="contact-channels"
+      >
+        <div className="cluster">
+          <Button href="mailto:info@rootrcm.com?subject=ROOT%20Practice%20Consultation" variant="primary" leftIcon={<Mail size={20} strokeWidth={1.75} aria-hidden="true" />}>
             {locale === 'es' ? 'Enviar correo' : 'Email ROOT'}
-          </a>
-          <a className="btn-secondary" href="https://wa.me/13025064685" target="_blank" rel="noopener noreferrer">
+          </Button>
+          <Button href="https://wa.me/13025064685" target="_blank" rel="noopener noreferrer" variant="secondary" leftIcon={<MessageCircle size={20} strokeWidth={1.75} aria-hidden="true" />}>
             WhatsApp
-          </a>
-          <a className="btn-secondary" href="tel:+13024965648">
+          </Button>
+          <Button href="tel:+13024965648" variant="secondary" leftIcon={<Phone size={20} strokeWidth={1.75} aria-hidden="true" />}>
             {locale === 'es' ? 'Llamar' : 'Call ROOT'}
-          </a>
+          </Button>
         </div>
-        <p className="text-xs text-[var(--muted)]">{t.footer.noPhi}</p>
-      </section>
+      </Card>
     );
   }
 
   return (
-    <form className="surface mt-8 grid max-w-xl gap-4 p-6" onSubmit={onSubmit} noValidate>
-      <TextInput
+    <form className="form-stack" onSubmit={onSubmit} noValidate>
+      <Input
         id="name"
         name="name"
         label={t.form.name}
@@ -102,7 +111,7 @@ export function BusinessInquiryForm({ locale }: { locale: Locale }) {
         error={errors.name ? t.form.errors[errors.name] : undefined}
         autoComplete="name"
       />
-      <TextInput
+      <Input
         id="email"
         name="email"
         type="email"
@@ -111,7 +120,7 @@ export function BusinessInquiryForm({ locale }: { locale: Locale }) {
         error={errors.email ? t.form.errors[errors.email] : undefined}
         autoComplete="email"
       />
-      <TextInput
+      <Input
         id="organization"
         name="organization"
         label={t.form.organization}
@@ -119,7 +128,7 @@ export function BusinessInquiryForm({ locale }: { locale: Locale }) {
         error={errors.organization ? t.form.errors[errors.organization] : undefined}
         autoComplete="organization"
       />
-      <SelectField
+      <Select
         id="concern"
         name="concern"
         label={t.form.concern}
@@ -129,22 +138,22 @@ export function BusinessInquiryForm({ locale }: { locale: Locale }) {
         <option value="diagnostic">{t.form.concernOptions.diagnostic}</option>
         <option value="managed">{t.form.concernOptions.managed}</option>
         <option value="custom">{t.form.concernOptions.custom}</option>
-      </SelectField>
+      </Select>
       <TextArea
         id="message"
         name="message"
         label={t.form.message}
         error={errors.message ? t.form.errors[errors.message] : undefined}
       />
-      <label className="flex items-start gap-3 text-sm">
-        <input type="checkbox" name="consent" required className="mt-1" />
-        <span>
-          {t.form.consent} {t.footer.noPhi}
-        </span>
-      </label>
-      {errors.consent ? <p className="field-error">{t.form.errors[errors.consent]}</p> : null}
+      <Checkbox
+        id="consent"
+        name="consent"
+        required
+        label={`${t.form.consent} ${t.footer.noPhi}`}
+        error={errors.consent ? t.form.errors[errors.consent] : undefined}
+      />
       {!inquirySubmissionEnabled ? <StatusBanner tone="warning">{t.consultation.unavailable}</StatusBanner> : null}
-      <Button type="submit" loading={status === 'loading'} disabled={!inquirySubmissionEnabled}>
+      <Button type="submit" variant="primary" size="lg" isLoading={status === 'loading'} disabled={!inquirySubmissionEnabled}>
         {t.consultation.submit}
       </Button>
       {status === 'success' ? <StatusBanner tone="warning">{message}</StatusBanner> : null}

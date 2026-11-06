@@ -1,12 +1,12 @@
 import type { CopyPair } from '@/content/ecosystem';
 
-export type EditorialStatus = 'unpublished' | 'pending_founder' | 'published';
+export type PublicationStatus = 'unpublished' | 'pending_founder' | 'published';
 
 export type ProofSlot = {
   id: string;
   role: CopyPair;
-  editorialStatus: EditorialStatus;
-  /** Only populated when editorialStatus is published. Never invent quotes. */
+  publicationStatus: PublicationStatus;
+  /** Only populated when publicationStatus is published. Never invent quotes. */
   quote?: CopyPair;
   attribution?: CopyPair;
 };
@@ -19,20 +19,20 @@ export const proofSlots: readonly ProofSlot[] = [
   {
     id: 'practice-owner',
     role: { en: 'Practice owner', es: 'Dueño de la práctica' },
-    editorialStatus: 'unpublished',
+    publicationStatus: 'unpublished',
   },
   {
     id: 'rcm-director',
     role: { en: 'RCM director', es: 'Director de RCM' },
-    editorialStatus: 'unpublished',
+    publicationStatus: 'unpublished',
   },
   {
     id: 'finance',
     role: { en: 'Finance lead', es: 'Responsable de finanzas' },
-    editorialStatus: 'unpublished',
+    publicationStatus: 'unpublished',
   },
 ];
 
 export function publishedProof(slots: readonly ProofSlot[] = proofSlots) {
-  return slots.filter((slot) => slot.editorialStatus === 'published' && slot.quote);
+  return slots.filter((slot) => slot.publicationStatus === 'published' && slot.quote);
 }

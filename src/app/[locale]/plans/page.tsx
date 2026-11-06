@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { CommercialNextActions } from '@/components/commercial/next-actions';
 import { MarketingPage } from '@/components/site/marketing-page';
-import { Card } from '@/components/ui/card';
+import { Card } from '@/components/ui/Card';
 import { priceCatalog } from '@/content/catalog';
 import { copy } from '@/content/messages';
 import { requireLocale } from '@/lib/locale';
@@ -15,7 +15,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const locale = await requireLocale(params);
   const t = copy(locale);
-  return publicPageMetadata(locale, t.plans.title, t.plans.body);
+  return publicPageMetadata(locale, t.plans.title, t.plans.body, 'pricing');
 }
 
 export default async function PlansPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -31,18 +31,19 @@ export default async function PlansPage({ params }: { params: Promise<{ locale: 
       bands={t.plans.bands}
       nodeId="4:88"
     >
-      <div className="mt-8 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+      <ul className="ui-grid">
         {priceCatalog.map((offer) => (
+          <li key={offer.id}>
           <Card
-            key={offer.id}
             title={offer.name[locale]}
             body={offer.summary[locale]}
             kicker={offer.priceLabel[locale]}
             href={localizedPath(locale, offer.href)}
             nodeId={offer.figmaNodeId}
           />
+          </li>
         ))}
-      </div>
+      </ul>
       <CommercialNextActions locale={locale} />
     </MarketingPage>
   );

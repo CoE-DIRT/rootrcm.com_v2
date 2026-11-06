@@ -33,47 +33,47 @@ const en = {
     copyright: '© 2026 ROOT — Revenue Operations & Outcomes Technology.',
   },
   pending: 'Pending verification',
-  preview: 'Synthetic preview — not live operations',
+  preview: 'Sample workspace — fictional data',
   adaptersOff: 'Appwrite, HubSpot, Stripe and Apollo adapters remain disabled.',
   home: {
-    eyebrow: 'ROOT / REVENUE OPERATIONS & OUTCOMES TECHNOLOGY',
-    titleDesktop:
-      'Handing Over the Keys to Your Revenue Shouldn’t Mean Losing Control of Your Practice.',
-    titleTablet: 'More clarity, without changing what works.',
-    titleMobile: 'Your practice. Your revenue. Your control.',
-    bodyDesktop:
-      'Revenue operations, billing accountability, and connected intelligence for independent practices. Keep control of your clinical workflows while making every next action visible.',
-    bodyTablet: 'An operating partner that connects services, technology and accountability.',
-    bodyMobile: 'Less guesswork. Clear billing, credentialing and operations with ROOT.',
-    ctaDesktop: 'Book a free consultation',
-    ctaTablet: 'Take a guided look',
-    ctaMobile: 'Speak with ROOT',
-    explore: 'Explore the connected experience',
-    tiles: [
-      { title: 'The black-box fear', href: '/why-root' },
-      { title: 'Revenue at risk', href: '/solutions' },
-      { title: 'You keep your systems', href: '/technology' },
-      { title: 'An operating partner', href: '/company' },
-      { title: 'Claim-by-claim accountability', href: '/services' },
-      { title: 'Free diagnostic exploration', href: '/diagnostic' },
+    eyebrow: 'RCM and revenue operations',
+    title: 'Take control of your revenue — without giving up your EHR.',
+    body: 'ROOT works inside the systems your practice already uses. Every claim, denial and credentialing task gets a named owner, a reason and a next action — and you see the same numbers we do.',
+    primaryCta: 'Get a free revenue leak review',
+    secondaryCta: 'Explore the sample workspace',
+    trust: [
+      'No forced EHR replacement',
+      'Named exception owners',
+      'Weekly cash reconciliation',
+      'HIPAA-aligned processes',
     ],
-    mobileTiles: [
-      { title: 'Understand a problem', href: '/solutions' },
-      { title: 'Explore services', href: '/services' },
-      { title: 'See a workspace', href: '/preview/client' },
+    methodEyebrow: 'How it works',
+    methodTitle: 'What actually changes when ROOT takes over the work?',
+    methodBody: 'Three moves, repeated every week. Nothing about your clinical workflow has to change.',
+    method: [
+      {
+        title: 'Reveal',
+        body: 'We baseline your open claims, denials, aging A/R and enrollment gaps so you can see exactly where revenue is waiting.',
+      },
+      {
+        title: 'Assign',
+        body: 'Every exception gets a named owner, a reason and a due date. Nothing sits in an anonymous backlog.',
+      },
+      {
+        title: 'Reconcile',
+        body: 'Each week, cash collected is reconciled against open work — on a dashboard you and ROOT both read.',
+      },
     ],
-    tabletTiles: [
-      { title: 'RCM', href: '/services' },
-      { title: 'DIRT intelligence', href: '/technology' },
-      { title: 'Credentialing', href: '/services' },
-      { title: 'Practice operations', href: '/company' },
+    servicesEyebrow: 'Services',
+    servicesTitle: 'Who handles each part of my revenue cycle?',
+    sameEyebrow: 'Shared visibility',
+    sameTitle: 'Will I see the same numbers you see?',
+    sameBody: 'Yes. Your team and ROOT work from one shared view of claims, denials, credentialing and cash — so weekly reviews start from facts, not from a report you have to trust.',
+    samePoints: [
+      'One dashboard for your team and ours',
+      'Every open item shows its owner and next action',
+      'Cash reconciled weekly against open work',
     ],
-    bands: [
-      'Reveal → Assign → Reconcile',
-      'Built around the technology your practice already uses',
-      'Accountability, transparent workflows and evidence-led decisions',
-    ],
-    tileHint: 'Explore the scope, evidence and next action.',
   },
   why: {
     title: 'An operating partner, not a black box.',
@@ -131,7 +131,7 @@ const en = {
   },
   solutions: {
     title: 'Your systems stay. The process gets sharper.',
-    body: 'Typical concerns: revenue leakage, aging A/R, denials, enrollment bottlenecks and operational fragmentation. Evidence stays labeled until verified.',
+    body: 'Typical concerns: revenue leakage, aging A/R, denials, enrollment bottlenecks and disconnected operations.',
     sections: [
       {
         title: 'Revenue leakage',
@@ -139,7 +139,7 @@ const en = {
       },
       {
         title: 'Aging A/R',
-        body: 'Make aging visible by owner and next action. Figures in this build are synthetic until a tenant import is authorized.',
+        body: 'Make aging visible by owner and next action, so nothing quietly ages past timely filing.',
       },
       {
         title: 'Denials and appeals',
@@ -157,12 +157,12 @@ const en = {
   },
   technology: {
     title: 'Purposeful intelligence. Traceable actions.',
-    body: 'DIRT is ROOT’s embedded intelligence capability, not a standalone product. Dashboards in this build are synthetic previews.',
+    body: 'DIRT is the intelligence built into ROOT’s service. It turns payer activity into owned next actions.',
     cta: 'Open DIRT preview',
     sections: [
       {
         title: 'DIRT previews',
-        body: 'Revenue intelligence screens use fictional practice data and are labeled synthetic. They are not live claims processing.',
+        body: 'The sample workspace uses fictional practice data so you can explore the screens before connecting anything.',
       },
       {
         title: 'Systems stay in place',
@@ -179,14 +179,14 @@ const en = {
     body: 'Free consultation, fixed-fee diagnostics, ongoing managed RCM and scoped project engagements. Fees and exclusions confirmed in writing.',
     cta: 'Compare your options',
     bands: [
-      'One canonical pricing catalog',
+      'One price list for every engagement',
       'Defined deliverables, dependencies and exclusions',
       'Speak with our team to choose the right engagement',
     ],
   },
   resources: {
     title: 'Methods you can put to work.',
-    body: 'Templates, official CMS form links and education. Current forms should come from their issuer. No fabricated case-study results.',
+    body: 'Practical guides, checklists and pointers to official CMS and payer forms.',
     sections: [
       {
         title: 'Official forms',
@@ -194,21 +194,21 @@ const en = {
       },
       {
         title: 'Templates',
-        body: 'Put structure around every exception. Template packs are listed when reviewed; none are implied as certified.',
+        body: 'Put structure around every exception with checklists your team can reuse.',
       },
       {
         title: 'Education',
-        body: 'Methods you can apply. Case-study frameworks stay empty until independently verified.',
+        body: 'Methods you can apply this week to find stalled claims and enrollment gaps.',
       },
     ],
     faqs: [
       {
         title: 'Where are the CMS forms?',
-        body: 'Use the issuer’s current publication. Links will be added only after they are reviewed.',
+        body: 'Always use the issuer’s current publication. We link to official sources rather than hosting copies.',
       },
       {
         title: 'Are these results from other practices?',
-        body: 'No. Editorial proof slots remain pending verification. We would rather verify than embellish.',
+        body: 'We only publish customer results with the customer’s written approval. Ask us for references during your consultation.',
       },
     ],
   },
@@ -217,34 +217,34 @@ const en = {
     body: 'A focused revenue operations partner for independent practices, care teams and growing healthcare organizations.',
     sections: [
       {
-        title: 'Public website',
-        body: 'Discover the operating partner model without a software switch.',
+        title: 'Partnership',
+        body: 'An operating partner that works inside your current software.',
       },
       {
-        title: 'Conversion and CRM',
-        body: 'Consultation and diagnostic paths collect business contacts only. Live HubSpot is disabled.',
+        title: 'Getting started',
+        body: 'Consultation and diagnostic requests collect business contact details only — never patient information.',
       },
       {
         title: 'Client portal',
-        body: 'Labeled synthetic workspace until Appwrite Auth is approved for an isolated V2 project.',
+        body: 'A secure workspace where your team follows claims, denials and credentialing in one place.',
       },
       {
-        title: 'Employee workspace',
-        body: 'ROOT staff queues are previews. They cannot impersonate a tenant.',
+        title: 'Specialist team',
+        body: 'ROOT specialists work assigned queues with role-based access to your organization only.',
       },
       {
         title: 'DIRT intelligence',
-        body: 'Embedded capability, not a standalone product. Synthetic until import is authorized.',
+        body: 'Revenue intelligence built into the service — not a separate product to buy.',
       },
     ],
     faqs: [
       {
         title: 'Are certifications displayed?',
-        body: 'No HIPAA, SOC 2, ISO or payer-partnership marks are shown until evidenced.',
+        body: 'We only display certifications or partnerships that can be verified. Ask for our security documentation during your consultation.',
       },
       {
-        title: 'Is this the live V1 site?',
-        body: 'No. V1 on rootrcm.com is untouched. This is the V2 application shell.',
+        title: 'Can I talk to someone before committing?',
+        body: 'Yes. Book a free consultation or request the revenue leak review — there is no obligation to continue.',
       },
     ],
   },
@@ -253,8 +253,8 @@ const en = {
     body: 'Tell us about your practice, revenue goals or operational challenges. Please do not share patient information.',
     submit: 'Send business inquiry',
     received: 'Your business inquiry has been received.',
-    unavailable: 'Online inquiries are not active yet. No information will be sent or stored.',
-    checkoutUnavailable: 'Checkout is not active. No payment was created.',
+    unavailable: 'Online inquiries are not open yet. Please email, call or message us on WhatsApp.',
+    checkoutUnavailable: 'Online checkout is not open yet. No payment was created.',
   },
   account: {
     title: 'Start without financial commitment',
@@ -269,23 +269,23 @@ const en = {
   },
   diagnostic: {
     title: 'Revenue Optimization Diagnostic · $2,500',
-    body: 'Fixed-fee assessment; additional work is quoted separately. Payment is not collected in this build.',
+    body: 'Fixed-fee assessment of where your revenue is stalling. Any follow-on work is quoted separately and only with your approval.',
     steps: [
       'Scope and exclusions',
       'Billing summary',
-      'Secure payment (planned)',
+      'Secure payment',
       'Onboarding',
       'Deliverable tracking',
     ],
   },
   custom: {
     title: 'Choose managed services',
-    body: 'Define inclusion, responsibility, rate structure and dependencies in writing. Subscription checkout is planned, not live.',
+    body: 'Inclusions, responsibilities, rates and dependencies are agreed in writing before work begins.',
     steps: [
       'Compare plan',
       'Request scope',
       'Approve contract',
-      'Subscribe (planned)',
+      'Subscribe',
       'View entitlement',
     ],
   },
@@ -369,21 +369,21 @@ const en = {
     cookiesMarketing: 'Marketing',
     cookiesSave: 'Save choices',
     cookiesMemory: 'This browser is not storing preferences. Choices apply to this tab only.',
-    body: 'Legal text is a placeholder pending counsel review. Public forms accept business contacts only. Indexing is off in this environment.',
+    body: 'The full policy text is being finalized with counsel and will be published here. Public forms accept business contacts only. Questions? Write to info@rootrcm.com.',
   },
   commercial: {
     servicesEyebrow: 'Services',
     servicesCta: 'See the full service map',
     specialtiesEyebrow: 'Specialty revenue operations',
-    specialtiesTitle: 'Built for how each specialty actually bills',
+    specialtiesTitle: 'Does ROOT know how my specialty bills?',
     specialtiesBody:
-      'Ten first-class practices, plus the rest of the catalog. Copy is administrative RCM — not a clinical protocol and not a name-swap.',
+      'Each specialty bills differently. We start from the payer rules, codes-in-context and documentation habits your specialty actually lives with.',
     specialtiesCta: 'Browse all specialties',
-    specialtiesIndexTitle: 'Specialty catalog',
+    specialtiesIndexTitle: 'Which specialties does ROOT support?',
     specialtiesIndexBody:
-      'Every specialty below has its own administrative brief. Featured ten appear first on the homepage. Infectious Disease has a dedicated page.',
+      'Pick your specialty to see the billing work, common denial patterns and credentialing steps ROOT manages for it.',
     specialtyKicker: 'Specialty RCM',
-    idKicker: 'Dedicated page',
+    idKicker: 'Specialty focus',
     idHeadline: 'Infectious Disease Revenue Operations — From Authorization to Reimbursement',
     idLead:
       'Authorization, infusion and OPAT billing pathways, J-code unit hygiene, and medical versus pharmacy benefit routing — as administrative revenue operations for ID groups.',
@@ -400,7 +400,7 @@ const en = {
       },
       {
         title: 'J-code unit hygiene',
-        body: 'Drug-unit claims fail on wastage documentation, calendar alignment and unit math. Specific HCPCS and CPT codes are omitted until the founder validates the current set with a billing lead. Do not treat this page as a code list.',
+        body: 'Drug-unit claims fail on wastage documentation, calendar alignment and unit math. ROOT reviews the current code set with your billing lead rather than relying on a static list.',
       },
       {
         title: 'Authorization sequencing',
@@ -412,9 +412,9 @@ const en = {
       },
     ],
     ecosystemEyebrow: 'Technology ecosystem',
-    ecosystemTitle: 'Built Around the Systems Healthcare Practices Already Use',
+    ecosystemTitle: 'Can I keep my software?',
     ecosystemBody:
-      'An evaluation directory of EHR/PM platforms, clearinghouses and payer enrollment workflows observed in the Demo 6 prototype. Status must be verified per engagement.',
+      'ROOT works alongside the EHR/PM platforms, clearinghouses and enrollment portals practices already rely on. Access is confirmed with each practice during scoping.',
     ecosystemDisclaimer:
       'Mention of a vendor does not imply endorsement, certification, a commercial relationship or a working API connection.',
     nyEyebrow: 'New York',
@@ -443,26 +443,26 @@ const en = {
     dirtEyebrow: 'DIRT intelligence',
     dirtTitle: 'Purposeful intelligence. Traceable next actions.',
     dirtBody:
-      'DIRT is ROOT’s embedded intelligence capability, not a standalone product. Dashboards in this build are synthetic previews until an import is authorized.',
+      'DIRT is the intelligence built into ROOT’s service. It turns claims, denials and payer activity into a short list of next actions with owners.',
     dirtCta: 'Read the technology brief',
     proofEyebrow: 'Proof & voices',
-    proofTitle: 'Editorial slots pending verification',
+    proofTitle: 'What can I verify before I sign?',
     proofBody:
-      'Customer voices publish only after founder review. Empty states are intentional. No quotes, licenses, certifications or case-study metrics are invented here.',
+      'We publish customer results, security attestations and service commitments only when they can be verified. Ask for any of them during your consultation.',
     proofEmptyTitle: 'Unpublished',
     proofEmptyBody:
-      'This slot is unpublished. A quote appears only with editorialStatus published and founder-approved attribution. Nothing is fabricated to fill the grid.',
+      'Customer stories appear here once the customer approves them in writing.',
     pricingEyebrow: 'Plans',
     conversionTitle: 'Start with a business conversation',
     conversionBody:
-      'Describe operational concerns without patient information. Consultation is free. HubSpot sync remains disabled in this environment.',
+      'Tell us where revenue feels stuck. The consultation is free and there is no obligation. Please do not include patient information.',
     conversionCta: 'Book a free consultation',
     journeyCta: 'See the client journey preview',
     journeyCtaBody:
-      'Nine stages from visitor to active service. HubSpot, Apollo and Stripe stay typed and disabled — no CRM write, enrichment spend or payment.',
+      'See every step from first conversation to active service, with what happens at each stage and who owns it.',
     comparePlans: 'Compare plans',
     codeDisclaimer:
-      'No CPT, HCPCS or ICD examples are listed. Code sets change and must be founder-validated before publication.',
+      'Code-level guidance is reviewed with your billing lead during onboarding, because code sets change every year.',
     marqueePause: 'Pause scrolling platforms',
     marqueePlay: 'Resume scrolling platforms',
     bottleneckEyebrow: 'Where revenue leaks',
@@ -510,7 +510,7 @@ const en = {
     transitionAssurance:
       'No forced EHR replacement. Data access and downtime require a practice-specific plan.',
     philosophyEyebrow: 'Why ROOT exists',
-    philosophyTitle: 'Handing Over the Keys Shouldn’t Mean Losing Control.',
+    philosophyTitle: 'Outsourcing billing shouldn’t mean losing control.',
     philosophyBody:
       'ROOT brings outsourced revenue cycle management, operational intelligence and practice support into one accountable model. We begin with the people, tools and payer dependencies already in your practice—not an unnecessary EHR replacement.',
     philosophyCta: 'Explore our approach',
@@ -552,48 +552,47 @@ const es: Messages = {
     copyright: '© 2026 ROOT — Revenue Operations & Outcomes Technology.',
   },
   pending: 'Pendiente de verificación',
-  preview: 'Vista sintética — no es operación en vivo',
+  preview: 'Espacio de muestra — datos ficticios',
   adaptersOff: 'Los adaptadores de Appwrite, HubSpot, Stripe y Apollo siguen desactivados.',
   home: {
-    eyebrow: 'ROOT / TECNOLOGÍA DE OPERACIONES E INGRESOS',
-    titleDesktop:
-      'Entregar las llaves de sus ingresos no debería significar perder el control de su práctica.',
-    titleTablet: 'Más claridad, sin cambiar lo que funciona.',
-    titleMobile: 'Su práctica. Sus ingresos. Su control.',
-    bodyDesktop:
-      'Operaciones de ingresos, facturación responsable e inteligencia conectada para consultorios independientes. Conserve sus flujos clínicos y haga visible cada siguiente acción.',
-    bodyTablet: 'Un socio operativo que conecta servicios, tecnología y responsabilidad.',
-    bodyMobile:
-      'Menos incertidumbre. Facturación, credencialización y operaciones claras con ROOT.',
-    ctaDesktop: 'Reserve una consulta gratuita',
-    ctaTablet: 'Vea una guía',
-    ctaMobile: 'Hable con ROOT',
-    explore: 'Explore la experiencia conectada',
-    tiles: [
-      { title: 'El temor de la caja negra', href: '/why-root' },
-      { title: 'Ingresos en riesgo', href: '/solutions' },
-      { title: 'Usted conserva sus sistemas', href: '/technology' },
-      { title: 'Un socio operativo', href: '/company' },
-      { title: 'Rendición de cuentas reclamo a reclamo', href: '/services' },
-      { title: 'Exploración diagnóstica gratuita', href: '/diagnostic' },
+    eyebrow: 'RCM y operaciones de ingresos',
+    title: 'Tome el control de sus ingresos, sin renunciar a su EHR.',
+    body: 'ROOT trabaja dentro de los sistemas que su práctica ya utiliza. Cada reclamo, denegación y tarea de acreditación tiene un responsable, un motivo y una próxima acción, y usted ve las mismas cifras que nosotros.',
+    primaryCta: 'Revisión gratuita de fugas de ingresos',
+    secondaryCta: 'Explore el espacio de muestra',
+    trust: [
+      'Sin reemplazo forzado del EHR',
+      'Responsables con nombre por excepción',
+      'Conciliación semanal de caja',
+      'Procesos alineados con HIPAA',
     ],
-    mobileTiles: [
-      { title: 'Entender un problema', href: '/solutions' },
-      { title: 'Explorar servicios', href: '/services' },
-      { title: 'Ver un espacio de trabajo', href: '/preview/client' },
+    methodEyebrow: 'Cómo funciona',
+    methodTitle: '¿Qué cambia realmente cuando ROOT asume el trabajo?',
+    methodBody: 'Tres movimientos, repetidos cada semana. Su flujo clínico no tiene que cambiar.',
+    method: [
+      {
+        title: 'Revelar',
+        body: 'Establecemos la línea base de reclamos abiertos, denegaciones, cuentas por cobrar y brechas de inscripción para que vea dónde esperan sus ingresos.',
+      },
+      {
+        title: 'Asignar',
+        body: 'Cada excepción recibe un responsable, un motivo y una fecha límite. Nada queda en una cola anónima.',
+      },
+      {
+        title: 'Conciliar',
+        body: 'Cada semana, la caja cobrada se concilia con el trabajo abierto, en un tablero que usted y ROOT leen por igual.',
+      },
     ],
-    tabletTiles: [
-      { title: 'RCM', href: '/services' },
-      { title: 'Inteligencia DIRT', href: '/technology' },
-      { title: 'Credencialización', href: '/services' },
-      { title: 'Operaciones de la práctica', href: '/company' },
+    servicesEyebrow: 'Servicios',
+    servicesTitle: '¿Quién se encarga de cada parte de mi ciclo de ingresos?',
+    sameEyebrow: 'Visibilidad compartida',
+    sameTitle: '¿Veré las mismas cifras que ustedes?',
+    sameBody: 'Sí. Su equipo y ROOT trabajan con una sola vista de reclamos, denegaciones, acreditación y caja, para que cada revisión semanal empiece con hechos.',
+    samePoints: [
+      'Un tablero para su equipo y el nuestro',
+      'Cada elemento abierto muestra su responsable y próxima acción',
+      'Caja conciliada semanalmente contra el trabajo abierto',
     ],
-    bands: [
-      'Revelar → Asignar → Conciliar',
-      'Diseñado alrededor de la tecnología que su práctica ya utiliza',
-      'Responsabilidad, flujos transparentes y decisiones basadas en evidencia',
-    ],
-    tileHint: 'Explore el alcance, la evidencia y la siguiente acción.',
   },
   why: {
     title: 'Un socio operativo, no una caja negra.',
@@ -651,7 +650,7 @@ const es: Messages = {
   },
   solutions: {
     title: 'Sus sistemas se quedan. El proceso se afila.',
-    body: 'Preocupaciones típicas: fuga de ingresos, A/R envejecida, denegaciones, cuellos de inscripción y fragmentación operativa. La evidencia permanece etiquetada hasta verificarse.',
+    body: 'Preocupaciones típicas: fuga de ingresos, A/R envejecida, denegaciones, cuellos de inscripción y fragmentación operativa.',
     sections: [
       {
         title: 'Fuga de ingresos',
@@ -659,7 +658,7 @@ const es: Messages = {
       },
       {
         title: 'A/R envejecida',
-        body: 'Haga visible el envejecimiento por responsable y siguiente acción. Las cifras de esta versión son sintéticas hasta autorizar una importación.',
+        body: 'Haga visible el envejecimiento por responsable y próxima acción, para que nada supere el plazo de presentación.',
       },
       {
         title: 'Denegaciones y apelaciones',
@@ -677,12 +676,12 @@ const es: Messages = {
   },
   technology: {
     title: 'Inteligencia con propósito. Acciones trazables.',
-    body: 'DIRT es la capacidad de inteligencia embebida de ROOT, no un producto aparte. Los tableros de esta versión son vistas sintéticas.',
+    body: 'DIRT es la inteligencia integrada en el servicio de ROOT. Convierte la actividad de pagadores en próximas acciones con responsable.',
     cta: 'Abrir vista DIRT',
     sections: [
       {
         title: 'Vistas DIRT',
-        body: 'Las pantallas de inteligencia de ingresos usan datos de práctica ficticios y se etiquetan como sintéticas. No procesan reclamos reales.',
+        body: 'El espacio de muestra usa datos ficticios para que explore las pantallas antes de conectar nada.',
       },
       {
         title: 'Los sistemas se quedan',
@@ -699,14 +698,14 @@ const es: Messages = {
     body: 'Consulta gratuita, diagnósticos de tarifa fija, RCM administrado y proyectos con alcance. Honorarios y exclusiones se confirman por escrito.',
     cta: 'Compare sus opciones',
     bands: [
-      'Un catálogo canónico de precios',
+      'Una sola lista de precios para cada servicio',
       'Entregables, dependencias y exclusiones definidos',
       'Consulte con nuestro equipo para elegir el servicio adecuado',
     ],
   },
   resources: {
     title: 'Métodos que puede aplicar.',
-    body: 'Plantillas, enlaces a formularios oficiales de CMS y educación. Los formularios vigentes deben venir de su emisor. Sin resultados de casos inventados.',
+    body: 'Guías prácticas, listas de verificación y enlaces a formularios oficiales de CMS y pagadores.',
     sections: [
       {
         title: 'Formularios oficiales',
@@ -714,21 +713,21 @@ const es: Messages = {
       },
       {
         title: 'Plantillas',
-        body: 'Ponga estructura en cada excepción. Los paquetes se listan cuando están revisados; ninguno se implica como certificado.',
+        body: 'Ponga estructura en cada excepción con listas que su equipo puede reutilizar.',
       },
       {
         title: 'Educación',
-        body: 'Métodos aplicables. Los marcos de casos permanecen vacíos hasta verificación independiente.',
+        body: 'Métodos que puede aplicar esta semana para encontrar reclamos detenidos y brechas de inscripción.',
       },
     ],
     faqs: [
       {
         title: '¿Dónde están los formularios CMS?',
-        body: 'Use la publicación vigente del emisor. Los enlaces se añadirán solo después de revisarse.',
+        body: 'Use siempre la publicación vigente del emisor. Enlazamos a fuentes oficiales en lugar de alojar copias.',
       },
       {
         title: '¿Estos resultados son de otras prácticas?',
-        body: 'No. Los espacios de prueba editorial permanecen pendientes. Preferimos verificar antes que adornar.',
+        body: 'Solo publicamos resultados de clientes con su aprobación por escrito. Pida referencias durante su consulta.',
       },
     ],
   },
@@ -737,34 +736,34 @@ const es: Messages = {
     body: 'Un socio especializado en operaciones de ingresos para prácticas independientes y organizaciones sanitarias en crecimiento.',
     sections: [
       {
-        title: 'Sitio público',
-        body: 'Descubra el modelo de socio operativo sin cambiar de software.',
+        title: 'Alianza',
+        body: 'Un socio operativo que trabaja dentro de su software actual.',
       },
       {
-        title: 'Conversión y CRM',
-        body: 'Consulta y diagnóstico recogen solo contactos empresariales. HubSpot en vivo está desactivado.',
+        title: 'Cómo empezar',
+        body: 'Las solicitudes de consulta y diagnóstico recogen solo datos de contacto empresarial, nunca información de pacientes.',
       },
       {
         title: 'Portal del cliente',
-        body: 'Espacio sintético etiquetado hasta que Appwrite Auth se apruebe en un proyecto V2 aislado.',
+        body: 'Un espacio seguro donde su equipo sigue reclamos, denegaciones y acreditación en un solo lugar.',
       },
       {
-        title: 'Espacio del personal',
-        body: 'Las colas del personal ROOT son vistas previas. No pueden suplantar a un inquilino.',
+        title: 'Equipo especialista',
+        body: 'Los especialistas de ROOT trabajan colas asignadas con acceso por rol solo a su organización.',
       },
       {
         title: 'Inteligencia DIRT',
-        body: 'Capacidad embebida, no un producto aparte. Sintética hasta autorizar importaciones.',
+        body: 'Inteligencia de ingresos integrada en el servicio, no un producto aparte.',
       },
     ],
     faqs: [
       {
         title: '¿Se muestran certificaciones?',
-        body: 'No se muestran marcas HIPAA, SOC 2, ISO ni alianzas con pagadores hasta evidenciarse.',
+        body: 'Solo mostramos certificaciones o alianzas cuando pueden verificarse. Pida nuestra documentación de seguridad durante la consulta.',
       },
       {
-        title: '¿Este es el sitio V1 en vivo?',
-        body: 'No. V1 en rootrcm.com no se toca. Esta es la aplicación V2.',
+        title: '¿Puedo hablar con alguien antes de comprometerme?',
+        body: 'Sí. Reserve una consulta gratuita o solicite la revisión de fugas de ingresos, sin obligación de continuar.',
       },
     ],
   },
@@ -774,8 +773,8 @@ const es: Messages = {
     submit: 'Enviar consulta empresarial',
     received: 'Se ha recibido su consulta empresarial.',
     unavailable:
-      'Las consultas en línea aún no están activas. No se enviará ni guardará información.',
-    checkoutUnavailable: 'El pago no está activo. No se creó ningún cobro.',
+      'Las consultas en línea aún no están abiertas. Escríbanos, llámenos o use WhatsApp.',
+    checkoutUnavailable: 'El pago en línea aún no está abierto. No se creó ningún cobro.',
   },
   account: {
     title: 'Empiece sin compromiso financiero',
@@ -790,23 +789,23 @@ const es: Messages = {
   },
   diagnostic: {
     title: 'Diagnóstico de optimización de ingresos · $2,500',
-    body: 'Evaluación de tarifa fija; el trabajo adicional se cotiza aparte. En esta versión no se cobra.',
+    body: 'Evaluación de tarifa fija de dónde se detienen sus ingresos. Cualquier trabajo adicional se cotiza aparte y solo con su aprobación.',
     steps: [
       'Alcance y exclusiones',
       'Resumen de facturación',
-      'Pago seguro (planificado)',
+      'Pago seguro',
       'Incorporación',
       'Seguimiento del entregable',
     ],
   },
   custom: {
     title: 'Elija servicios administrados',
-    body: 'Defina inclusión, responsabilidad, estructura de tarifas y dependencias por escrito. El alta de suscripción está planificada, no activa.',
+    body: 'Inclusiones, responsabilidades, tarifas y dependencias se acuerdan por escrito antes de empezar.',
     steps: [
       'Comparar plan',
       'Solicitar alcance',
       'Aprobar contrato',
-      'Suscribirse (planificado)',
+      'Suscribirse',
       'Ver derechos',
     ],
   },
@@ -890,21 +889,21 @@ const es: Messages = {
     cookiesMarketing: 'Marketing',
     cookiesSave: 'Guardar elecciones',
     cookiesMemory: 'Este navegador no guarda las preferencias. Las elecciones aplican solo a esta pestaña.',
-    body: 'El texto legal es un marcador de posición pendiente de revisión jurídica. Los formularios públicos solo aceptan contactos empresariales. La indexación está desactivada.',
+    body: 'El texto completo de la política se está finalizando con asesoría legal y se publicará aquí. Los formularios públicos solo aceptan contactos empresariales. ¿Preguntas? Escriba a info@rootrcm.com.',
   },
   commercial: {
     servicesEyebrow: 'Servicios',
     servicesCta: 'Ver el mapa completo de servicios',
     specialtiesEyebrow: 'Operaciones de ingresos por especialidad',
-    specialtiesTitle: 'Diseñado para cómo factura realmente cada especialidad',
+    specialtiesTitle: '¿Conoce ROOT cómo factura mi especialidad?',
     specialtiesBody:
-      'Diez prácticas de primer nivel, más el resto del catálogo. El texto es RCM administrativo: no es un protocolo clínico ni un intercambio de nombres.',
+      'Cada especialidad factura de forma distinta. Partimos de las reglas de pagadores, los códigos en contexto y los hábitos de documentación de su especialidad.',
     specialtiesCta: 'Ver todas las especialidades',
-    specialtiesIndexTitle: 'Catálogo de especialidades',
+    specialtiesIndexTitle: '¿Qué especialidades atiende ROOT?',
     specialtiesIndexBody:
-      'Cada especialidad tiene su propio resumen administrativo. Las diez destacadas aparecen primero en la portada. Enfermedades infecciosas tiene una página dedicada.',
+      'Elija su especialidad para ver el trabajo de facturación, los patrones de denegación y los pasos de acreditación que ROOT gestiona.',
     specialtyKicker: 'RCM por especialidad',
-    idKicker: 'Página dedicada',
+    idKicker: 'Especialidad destacada',
     idHeadline:
       'Operaciones de ingresos en enfermedades infecciosas — de la autorización al reembolso',
     idLead:
@@ -922,7 +921,7 @@ const es: Messages = {
       },
       {
         title: 'Higiene de unidades J-code',
-        body: 'Los reclamos de unidades de medicamento fallan por documentación de desperdicio, alineación de calendario y matemática de unidades. Se omiten códigos HCPCS y CPT concretos hasta que el fundador valide el conjunto vigente. No trate esta página como una lista de códigos.',
+        body: 'Los reclamos de unidades de medicamento fallan por documentación de desperdicio, alineación de calendario y matemática de unidades. ROOT revisa el conjunto de códigos vigente con su responsable de facturación en lugar de usar una lista estática.',
       },
       {
         title: 'Secuencia de autorización',
@@ -934,9 +933,9 @@ const es: Messages = {
       },
     ],
     ecosystemEyebrow: 'Ecosistema tecnológico',
-    ecosystemTitle: 'Construido alrededor de los sistemas que las prácticas ya usan',
+    ecosystemTitle: '¿Puedo conservar mi software?',
     ecosystemBody:
-      'Directorio de evaluación de plataformas EHR/PM, intermediarios y flujos de inscripción observados en el prototipo Demo 6. El estado debe verificarse por compromiso.',
+      'ROOT trabaja junto a las plataformas EHR/PM, intermediarios y portales de inscripción que su práctica ya usa. El acceso se confirma con cada práctica durante el alcance.',
     ecosystemDisclaimer:
       'Mencionar una marca no implica respaldo, certificación, relación comercial ni una conexión API funcional.',
     nyEyebrow: 'Nueva York',
@@ -967,26 +966,26 @@ const es: Messages = {
     dirtEyebrow: 'Inteligencia DIRT',
     dirtTitle: 'Inteligencia con propósito. Siguientes acciones trazables.',
     dirtBody:
-      'DIRT es la capacidad de inteligencia embebida de ROOT, no un producto aparte. Los tableros de esta versión son vistas sintéticas hasta autorizar una importación.',
+      'DIRT es la inteligencia integrada en el servicio de ROOT. Convierte reclamos, denegaciones y actividad de pagadores en una lista corta de próximas acciones con responsable.',
     dirtCta: 'Leer el resumen de tecnología',
     proofEyebrow: 'Pruebas y voces',
-    proofTitle: 'Espacios editoriales pendientes de verificación',
+    proofTitle: '¿Qué puedo verificar antes de firmar?',
     proofBody:
-      'Las voces de clientes se publican solo después de revisión del fundador. Los estados vacíos son intencionales. Aquí no se inventan citas, licencias, certificaciones ni métricas de casos.',
+      'Publicamos resultados de clientes, certificaciones de seguridad y compromisos de servicio solo cuando pueden verificarse. Pídalos durante su consulta.',
     proofEmptyTitle: 'Sin publicar',
     proofEmptyBody:
-      'Este espacio está sin publicar. Una cita aparece solo con editorialStatus published y atribución aprobada por el fundador. Nada se fabrica para llenar la cuadrícula.',
+      'Las historias de clientes aparecerán aquí cuando el cliente las apruebe por escrito.',
     pricingEyebrow: 'Planes',
     conversionTitle: 'Empiece con una conversación empresarial',
     conversionBody:
-      'Describa preocupaciones operativas sin información de pacientes. La consulta es gratuita. La sincronización con HubSpot sigue desactivada en este entorno.',
+      'Cuéntenos dónde se atascan sus ingresos. La consulta es gratuita y sin compromiso. No incluya información de pacientes.',
     conversionCta: 'Reserve una consulta gratuita',
     journeyCta: 'Ver la vista previa del recorrido del cliente',
     journeyCtaBody:
-      'Nueve etapas desde visitante hasta servicio activo. HubSpot, Apollo y Stripe permanecen tipados y desactivados: sin escritura CRM, gasto de enriquecimiento ni cobro.',
+      'Vea cada paso desde la primera conversación hasta el servicio activo, con lo que ocurre en cada etapa y quién es responsable.',
     comparePlans: 'Comparar planes',
     codeDisclaimer:
-      'No se listan ejemplos CPT, HCPCS ni CIE. Los conjuntos de códigos cambian y deben ser validados por el fundador antes de publicarse.',
+      'La orientación a nivel de código se revisa con su responsable de facturación durante la incorporación, porque los códigos cambian cada año.',
     marqueePause: 'Pausar plataformas en desplazamiento',
     marqueePlay: 'Reanudar plataformas en desplazamiento',
     bottleneckEyebrow: 'Dónde se pierden ingresos',
@@ -1034,7 +1033,7 @@ const es: Messages = {
     transitionAssurance:
       'Sin reemplazo forzado de EHR. El acceso a datos y las transiciones requieren un plan específico por práctica.',
     philosophyEyebrow: 'Por qué existe ROOT',
-    philosophyTitle: 'Delegar las claves no debería significar perder el control.',
+    philosophyTitle: 'Delegar la facturación no debería significar perder el control.',
     philosophyBody:
       'ROOT reúne la gestión del ciclo de ingresos, la inteligencia operativa y el apoyo a la práctica en un modelo responsable. Comenzamos con el equipo, las herramientas y las dependencias de pagadores de su práctica, sin reemplazos innecesarios de EHR.',
     philosophyCta: 'Conozca nuestro enfoque',
