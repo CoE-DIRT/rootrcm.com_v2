@@ -69,8 +69,8 @@ test.describe('ROOT V3 Public Transformation', () => {
     await page.goto('/en/signup');
     await expect(page.getByRole('heading', { level: 1, name: 'Create your practice account' })).toBeVisible();
     await expect(page.locator('#main input[type="checkbox"]')).toBeVisible();
-    await expect(page.getByRole('link', { name: /Terms of Service/i })).toHaveAttribute('href', '/en/terms');
-    await expect(page.getByRole('link', { name: /Privacy Policy/i })).toHaveAttribute('href', '/en/privacy');
+    await expect(page.locator('#main a[href="/en/terms"]')).toBeVisible();
+    await expect(page.locator('#main a[href="/en/privacy"]')).toBeVisible();
 
     await page.goto('/en/forgot-password');
     await expect(page.getByRole('heading', { level: 1, name: 'Forgot your password?' })).toBeVisible();
