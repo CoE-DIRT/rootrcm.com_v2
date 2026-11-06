@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { authCopy } from '@/content/auth-messages';
 import type { Locale } from '@/i18n/locales';
 import { Button } from '@/components/ui/Button';
+import { OAuthButtons } from '@/components/forms/oauth-buttons';
 type Action = 'login' | 'signup' | 'recover' | 'reset' | 'verify' | 'verification' | 'logout';
 type Status = 'idle' | 'pending' | 'success' | 'verificationFailed' | 'verificationRequired' | 'signupSent' | 'verified' | 'verifyFailed' | 'recoverySent' | 'passwordReset' | 'error';
 export function AuthForm({ locale, logout = false }: { locale: Locale; logout?: boolean }) {
@@ -17,6 +18,7 @@ export function AuthForm({ locale, logout = false }: { locale: Locale; logout?: 
     const timer = window.setTimeout(() => {
       const url = new URL(window.location.href);
       const mode = url.searchParams.get('mode');
+      if (url.searchParams.get('error')?.startsWith('oauth_')) { window.history.replaceState(null, '', url.pathname); setStatus('error'); return; }
       if (url.searchParams.get('verified') === '1') {
         window.history.replaceState(null, '', url.pathname);
         setStatus('verified');
@@ -49,7 +51,7 @@ export function AuthForm({ locale, logout = false }: { locale: Locale; logout?: 
     return () => window.clearTimeout(timer);
   }, [locale, router]);
   return <div className="mt-6 space-y-4">
-    {!logout && <><p>{t.business}</p><div className="flex flex-wrap gap-3">{(['login', 'signup', 'recover', 'verification'] as const).map(mode => <Button variant="secondary" key={mode} type="button" aria-pressed={action === mode} onClick={() => { setAction(mode); setStatus('idle'); }}>{t[mode]}</Button>)}</div></>}
+    {!logout && <><p>{t.business}</p><div className="flex flex-wrap gap-3">{(['login', 'signup', 'recover', 'verification'] as const).map(mode => <Button variant="secondary" key={mode} type="button" aria-pressed={action === mode} onClick={() => { setAction(mode); setStatus('idle'); }}>{t[mode]}</Button>)}</div>{(action === 'login' || action === 'signup') && <OAuthButtons locale={locale} />}</>}
     <form className="space-y-4" onSubmit={async event => {
       event.preventDefault(); setStatus('pending');
       const form = new FormData(event.currentTarget);

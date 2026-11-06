@@ -1,41 +1,38 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { Locale } from '@/i18n/locales';
 import { Button } from '@/components/ui/Button';
-import { StatusBanner } from '@/components/ui/status';
+
+type Provider = 'google' | 'microsoft';
 
 export function OAuthButtons({ locale }: { locale: Locale }) {
-  const [notice, setNotice] = useState<string | null>(null);
+  const [providers, setProviders] = useState<Provider[]>([]);
   const es = locale === 'es';
 
-  function handleOAuth(provider: 'google' | 'microsoft') {
-    // Check if Appwrite endpoint is configured for OAuth
-    const providerName = provider === 'google' ? 'Google' : 'Microsoft 365';
-    // In production with live Appwrite, this redirects to Appwrite OAuth2 URL.
-    // In current disabled/isolated adapter state, provide an honest enterprise message rather than fake success.
-    const appwriteEndpoint = process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT;
-    const appwriteProject = process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID;
+  // Buttons exist only for providers the server reports as enabled; otherwise nothing renders (no dead buttons).
+  useEffect(() => {
+    let active = true;
+    fetch('/api/v1/auth/oauth/providers', { cache: 'no-store' })
+      .then((response) => (response.ok ? response.json() : { providers: [] }))
+      .then((data: { providers?: Provider[] }) => {
+        if (active) setProviders((data.providers ?? []).filter((p): p is Provider => p === 'google' || p === 'microsoft'));
+      })
+      .catch(() => undefined);
+    return () => { active = false; };
+  }, []);
 
-    if (appwriteEndpoint && appwriteProject) {
-      const redirectUrl = `${window.location.origin}/${locale}/dashboard`;
-      const failureUrl = `${window.location.origin}/${locale}/login?error=oauth_failed`;
-      // External OAuth provider redirect
-      // eslint-disable-next-line @next/next/no-location-assign-relative-destination
-      window.location.href = `${appwriteEndpoint}/account/sessions/oauth2/${provider}?project=${appwriteProject}&success=${encodeURIComponent(redirectUrl)}&failure=${encodeURIComponent(failureUrl)}`;
-    } else {
-      setNotice(
-        es
-          ? `El inicio de sesión único con ${providerName} requiere la habilitación del proveedor de identidad en Appwrite. Utilice el acceso seguro mediante correo y contraseña.`
-          : `${providerName} enterprise SSO requires an active Appwrite identity provider configuration. Please sign in with your practice email and password.`
-      );
-    }
+  function handleOAuth(provider: Provider) {
+    // Server-side token flow: /start sets a one-time nonce cookie and redirects to Appwrite; /callback sets the HttpOnly session.
+    window.location.assign(`/api/v1/auth/oauth/start?provider=${provider}&locale=${locale}`);
   }
+
+  if (providers.length === 0) return null;
 
   return (
     <div className="stack">
       <div className="auth-shell__oauth">
-        <Button variant="secondary" size="lg" fullWidth onClick={() => handleOAuth('google')} leftIcon={
+        {providers.includes('google') && <Button variant="secondary" size="lg" fullWidth onClick={() => handleOAuth('google')} leftIcon={
           <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
             <path
               fill="#4285F4"
@@ -56,8 +53,8 @@ export function OAuthButtons({ locale }: { locale: Locale }) {
           </svg>
         }>
           {es ? 'Continuar con Google' : 'Continue with Google'}
-        </Button>
-        <Button variant="secondary" size="lg" fullWidth onClick={() => handleOAuth('microsoft')} leftIcon={
+        </Button>}
+        {providers.includes('microsoft') && <Button variant="secondary" size="lg" fullWidth onClick={() => handleOAuth('microsoft')} leftIcon={
           <svg width="20" height="20" viewBox="0 0 23 23" aria-hidden="true">
             <path fill="#f35325" d="M1 1h10v10H1z" />
             <path fill="#81bc06" d="M12 1h10v10H12z" />
@@ -66,9 +63,8 @@ export function OAuthButtons({ locale }: { locale: Locale }) {
           </svg>
         }>
           {es ? 'Continuar con Microsoft' : 'Continue with Microsoft'}
-        </Button>
+        </Button>}
       </div>
-      {notice ? <StatusBanner tone="warning">{notice}</StatusBanner> : null}
       <p className="auth-shell__divider">{es ? 'o con correo y contraseña' : 'or with email and password'}</p>
     </div>
   );

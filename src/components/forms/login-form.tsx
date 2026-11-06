@@ -20,7 +20,7 @@ export function LoginForm({ locale }: { locale: Locale }) {
 
   useEffect(() => {
     const id = window.setTimeout(() => {
-      if (new URL(window.location.href).searchParams.get('error') === 'oauth_failed') setOutcome('unavailable');
+      if (new URL(window.location.href).searchParams.get('error')?.startsWith('oauth_')) setOutcome('unavailable');
     }, 0);
     return () => window.clearTimeout(id);
   }, []);
