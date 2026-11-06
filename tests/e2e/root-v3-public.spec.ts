@@ -59,8 +59,9 @@ test.describe('ROOT V3 Public Transformation', () => {
   test('English auth routes have distinct genuine forms, legal links and recovery flow', async ({ page }) => {
     await page.goto('/en/login');
     await expect(page.getByRole('heading', { level: 1, name: 'Log in to ROOT' })).toBeVisible();
-    await expect(page.getByRole('button', { name: /Continue with Google/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: /Continue with Microsoft/i })).toBeVisible();
+    // Provider buttons stay hidden until the server reports a provider as enabled.
+    await expect(page.locator('#login-email')).toBeVisible();
+    await expect(page.getByRole('button', { name: /Continue with (Google|Microsoft)/i })).toHaveCount(0);
     await expect(page.locator('#main input[type="email"]')).toBeVisible();
     await expect(page.locator('#main input[type="password"]')).toBeVisible();
     await expect(page.getByRole('link', { name: /Forgot password/i })).toHaveAttribute('href', '/en/forgot-password');
@@ -84,10 +85,20 @@ test.describe('ROOT V3 Public Transformation', () => {
     await expect(page.locator('#main a[href="tel:+13024965648"]').first()).toBeVisible();
   });
 
+  test('provider buttons appear only for providers the server enables (EN and ES)', async ({ page }) => {
+    await page.route('**/api/v1/auth/oauth/providers', (route) => route.fulfill({ json: { providers: ['google', 'microsoft'] } }));
+    await page.goto('/en/login');
+    await expect(page.getByRole('button', { name: /Continue with Google/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Continue with Microsoft/i })).toBeVisible();
+    await page.goto('/es/signup');
+    await expect(page.getByRole('button', { name: /Continuar con Google/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Continuar con Microsoft/i })).toBeVisible();
+  });
+
   test('Spanish login, signup and contact routes render localized H1s', async ({ page }) => {
     await page.goto('/es/login');
     await expect(page.getByRole('heading', { level: 1, name: 'Inicie sesión en ROOT' })).toBeVisible();
-    await expect(page.getByRole('button', { name: /Continuar con Google/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Continuar con (Google|Microsoft)/i })).toHaveCount(0);
     await page.goto('/es/signup');
     await expect(page.getByRole('heading', { level: 1, name: 'Cree su cuenta de práctica' })).toBeVisible();
     await page.goto('/es/contact');
